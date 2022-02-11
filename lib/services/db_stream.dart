@@ -30,6 +30,7 @@ class DBStream {
   // group data from snapshots
   GroupModel _groupDataFromSnapshot(DocumentSnapshot snapshot) {
     return GroupModel(
+        id: snapshot.id,
         name: snapshot.get("name"),
         leader: snapshot.get("leader"),
         currentBookId: snapshot.get("currentBookId"),

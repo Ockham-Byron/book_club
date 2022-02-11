@@ -1,6 +1,8 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/home/GroupHome/single_book_card.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
+import 'package:book_club/shared/app_drawer.dart';
 
 import 'package:book_club/shared/background_container.dart';
 
@@ -82,38 +84,9 @@ class _SingleBookHomeState extends State<SingleBookHome> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Livre à lire pour le ",
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
-                              ),
-                              // Text(
-                              //   _displayDueDate(),
-                              //   style: TextStyle(
-                              //       fontSize: 30,
-                              //       fontWeight: FontWeight.w500,
-                              //       color: Theme.of(context).primaryColor),
-                              // ),
-                              // Text(_displayRemainingDays()),
-                              // _displayCurrentBookInfo(),
-                              // SizedBox(
-                              //   height: 30,
-                              // ),
-                              // _displayNextBookInfo(),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
+                    SingleBookCard(
+                        currentUser: widget.currentUser,
+                        currentGroup: widget.currentGroup)
                   ],
                 ),
               ),
@@ -121,12 +94,10 @@ class _SingleBookHomeState extends State<SingleBookHome> {
           ],
         ),
       ),
-      // drawer: AppDrawer(
-      //   currentGroup: widget.currentGroup,
-      //   currentUser: widget.currentUser,
-      //   currentBook: _currentBook,
-      //   authModel: widget.authModel,
-      // ),
+      drawer: AppDrawer(
+        currentGroup: widget.currentGroup,
+        currentUser: widget.currentUser,
+      ),
     );
   }
 }

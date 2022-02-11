@@ -1,3 +1,4 @@
+import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,6 +15,10 @@ class DBFuture {
 
   //Groups collection reference
   final CollectionReference groupsCollection =
+      FirebaseFirestore.instance.collection("groups");
+
+  //Books collection reference
+  final CollectionReference booksCollection =
       FirebaseFirestore.instance.collection("groups");
 
   /* ---------------------------- */
@@ -72,5 +77,37 @@ class DBFuture {
     } catch (e) {}
 
     return retVal;
+  }
+
+  /* ---------------------------- */
+  /* ----------- BOOK ----------- */
+  /* ---------------------------- */
+
+  Future<String> addSingleBook(
+      String groupId, BookModel book, int nextPicker) async {
+    String message = "error";
+
+    try {
+      DocumentReference _docRef =
+          await booksCollection.doc(groupId).collection("books").add({
+        "title": book.title,
+        "author": book.author,
+        "length": book.length,
+        "dueDate": book.dueDate,
+        "cover": book.cover
+      });
+
+      //add book to the Group schedule
+      await groupsCollection.doc(groupId).update({
+        "currentBookId": _docRef.id,
+        "currentBookDue": book.dueDate,
+        "indexPickingBook": nextPicker,
+        //"nbOfBooks": FieldValue.increment(1),
+      });
+      message = "success";
+    } catch (e) {
+      //
+    }
+    return message;
   }
 }
