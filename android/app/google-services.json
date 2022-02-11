@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "435158685506",
+    "project_id": "book-club-6f916",
+    "storage_bucket": "book-club-6f916.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435158685506:android:d074fa53a3b1517af55adb",
+        "android_client_info": {
+          "package_name": "com.ikameleon.book_club"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435158685506-d05ub6st3optjber193l0q2os0f4kbk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6W-2EsevbRF23ntpVAKEzlxdZYP0NjF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435158685506-d05ub6st3optjber193l0q2os0f4kbk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
