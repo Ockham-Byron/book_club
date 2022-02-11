@@ -78,7 +78,9 @@ class LoggedIn extends StatelessWidget {
       displayScreen = StreamProvider<GroupModel>.value(
         value: DBStream().getGroupData(_userStream.groupId!),
         initialData: GroupModel(),
-        child: const GroupHome(),
+        child: GroupHome(
+          currentUser: _userStream,
+        ),
       );
     } else {
       displayScreen = const NoGroup();

@@ -15,6 +15,7 @@ class AppTheme {
 
       //texts
       textTheme: const TextTheme(
+        bodyText1: TextStyle(color: Colors.black),
         bodyText2: TextStyle(
             color: Colors.brown, fontSize: 20, fontWeight: FontWeight.bold),
       ),
