@@ -5,7 +5,7 @@ import 'package:book_club/screens/create/add_book.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/loading.dart';
-import 'package:book_club/shared/shadow_container.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,8 +26,15 @@ class _SingleBookCardState extends State<SingleBookCard> {
   bool _hasReadTheBook = false;
 
   @override
-  void initState() async {
-    //check if the user is done with book
+  void initState() {
+    checkIfUserHasReadTheBook().whenComplete(() {
+      setState(() {});
+    });
+
+    super.initState();
+  }
+
+  Future checkIfUserHasReadTheBook() async {
     if (widget.currentGroup.currentBookId != null) {
       if (await DBFuture().hasReadTheBook(widget.currentGroup.id!,
           widget.currentGroup.currentBookId!, widget.currentUser.uid!)) {
@@ -36,7 +43,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
         _hasReadTheBook = false;
       }
     }
-    super.initState();
   }
 
   String _displayDueDate(BookModel _currentBook) {
@@ -126,64 +132,62 @@ class _SingleBookCardState extends State<SingleBookCard> {
   }
 
   Widget _displayCurrentBookInfo(BookModel _currentBook) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Container(
-            height: 150,
-            width: 100,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(_currentBookCoverUrl(_currentBook)))),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          height: 150,
+          width: 100,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(_currentBookCoverUrl(_currentBook)))),
+        ),
+        SizedBox(
+          height: 150,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _displayBookTitle(_currentBook),
+                style: TextStyle(
+                    color: Theme.of(context).focusColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                _displayBookAuthor(_currentBook),
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+              Text(
+                _displayBookPages(_currentBook),
+                style: const TextStyle(color: Colors.black, fontSize: 12),
+              ),
+              ElevatedButton(
+                onPressed: _hasReadTheBook ? null : _goToReview,
+                child: const Text("Livre terminé !"),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _displayBookTitle(_currentBook),
-                  style: TextStyle(
-                      color: Theme.of(context).focusColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  _displayBookAuthor(_currentBook),
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-                Text(
-                  _displayBookPages(_currentBook),
-                  style: const TextStyle(color: Colors.black, fontSize: 12),
-                ),
-                ElevatedButton(
-                  onPressed: _hasReadTheBook ? null : _goToReview,
-                  child: const Text("Livre terminé !"),
-                ),
-              ],
-            ),
-          ),
-          RotatedBox(
-            quarterTurns: 3,
-            child: TextButton(
-                onPressed: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => EditBook(
-                  //           currentGroup: widget.currentGroup,
-                  //           currentBook: _currentBook,
-                  //           currentUser: widget.currentUser,
-                  //           authModel: widget.authModel,
-                  //           fromRoute: "fromHome",
-                  //         )));
-                },
-                child: Text(
-                  "MODIFIER",
-                  style: TextStyle(color: Theme.of(context).focusColor),
-                )),
-          )
-        ],
-      ),
+        ),
+        RotatedBox(
+          quarterTurns: 3,
+          child: TextButton(
+              onPressed: () {
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => EditBook(
+                //           currentGroup: widget.currentGroup,
+                //           currentBook: _currentBook,
+                //           currentUser: widget.currentUser,
+                //           authModel: widget.authModel,
+                //           fromRoute: "fromHome",
+                //         )));
+              },
+              child: Text(
+                "MODIFIER",
+                style: TextStyle(color: Theme.of(context).focusColor),
+              )),
+        )
+      ],
     );
   }
 
@@ -214,15 +218,15 @@ class _SingleBookCardState extends State<SingleBookCard> {
             BookModel _currentBook = BookModel();
             if (snapshot.connectionState == ConnectionState.waiting) {
               print("waiting");
-              return Loading();
+              return const Loading();
             } else {
               if (snapshot.hasError) {
                 print("y a une erreur : " + snapshot.error.toString());
-                return Loading();
+                return const Loading();
               } else {
                 if (!snapshot.hasData) {
                   print("pas de data");
-                  return Loading();
+                  return const Loading();
                 } else {
                   _currentBook = snapshot.data!;
                   return Column(

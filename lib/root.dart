@@ -51,7 +51,9 @@ class _AppRootState extends State<AppRoot> {
       return const LogIn();
     } else if (_authStatus == AuthStatus.loggedIn) {
       if (currentUid != null) {
+        print("root currentUid : " + currentUid.toString());
         return StreamProvider<UserModel>.value(
+          //catchError: (_, error) => UserModel(),
           value: DBStream().getUserData(currentUid!),
           initialData: UserModel(),
           child: const LoggedIn(),
@@ -75,6 +77,7 @@ class LoggedIn extends StatelessWidget {
     Widget displayScreen;
 
     if (_userStream.groupId != null) {
+      print("user a un groupId");
       displayScreen = StreamProvider<GroupModel>.value(
         value: DBStream().getGroupData(_userStream.groupId!),
         initialData: GroupModel(),

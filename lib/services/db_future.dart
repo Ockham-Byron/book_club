@@ -17,10 +17,6 @@ class DBFuture {
   final CollectionReference groupsCollection =
       FirebaseFirestore.instance.collection("groups");
 
-  //Books collection reference
-  final CollectionReference booksCollection =
-      FirebaseFirestore.instance.collection("books");
-
   /* ---------------------------- */
   /* ---------- USER ------------ */
   /* ---------------------------- */
@@ -36,7 +32,8 @@ class DBFuture {
       await usersCollection.doc(user.uid).set({
         "pseudo": user.pseudo!.trim(),
         "email": user.email!.trim(),
-        "pictureUrl": user.pictureUrl!.trim()
+        "pictureUrl": user.pictureUrl!.trim(),
+        "groupId": user.groupId!.trim(),
         // "readBooks": readBooks,
         // "favoriteBooks": favoriteBooks,
         // "readPages": user.readPages,
@@ -74,9 +71,33 @@ class DBFuture {
       });
 
       retVal = "success";
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
 
     return retVal;
+  }
+
+  //Join Group
+  Future<String> joinGroup(
+      {required String groupId, required String userId}) async {
+    String message = "error";
+    List<String> members = [];
+
+    try {
+      members.add(userId);
+      await groupsCollection.doc(groupId).update({
+        "members": FieldValue.arrayUnion(members),
+      });
+      await usersCollection.doc(userId).update({
+        "groupId": groupId.trim(),
+      });
+      message = "success";
+    } catch (e) {
+      print("y a un problème pour joindre le groupe");
+      print(e);
+    }
+    return message;
   }
 
   /* ---------------------------- */
@@ -132,5 +153,33 @@ class DBFuture {
     }
 
     return hasReadTheBook;
+  }
+
+  Future<String> changePicker(String groupId) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .update({"indexPickingBook": FieldValue.increment(1)});
+
+      message = "success";
+    } catch (e) {
+      //
+    }
+
+    return message;
+  }
+
+  Future<String> changePickerFromStart(String groupId) async {
+    String retVal = "error";
+
+    try {
+      await groupsCollection.doc(groupId).update({"indexPickingBook": 0});
+    } catch (e) {
+      //
+    }
+
+    return retVal;
   }
 }

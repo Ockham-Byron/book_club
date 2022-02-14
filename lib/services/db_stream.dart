@@ -10,13 +10,15 @@ class DBStream {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // user data from snapshots
-  UserModel _userDataFromSnapshot(DocumentSnapshot snapshot) {
+  UserModel _userDataFromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return UserModel(
-        uid: userId,
-        pseudo: snapshot.get("pseudo"),
-        email: snapshot.get("email"),
-        pictureUrl: snapshot.get("pictureUrl"),
-        groupId: snapshot.get("groupId"));
+      uid: snapshot.id,
+      pseudo: snapshot.get("pseudo"),
+      email: snapshot.get("email"),
+      pictureUrl: snapshot.get("pictureUrl"),
+      groupId: snapshot.data()!["groupId"],
+    );
   }
 
   // get user doc stream

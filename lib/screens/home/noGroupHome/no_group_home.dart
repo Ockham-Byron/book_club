@@ -33,7 +33,6 @@ class NoGroup extends StatelessWidget {
           ),
         ),
       );
-      print("goToCreate :" + _currentUser.uid!);
     }
 
     return Scaffold(

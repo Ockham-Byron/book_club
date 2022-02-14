@@ -1,5 +1,6 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/home/GroupHome/next_book_info.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_card.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/app_drawer.dart';
@@ -86,7 +87,10 @@ class _SingleBookHomeState extends State<SingleBookHome> {
                     ),
                     SingleBookCard(
                         currentUser: widget.currentUser,
-                        currentGroup: widget.currentGroup)
+                        currentGroup: widget.currentGroup),
+                    NextBookInfo(
+                        currentGroup: widget.currentGroup,
+                        currentUser: widget.currentUser)
                   ],
                 ),
               ),
