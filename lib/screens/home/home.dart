@@ -1,4 +1,3 @@
-import 'package:book_club/models/auth_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/home/noGroupHome/no_group_home.dart';
 
@@ -24,7 +23,7 @@ class _HomeState extends State<Home> {
           value: DBStream(userId: widget.currentUser!.uid!)
               .getUserData(widget.currentUser!.uid!),
           initialData: UserModel(),
-          child: NoGroup(),
+          child: const NoGroup(),
         ));
   }
 }

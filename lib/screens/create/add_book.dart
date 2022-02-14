@@ -161,8 +161,8 @@ class _AddBookState extends State<AddBook> {
                   if (widget.currentGroup.id != null) {
                     _addBook(context, widget.currentGroup.id!, book);
                   } else {
-                    print(widget.currentGroup);
-                    print("pas de groupId");
+                    // print(widget.currentGroup);
+                    // print("pas de groupId");
                   }
                 },
                 child: Padding(

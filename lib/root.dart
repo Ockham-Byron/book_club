@@ -36,12 +36,12 @@ class _AppRootState extends State<AppRoot> {
         _authStatus = AuthStatus.loggedIn;
         currentUid = _authStream.uid;
       });
-      print("logged in");
+      //print("logged in");
     } else {
       setState(() {
         _authStatus = AuthStatus.notLoggedIn;
       });
-      print("not loggedIn");
+      //print("not loggedIn");
     }
   }
 

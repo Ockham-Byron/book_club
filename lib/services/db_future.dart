@@ -19,7 +19,7 @@ class DBFuture {
 
   //Books collection reference
   final CollectionReference booksCollection =
-      FirebaseFirestore.instance.collection("groups");
+      FirebaseFirestore.instance.collection("books");
 
   /* ---------------------------- */
   /* ---------- USER ------------ */
@@ -89,7 +89,7 @@ class DBFuture {
 
     try {
       DocumentReference _docRef =
-          await booksCollection.doc(groupId).collection("books").add({
+          await groupsCollection.doc(groupId).collection("books").add({
         "title": book.title,
         "author": book.author,
         "length": book.length,
@@ -109,5 +109,28 @@ class DBFuture {
       //
     }
     return message;
+  }
+
+  Future<bool> hasReadTheBook(
+      String groupId, String bookId, String userId) async {
+    bool hasReadTheBook = false;
+
+    try {
+      DocumentSnapshot _docSnapshot = await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .get();
+
+      if (_docSnapshot.exists) {
+        hasReadTheBook = true;
+      }
+    } catch (e) {
+      //print(e);
+    }
+
+    return hasReadTheBook;
   }
 }

@@ -1,14 +1,191 @@
+import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/create/add_book.dart';
+import 'package:book_club/services/db_future.dart';
+import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/loading.dart';
+import 'package:book_club/shared/shadow_container.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class SingleBookCard extends StatelessWidget {
+class SingleBookCard extends StatefulWidget {
   final UserModel currentUser;
   final GroupModel currentGroup;
+
   const SingleBookCard(
       {Key? key, required this.currentUser, required this.currentGroup})
       : super(key: key);
+
+  @override
+  _SingleBookCardState createState() => _SingleBookCardState();
+}
+
+class _SingleBookCardState extends State<SingleBookCard> {
+  bool _hasReadTheBook = false;
+
+  @override
+  void initState() async {
+    //check if the user is done with book
+    if (widget.currentGroup.currentBookId != null) {
+      if (await DBFuture().hasReadTheBook(widget.currentGroup.id!,
+          widget.currentGroup.currentBookId!, widget.currentUser.uid!)) {
+        _hasReadTheBook = true;
+      } else {
+        _hasReadTheBook = false;
+      }
+    }
+    super.initState();
+  }
+
+  String _displayDueDate(BookModel _currentBook) {
+    String rdv;
+    if (_currentBook.dueDate != null) {
+      var dueDate = _currentBook.dueDate!.toDate();
+      rdv = DateFormat("dd/MM").format(dueDate);
+    } else {
+      rdv = "pas de rdv établi";
+    }
+    return rdv;
+  }
+
+  String _displayRemainingDays(BookModel _currentBook) {
+    String currentBookDue;
+    var today = DateTime.now();
+
+    if (_currentBook.id != null) {
+      var _currentBookDue = _currentBook.dueDate;
+
+      var _remainingDays = _currentBookDue!.toDate().difference(today);
+      if (_currentBookDue == Timestamp.now()) {
+        currentBookDue = "pas de rdv fixé";
+      } else if (_remainingDays.isNegative) {
+        currentBookDue = "le rdv a déjà eu lieu";
+      } else if (_remainingDays.inDays == 1) {
+        currentBookDue = "rdv demain !";
+      } else if (_remainingDays.inDays == 0) {
+        currentBookDue = "rdv aujourd'hui !";
+      } else {
+        currentBookDue = "Rdv pour échanger dans " +
+            _remainingDays.inDays.toString() +
+            " jours";
+      }
+    } else {
+      currentBookDue = "pas de rdv établi";
+    }
+    return currentBookDue;
+  }
+
+  String _currentBookCoverUrl(BookModel _currentBook) {
+    String currentBookCoverUrl;
+
+    if (_currentBook.cover == "") {
+      currentBookCoverUrl =
+          "https://www.azendportafolio.com/static/img/not-found.png";
+    } else {
+      currentBookCoverUrl = _currentBook.cover!;
+    }
+
+    return currentBookCoverUrl;
+  }
+
+  String _displayBookTitle(BookModel _currentBook) {
+    if (_currentBook.title != null) {
+      return _currentBook.title!;
+    } else {
+      return "pas de titre défini";
+    }
+  }
+
+  String _displayBookAuthor(BookModel _currentBook) {
+    if (_currentBook.author != null) {
+      return _currentBook.author!;
+    } else {
+      return "pas d'auteur précisé";
+    }
+  }
+
+  String _displayBookPages(BookModel _currentBook) {
+    if (_currentBook.length != null) {
+      return _currentBook.length!.toString() + " pages";
+    } else {
+      return "";
+    }
+  }
+
+  void _goToReview() {
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => AddReview(
+    //         currentGroup: widget.currentGroup,
+    //         bookId: widget.currentGroup.currentBookId!,
+    //         fromRoute: OurRoot()),
+    //   ),
+    // );
+  }
+
+  Widget _displayCurrentBookInfo(BookModel _currentBook) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            height: 150,
+            width: 100,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(_currentBookCoverUrl(_currentBook)))),
+          ),
+          SizedBox(
+            height: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _displayBookTitle(_currentBook),
+                  style: TextStyle(
+                      color: Theme.of(context).focusColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  _displayBookAuthor(_currentBook),
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                Text(
+                  _displayBookPages(_currentBook),
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                ElevatedButton(
+                  onPressed: _hasReadTheBook ? null : _goToReview,
+                  child: const Text("Livre terminé !"),
+                ),
+              ],
+            ),
+          ),
+          RotatedBox(
+            quarterTurns: 3,
+            child: TextButton(
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => EditBook(
+                  //           currentGroup: widget.currentGroup,
+                  //           currentBook: _currentBook,
+                  //           currentUser: widget.currentUser,
+                  //           authModel: widget.authModel,
+                  //           fromRoute: "fromHome",
+                  //         )));
+                },
+                child: Text(
+                  "MODIFIER",
+                  style: TextStyle(color: Theme.of(context).focusColor),
+                )),
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,46 +197,72 @@ class SingleBookCard extends StatelessWidget {
             // onGroupCreation: false,
             // onError: false,
             // currentUser: currentUser,
-            currentGroup: currentGroup,
+            currentGroup: widget.currentGroup,
           ),
         ),
       );
     }
 
-    if (currentGroup.currentBookId != null) {
-      print(currentGroup.currentBookId);
-      return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Livre à lire pour le ",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                ),
-                // Text(
-                //   _displayDueDate(),
-                //   style: TextStyle(
-                //       fontSize: 30,
-                //       fontWeight: FontWeight.w500,
-                //       color: Theme.of(context).primaryColor),
-                // ),
-                // Text(_displayRemainingDays()),
-                // _displayCurrentBookInfo(),
-                // SizedBox(
-                //   height: 30,
-                // ),
-                // _displayNextBookInfo(),
-              ],
-            )
-          ],
-        ),
-      );
+    if (widget.currentGroup.currentBookId != null) {
+      print("bookId : " + widget.currentGroup.currentBookId.toString());
+      return StreamBuilder<BookModel>(
+          stream: DBStream().getBookData(
+              groupId: widget.currentGroup.id!,
+              bookId: widget.currentGroup.currentBookId!),
+          initialData: BookModel(),
+          builder: (context, snapshot) {
+            BookModel _currentBook = BookModel();
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              print("waiting");
+              return Loading();
+            } else {
+              if (snapshot.hasError) {
+                print("y a une erreur : " + snapshot.error.toString());
+                return Loading();
+              } else {
+                if (!snapshot.hasData) {
+                  print("pas de data");
+                  return Loading();
+                } else {
+                  _currentBook = snapshot.data!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Livre à lire pour le ",
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                          ),
+
+                          Text(
+                            _displayDueDate(_currentBook),
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          Text(_displayRemainingDays(_currentBook)),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          _displayCurrentBookInfo(_currentBook),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          //_displayNextBookInfo(),
+                        ],
+                      )
+                    ],
+                  );
+                }
+              }
+            }
+          });
     } else {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

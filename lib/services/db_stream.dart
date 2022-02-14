@@ -1,3 +1,4 @@
+import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,8 +48,26 @@ class DBStream {
         .map(_groupDataFromSnapshot);
   }
 
-  // Stream<GroupModel> getcurrentGroup(String groupId) {
-  //   return _firestore.collection("groups").doc(groupId).snapshots().map(
-  //       (docSnapshot) => GroupModel.fromDocumentSnapshot(doc: docSnapshot));
-  // }
+  //book data from snapshot
+  BookModel _bookDataFromSnapshot(DocumentSnapshot snapshot) {
+    return BookModel(
+        id: snapshot.id,
+        title: snapshot.get("title"),
+        author: snapshot.get("author"),
+        length: snapshot.get("length"),
+        dueDate: snapshot.get("dueDate"),
+        cover: snapshot.get("cover"));
+  }
+
+  //get book doc stream
+  Stream<BookModel> getBookData(
+      {required String groupId, required String bookId}) {
+    return _firestore
+        .collection("groups")
+        .doc(groupId)
+        .collection("books")
+        .doc(bookId)
+        .snapshots()
+        .map(_bookDataFromSnapshot);
+  }
 }
