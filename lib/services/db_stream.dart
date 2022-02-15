@@ -4,9 +4,6 @@ import 'package:book_club/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DBStream {
-  final String? userId;
-
-  DBStream({this.userId});
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // user data from snapshots

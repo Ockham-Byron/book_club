@@ -20,8 +20,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         appBar: const HomeAppBar(),
         body: StreamProvider<UserModel>.value(
-          value: DBStream(userId: widget.currentUser!.uid!)
-              .getUserData(widget.currentUser!.uid!),
+          value: DBStream().getUserData(widget.currentUser!.uid!),
           initialData: UserModel(),
           child: const NoGroup(),
         ));

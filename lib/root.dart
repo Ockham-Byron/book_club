@@ -73,6 +73,7 @@ class LoggedIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserModel _userStream = Provider.of<UserModel>(context);
+    print(_userStream.pseudo);
 
     Widget displayScreen;
 
@@ -86,6 +87,7 @@ class LoggedIn extends StatelessWidget {
         ),
       );
     } else {
+      print("user n'a pas de groupe");
       displayScreen = const NoGroup();
     }
 
