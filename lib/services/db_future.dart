@@ -100,6 +100,36 @@ class DBFuture {
     return message;
   }
 
+  //Manage picker of the next book
+  Future<String> changePicker(String groupId) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .update({"indexPickingBook": FieldValue.increment(1)});
+
+      message = "success";
+    } catch (e) {
+      //
+    }
+
+    return message;
+  }
+
+  Future<String> changePickerFromStart(String groupId) async {
+    String message = "error";
+
+    try {
+      await groupsCollection.doc(groupId).update({"indexPickingBook": 0});
+      message = "success";
+    } catch (e) {
+      //
+    }
+
+    return message;
+  }
+
   /* ---------------------------- */
   /* ----------- BOOK ----------- */
   /* ---------------------------- */
@@ -155,31 +185,53 @@ class DBFuture {
     return hasReadTheBook;
   }
 
-  Future<String> changePicker(String groupId) async {
-    String message = "error";
+  Future<String> reviewBook(String groupId, String bookId, String userId,
+      int rating, String review, bool favorite) async {
+    String retVal = "error";
+    List<String> readBooks = [];
 
     try {
       await groupsCollection
           .doc(groupId)
-          .update({"indexPickingBook": FieldValue.increment(1)});
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .set({"rating": rating, "review": review, "favorite": favorite});
 
-      message = "success";
+      //add finished Book in user profile
+      readBooks.add(bookId);
+      await usersCollection.doc(userId).update({
+        "readBooks": FieldValue.arrayUnion(readBooks),
+        //"readPages": FieldValue.increment(nbPages)
+      });
+
+      retVal = "success";
     } catch (e) {
-      //
-    }
-
-    return message;
-  }
-
-  Future<String> changePickerFromStart(String groupId) async {
-    String retVal = "error";
-
-    try {
-      await groupsCollection.doc(groupId).update({"indexPickingBook": 0});
-    } catch (e) {
-      //
+      //print(e);
     }
 
     return retVal;
+  }
+
+  Future<String> favoriteBook(
+    String groupId,
+    String bookId,
+    String userId,
+  ) async {
+    String message = "error";
+    List<String> favoriteBooks = [];
+
+    try {
+      favoriteBooks.add(bookId);
+      await usersCollection.doc(userId).update({
+        "favoriteBooks": FieldValue.arrayUnion(favoriteBooks),
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+
+    return message;
   }
 }

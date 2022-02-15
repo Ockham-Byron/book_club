@@ -1,6 +1,6 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
-import 'package:book_club/root.dart';
+
 import 'package:book_club/screens/create/add_book.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
@@ -59,7 +59,7 @@ class _NextBookInfoState extends State<NextBookInfo> {
         builder: (context, snapshot) {
           if (widget.currentGroup.id != null) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Loading();
+              return const Loading();
             } else {
               UserModel _pickingUser = snapshot.data!;
               Widget passerTour;

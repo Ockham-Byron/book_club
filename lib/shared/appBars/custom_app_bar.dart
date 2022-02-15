@@ -13,18 +13,10 @@ class CustomAppBar extends StatelessWidget {
 
   final AuthService _auth = AuthService();
 
-  String _displayGroupName() {
-    if (currentGroup.name != null) {
-      return currentGroup.name!;
-    } else {
-      return "Groupe sans nom";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget displayCircularAvatar() {
-      if (currentUser.pictureUrl != null) {
+      if (currentUser.pictureUrl != "") {
         return CircularProfileAvatar(
           currentUser.pictureUrl!,
           showInitialTextAbovePicture: false,
@@ -76,7 +68,7 @@ class CustomAppBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                   color: Colors.grey.shade200.withOpacity(0.5)),
               child: Text(
-                _displayGroupName(),
+                currentGroup.name ?? "groupe sans nom",
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 30),
               ),

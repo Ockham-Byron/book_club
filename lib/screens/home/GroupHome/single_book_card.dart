@@ -1,7 +1,9 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/root.dart';
 import 'package:book_club/screens/create/add_book.dart';
+import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/loading.dart';
@@ -96,39 +98,16 @@ class _SingleBookCardState extends State<SingleBookCard> {
     return currentBookCoverUrl;
   }
 
-  String _displayBookTitle(BookModel _currentBook) {
-    if (_currentBook.title != null) {
-      return _currentBook.title!;
-    } else {
-      return "pas de titre défini";
-    }
-  }
-
-  String _displayBookAuthor(BookModel _currentBook) {
-    if (_currentBook.author != null) {
-      return _currentBook.author!;
-    } else {
-      return "pas d'auteur précisé";
-    }
-  }
-
-  String _displayBookPages(BookModel _currentBook) {
-    if (_currentBook.length != null) {
-      return _currentBook.length!.toString() + " pages";
-    } else {
-      return "";
-    }
-  }
-
   void _goToReview() {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => AddReview(
-    //         currentGroup: widget.currentGroup,
-    //         bookId: widget.currentGroup.currentBookId!,
-    //         fromRoute: OurRoot()),
-    //   ),
-    // );
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AddReview(
+            currentGroup: widget.currentGroup,
+            currentUser: widget.currentUser,
+            bookId: widget.currentGroup.currentBookId!,
+            fromRoute: const AppRoot()),
+      ),
+    );
   }
 
   Widget _displayCurrentBookInfo(BookModel _currentBook) {
@@ -148,18 +127,18 @@ class _SingleBookCardState extends State<SingleBookCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _displayBookTitle(_currentBook),
+                _currentBook.title ?? "pas de titre",
                 style: TextStyle(
                     color: Theme.of(context).focusColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                _displayBookAuthor(_currentBook),
+                _currentBook.author ?? "pas d'auteur",
                 style: TextStyle(color: Theme.of(context).primaryColor),
               ),
               Text(
-                _displayBookPages(_currentBook),
+                _currentBook.length.toString() + " pages",
                 style: const TextStyle(color: Colors.black, fontSize: 12),
               ),
               ElevatedButton(
@@ -208,7 +187,7 @@ class _SingleBookCardState extends State<SingleBookCard> {
     }
 
     if (widget.currentGroup.currentBookId != null) {
-      print("bookId : " + widget.currentGroup.currentBookId.toString());
+      //print("bookId : " + widget.currentGroup.currentBookId.toString());
       return StreamBuilder<BookModel>(
           stream: DBStream().getBookData(
               groupId: widget.currentGroup.id!,
@@ -217,15 +196,15 @@ class _SingleBookCardState extends State<SingleBookCard> {
           builder: (context, snapshot) {
             BookModel _currentBook = BookModel();
             if (snapshot.connectionState == ConnectionState.waiting) {
-              print("waiting");
+              //print("waiting");
               return const Loading();
             } else {
               if (snapshot.hasError) {
-                print("y a une erreur : " + snapshot.error.toString());
+                //print("y a une erreur : " + snapshot.error.toString());
                 return const Loading();
               } else {
                 if (!snapshot.hasData) {
-                  print("pas de data");
+                  //print("pas de data");
                   return const Loading();
                 } else {
                   _currentBook = snapshot.data!;

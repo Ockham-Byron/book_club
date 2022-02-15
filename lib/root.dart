@@ -51,7 +51,7 @@ class _AppRootState extends State<AppRoot> {
       return const LogIn();
     } else if (_authStatus == AuthStatus.loggedIn) {
       if (currentUid != null) {
-        print("root currentUid : " + currentUid.toString());
+        //print("root currentUid : " + currentUid.toString());
         return StreamProvider<UserModel>.value(
           value: DBStream().getUserData(currentUid!),
           initialData: UserModel(),
@@ -72,13 +72,13 @@ class LoggedIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserModel _userStream = Provider.of<UserModel>(context);
-    print("root pseudo : " + _userStream.pseudo.toString());
+    //print("root pseudo : " + _userStream.pseudo.toString());
 
     Widget displayScreen;
 
     if (_userStream.uid != null) {
       if (_userStream.groupId != null) {
-        print("user a un groupId");
+        //print("user a un groupId");
         displayScreen = StreamProvider<GroupModel>.value(
           value: DBStream().getGroupData(_userStream.groupId!),
           initialData: GroupModel(),
@@ -87,7 +87,7 @@ class LoggedIn extends StatelessWidget {
           ),
         );
       } else {
-        print("user n'a pas de groupe");
+        //print("user n'a pas de groupe");
         displayScreen = const NoGroup();
       }
     } else {
