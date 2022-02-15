@@ -1,4 +1,3 @@
-import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/services/db_future.dart';
@@ -27,19 +26,9 @@ class AddReview extends StatefulWidget {
 class _AddReviewState extends State<AddReview> {
   final reviewKey = GlobalKey<ScaffoldState>();
   int _dropdownValue = 1;
-  //AuthModel _authModel = AuthModel();
-  //late BookModel _reviewedBook = BookModel();
   bool favorite = false;
   final TextEditingController _reviewInput = TextEditingController();
   FocusNode? freview;
-
-  // @override
-  // void didChangeDependencies() async {
-  //   //_authModel = Provider.of<AuthModel>(context);
-  //   _reviewedBook =
-  //       await DBFuture().getBook(widget.bookId, widget.currentGroup.id!);
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +118,7 @@ class _AddReviewState extends State<AddReview> {
                 iconColor: Theme.of(context).focusColor,
                 isFavorite: false,
                 valueChanged: (_isFavorite) {
-                  print('Is Favorite : $_isFavorite');
+                  //print('Is Favorite : $_isFavorite');
                   if (_isFavorite = false) {
                     favorite = false;
                   } else {

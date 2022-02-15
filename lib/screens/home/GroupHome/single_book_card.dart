@@ -28,22 +28,18 @@ class _SingleBookCardState extends State<SingleBookCard> {
   bool _hasReadTheBook = false;
 
   @override
-  void initState() {
-    checkIfUserHasReadTheBook().whenComplete(() {
-      setState(() {});
-    });
-
-    super.initState();
-  }
-
-  Future checkIfUserHasReadTheBook() async {
+  void didChangeDependencies() async {
     if (widget.currentGroup.currentBookId != null) {
       if (await DBFuture().hasReadTheBook(widget.currentGroup.id!,
           widget.currentGroup.currentBookId!, widget.currentUser.uid!)) {
         _hasReadTheBook = true;
+        print("livre lu");
       } else {
         _hasReadTheBook = false;
+        print("livre pas lu");
       }
+
+      super.didChangeDependencies();
     }
   }
 
@@ -221,7 +217,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black),
                           ),
-
                           Text(
                             _displayDueDate(_currentBook),
                             style: TextStyle(
@@ -237,7 +232,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
                           const SizedBox(
                             height: 30,
                           ),
-                          //_displayNextBookInfo(),
                         ],
                       )
                     ],

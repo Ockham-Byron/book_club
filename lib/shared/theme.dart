@@ -22,7 +22,8 @@ class AppTheme {
 
       //buttons
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(primary: Colors.red[300]),
+        style: ElevatedButton.styleFrom(
+            primary: Colors.red[300], onSurface: Colors.red[300]),
       ),
 
       //forms
