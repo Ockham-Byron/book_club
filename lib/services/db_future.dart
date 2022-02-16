@@ -162,6 +162,37 @@ class DBFuture {
     return message;
   }
 
+  //edit Book
+  Future<String> editBook({
+    required String groupId,
+    required String bookId,
+    required String bookTitle,
+    required String bookAuthor,
+    required String bookCover,
+    required int bookPages,
+    required Timestamp dueDate,
+  }) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({
+        "title": bookTitle.trim(),
+        "author": bookAuthor.trim(),
+        "cover": bookCover.trim(),
+        "length": bookPages,
+        "dueDate": dueDate,
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   Future<bool> hasReadTheBook(
       String groupId, String bookId, String userId) async {
     bool hasReadTheBook = false;

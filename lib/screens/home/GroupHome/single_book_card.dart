@@ -3,8 +3,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/screens/create/add_book.dart';
-import 'package:book_club/screens/create/add_review.dart';
-import 'package:book_club/services/db_future.dart';
+import 'package:book_club/screens/edit/edit_book.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/buttons/finish_button.dart';
 import 'package:book_club/shared/loading.dart';
@@ -120,14 +119,13 @@ class _SingleBookCardState extends State<SingleBookCard> {
           quarterTurns: 3,
           child: TextButton(
               onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => EditBook(
-                //           currentGroup: widget.currentGroup,
-                //           currentBook: _currentBook,
-                //           currentUser: widget.currentUser,
-                //           authModel: widget.authModel,
-                //           fromRoute: "fromHome",
-                //         )));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditBook(
+                          currentGroup: widget.currentGroup,
+                          currentBook: _currentBook,
+                          currentUser: widget.currentUser,
+                          fromScreen: "fromHome",
+                        )));
               },
               child: Text(
                 "MODIFIER",
