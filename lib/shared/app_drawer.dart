@@ -18,7 +18,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget displayCircularAvatar() {
-      if (currentUser.pictureUrl != null) {
+      if (currentUser.pictureUrl != "") {
         return CircularProfileAvatar(
           currentUser.pictureUrl!,
           showInitialTextAbovePicture: false,
@@ -30,7 +30,7 @@ class AppDrawer extends StatelessWidget {
           initialsText: Text(
             currentUser.pseudo![0].toUpperCase(),
             style: const TextStyle(
-                fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                fontSize: 80, color: Colors.white, fontWeight: FontWeight.bold),
           ),
           showInitialTextAbovePicture: true,
         );
@@ -95,7 +95,7 @@ class AppDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom:
-                    BorderSide(width: 3, color: Theme.of(context).primaryColor),
+                    BorderSide(width: 3, color: Theme.of(context).focusColor),
               ),
             ),
             child: Row(
@@ -107,7 +107,7 @@ class AppDrawer extends StatelessWidget {
                 Text(
                   getUserPseudo(),
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 20),
+                      color: Theme.of(context).focusColor, fontSize: 20),
                 )
               ],
             ),
