@@ -6,6 +6,7 @@ import 'package:book_club/screens/create/add_book.dart';
 import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/buttons/finish_button.dart';
 import 'package:book_club/shared/loading.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,24 +26,6 @@ class SingleBookCard extends StatefulWidget {
 }
 
 class _SingleBookCardState extends State<SingleBookCard> {
-  bool _hasReadTheBook = false;
-
-  @override
-  void didChangeDependencies() async {
-    if (widget.currentGroup.currentBookId != null) {
-      if (await DBFuture().hasReadTheBook(widget.currentGroup.id!,
-          widget.currentGroup.currentBookId!, widget.currentUser.uid!)) {
-        _hasReadTheBook = true;
-        print("livre lu");
-      } else {
-        _hasReadTheBook = false;
-        print("livre pas lu");
-      }
-
-      super.didChangeDependencies();
-    }
-  }
-
   String _displayDueDate(BookModel _currentBook) {
     String rdv;
     if (_currentBook.dueDate != null) {
@@ -94,18 +77,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
     return currentBookCoverUrl;
   }
 
-  void _goToReview() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => AddReview(
-            currentGroup: widget.currentGroup,
-            currentUser: widget.currentUser,
-            bookId: widget.currentGroup.currentBookId!,
-            fromRoute: const AppRoot()),
-      ),
-    );
-  }
-
   Widget _displayCurrentBookInfo(BookModel _currentBook) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -137,9 +108,10 @@ class _SingleBookCardState extends State<SingleBookCard> {
                 _currentBook.length.toString() + " pages",
                 style: const TextStyle(color: Colors.black, fontSize: 12),
               ),
-              ElevatedButton(
-                onPressed: _hasReadTheBook ? null : _goToReview,
-                child: const Text("Livre terminé !"),
+              FinishButton(
+                currentGroup: widget.currentGroup,
+                currentUser: widget.currentUser,
+                fromScreen: const AppRoot(),
               ),
             ],
           ),
