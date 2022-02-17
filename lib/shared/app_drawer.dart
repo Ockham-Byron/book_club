@@ -1,5 +1,6 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/admin/admin_profile.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_home.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -56,16 +57,18 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToProfileManage() {
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => ProfileManage(
-      //           currentUser: currentUser,
-      //           currentGroup: currentGroup,
-      //           currentBook: currentBook,
-      //           authModel: authModel,
-      //         )));
+      print("go to profile");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ProfileAdmin(
+                currentUser: currentUser,
+                currentGroup: currentGroup,
+                // currentBook: currentBook,
+                // authModel: authModel,
+              )));
     }
 
-    void _goToBooksHistory() {
+    _goToBooksHistory() {
+      print("go to book history");
       // Navigator.of(context).push(MaterialPageRoute(
       //     builder: (context) => BookHistory(
       //         groupId: currentGroup.id!,
@@ -156,7 +159,7 @@ class AppDrawer extends StatelessWidget {
 class KListTile extends StatelessWidget {
   final IconData? iconData;
   final String? title;
-  final Function? goTo;
+  final VoidCallback? goTo;
   const KListTile({Key? key, this.iconData, this.title, this.goTo})
       : super(key: key);
 
@@ -171,6 +174,6 @@ class KListTile extends StatelessWidget {
           title!,
           style: TextStyle(color: Theme.of(context).focusColor, fontSize: 20),
         ),
-        onTap: () => goTo);
+        onTap: goTo);
   }
 }

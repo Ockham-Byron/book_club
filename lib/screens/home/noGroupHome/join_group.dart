@@ -22,7 +22,6 @@ class _JoinGroupState extends State<JoinGroup> {
     print(_currentUser.uid);
     String _returnString =
         await DBFuture().joinGroup(groupId: groupId, userId: _currentUser.uid!);
-    print("function" + groupId + " user " + _currentUser.pseudo!);
 
     Navigator.pushAndRemoveUntil(
         context,
@@ -76,8 +75,6 @@ class _JoinGroupState extends State<JoinGroup> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          print(
-                              "groupIdinput " + _groupIdInput.text.toString());
                           _joinGroup(context, _groupIdInput.text);
                         },
                         child: Padding(

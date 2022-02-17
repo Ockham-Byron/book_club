@@ -3,9 +3,10 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/services/db_future.dart';
-import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/appBars/home_app_bar.dart';
+
 import 'package:book_club/shared/background_container.dart';
-import 'package:book_club/shared/loading.dart';
+
 import 'package:book_club/shared/shadow_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -113,134 +114,145 @@ class _EditBookState extends State<EditBook> {
   Widget build(BuildContext context) {
     //UserModel _currentUser = Provider.of<UserModel>(context, listen: false);
     return Scaffold(
+      appBar: const HomeAppBar(),
       body: BackgroundContainer(
-        child: ShadowContainer(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _bookTitleInput,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).canvasColor)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor)),
-                  prefixIcon: Icon(
-                    Icons.book,
-                    color: Theme.of(context).primaryColor,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.only(top: 50),
+            height: 600,
+            child: ShadowContainer(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _bookTitleInput,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).canvasColor)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor)),
+                      prefixIcon: Icon(
+                        Icons.book,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      labelText: "Titre du livre",
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    style: Theme.of(context).textTheme.headline6,
                   ),
-                  labelText: "Titre du livre",
-                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                controller: _bookAuthorInput,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).canvasColor)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor)),
-                  prefixIcon: Icon(
-                    Icons.face,
-                    color: Theme.of(context).primaryColor,
+                  const SizedBox(
+                    height: 20,
                   ),
-                  labelText: "Auteur.e du livre",
-                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                controller: _bookLengthInput,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).canvasColor)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor)),
-                  prefixIcon: Icon(
-                    Icons.format_list_numbered,
-                    color: Theme.of(context).primaryColor,
+                  TextFormField(
+                    controller: _bookAuthorInput,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).canvasColor)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor)),
+                      prefixIcon: Icon(
+                        Icons.face,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      labelText: "Auteur.e du livre",
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    style: Theme.of(context).textTheme.headline6,
                   ),
-                  labelText: "Nombre de pages",
-                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                controller: _bookCoverInput,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).canvasColor)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor)),
-                  prefixIcon: Icon(
-                    Icons.auto_stories,
-                    color: Theme.of(context).primaryColor,
+                  const SizedBox(
+                    height: 20,
                   ),
-                  labelText: "Url de la couverture du livre",
-                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Rdv pour échanger sur ce livre le",
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontSize: 20),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(DateFormat("dd/MM à HH:mm").format(_selectedDate!),
-                  style: Theme.of(context).textTheme.headline6),
-              TextButton(
-                onPressed: () => _selectDate(context),
-                child: Icon(
-                  Icons.calendar_today,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _editBook(
-                      widget.currentGroup.id!,
-                      widget.currentBook.id!,
-                      _bookTitleInput.text,
-                      _bookAuthorInput.text,
-                      _bookCoverInput.text,
-                      int.parse(_bookLengthInput.text),
-                      Timestamp.fromDate(_selectedDate!));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Text(
-                    "Modifier".toUpperCase(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  TextFormField(
+                    controller: _bookLengthInput,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).canvasColor)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor)),
+                      prefixIcon: Icon(
+                        Icons.format_list_numbered,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      labelText: "Nombre de pages",
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    style: Theme.of(context).textTheme.headline6,
                   ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _bookCoverInput,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).canvasColor)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor)),
+                      prefixIcon: Icon(
+                        Icons.auto_stories,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      labelText: "Url de la couverture du livre",
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Rdv pour échanger sur ce livre le",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor, fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(DateFormat("dd/MM à HH:mm").format(_selectedDate!),
+                      style: Theme.of(context).textTheme.headline6),
+                  TextButton(
+                    onPressed: () => _selectDate(context),
+                    child: Icon(
+                      Icons.calendar_today,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _editBook(
+                          widget.currentGroup.id!,
+                          widget.currentBook.id!,
+                          _bookTitleInput.text,
+                          _bookAuthorInput.text,
+                          _bookCoverInput.text,
+                          int.parse(_bookLengthInput.text),
+                          Timestamp.fromDate(_selectedDate!));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: Text(
+                        "Modifier".toUpperCase(),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

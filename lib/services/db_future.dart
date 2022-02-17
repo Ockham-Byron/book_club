@@ -94,8 +94,7 @@ class DBFuture {
       });
       message = "success";
     } catch (e) {
-      print("y a un problème pour joindre le groupe");
-      print(e);
+      //
     }
     return message;
   }
