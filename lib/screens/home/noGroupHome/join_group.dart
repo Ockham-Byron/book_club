@@ -19,7 +19,7 @@ class _JoinGroupState extends State<JoinGroup> {
 
   void _joinGroup(BuildContext context, String groupId) async {
     UserModel _currentUser = widget.userModel;
-    print(_currentUser.uid);
+
     String _returnString =
         await DBFuture().joinGroup(groupId: groupId, userId: _currentUser.uid!);
 

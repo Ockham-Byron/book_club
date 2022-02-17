@@ -57,7 +57,7 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToProfileManage() {
-      print("go to profile");
+      //print("go to profile");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfileAdmin(
                 currentUser: currentUser,
@@ -68,7 +68,7 @@ class AppDrawer extends StatelessWidget {
     }
 
     _goToBooksHistory() {
-      print("go to book history");
+      //print("go to book history");
       // Navigator.of(context).push(MaterialPageRoute(
       //     builder: (context) => BookHistory(
       //         groupId: currentGroup.id!,

@@ -10,12 +10,12 @@ class DBStream {
   UserModel _userDataFromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return UserModel(
-      uid: snapshot.id,
-      pseudo: snapshot.get("pseudo"),
-      email: snapshot.get("email"),
-      pictureUrl: snapshot.get("pictureUrl"),
-      groupId: snapshot.data()!["groupId"],
-    );
+        uid: snapshot.id,
+        pseudo: snapshot.get("pseudo"),
+        email: snapshot.get("email"),
+        pictureUrl: snapshot.get("pictureUrl"),
+        groupId: snapshot.data()!["groupId"],
+        readBooks: List<String>.from(snapshot.data()!["readBooks"]));
   }
 
   // get user doc stream
@@ -61,6 +61,7 @@ class DBStream {
   //get book doc stream
   Stream<BookModel> getBookData(
       {required String groupId, required String bookId}) {
+    // BookModel book = BookModel();
     return _firestore
         .collection("groups")
         .doc(groupId)
@@ -68,5 +69,24 @@ class DBStream {
         .doc(bookId)
         .snapshots()
         .map(_bookDataFromSnapshot);
+  }
+
+  //get bookmodel
+  Future<BookModel> getBook(String bookId, String groupId) async {
+    BookModel book = BookModel();
+
+    try {
+      DocumentSnapshot<Map<String, dynamic>> _docSnapshot = await _firestore
+          .collection("groups")
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .get();
+      book = _bookDataFromSnapshot(_docSnapshot);
+    } catch (e) {
+      //print(e);
+    }
+
+    return book;
   }
 }

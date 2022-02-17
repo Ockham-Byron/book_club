@@ -77,4 +77,56 @@ class AuthService {
       return null;
     }
   }
+
+  // Reset Password
+  Future<String> sendPasswordResetEmail(String email) async {
+    String retVal = "error";
+    try {
+      _auth.sendPasswordResetEmail(email: email);
+      retVal = "sucess";
+    } catch (e) {
+      //print(e);
+    }
+    return retVal;
+  }
+
+  // Reset email
+  Future<String> resetEmail(String email) async {
+    String retVal = "error";
+    try {
+      await _auth.currentUser!.updateEmail(email);
+      retVal = "success";
+    } on PlatformException catch (e) {
+      //print(e);
+      retVal = "exception";
+    } catch (e) {
+      //print(e);
+    }
+    return retVal;
+  }
+
+  // Reset password
+  Future<String> resetPassword(String password) async {
+    String retVal = "error";
+    try {
+      _auth.currentUser!.updatePassword(password);
+      retVal = "success";
+    } catch (e) {
+      // print(e);
+    }
+
+    return retVal;
+  }
+
+  //Delete user
+  Future<String> deleteUser() async {
+    String message = "error";
+    try {
+      _auth.currentUser!.delete();
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
 }
