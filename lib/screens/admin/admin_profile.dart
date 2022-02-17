@@ -1,6 +1,11 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/edit/edit_user.dart';
+import 'package:book_club/services/db_stream.dart';
+
+import 'package:book_club/shared/loading.dart';
+import 'package:collection/collection.dart';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -27,27 +32,23 @@ class _ProfileAdminState extends State<ProfileAdmin> {
   List<BookModel> readBooks = [];
   List<int> readBooksPages = [];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   nbOfReadPages = 0;
+  @override
+  void initState() {
+    super.initState();
+    _countReadPages().whenComplete(() => {setState(() {})});
+  }
 
-  //   _countReadPages().whenComplete(() {
-  //     setState(() {});
-  //   });
-  // }
+  Future _countReadPages() async {
+    for (String bookId in widget.currentUser.readBooks!) {
+      readBooks.add(await DBStream().getBook(bookId, widget.currentGroup.id!));
+    }
+    for (BookModel book in readBooks) {
+      readBooksPages.add(book.length!);
+      //print(readBooksPages);
+    }
 
-  // Future _countReadPages() async {
-  //   for (String bookId in widget.currentUser.readBooks!) {
-  //     readBooks.add(await DBFuture().getBook(bookId, widget.currentGroup.id!));
-  //   }
-  //   for (BookModel book in readBooks) {
-  //     readBooksPages.add(book.length!);
-  //     print(readBooksPages);
-  //   }
-
-  //   nbOfReadPages = readBooksPages.sum;
-  // }
+    nbOfReadPages = readBooksPages.sum;
+  }
 
   bool withProfilePicture() {
     if (widget.currentUser.pictureUrl == "") {
@@ -57,12 +58,12 @@ class _ProfileAdminState extends State<ProfileAdmin> {
     }
   }
 
-  String getUserPseudo() {
+  String getUserPseudo(UserModel currentUser) {
     String userPseudo;
-    if (widget.currentUser.pseudo == null) {
+    if (currentUser.pseudo == null) {
       userPseudo = "personne";
     } else {
-      userPseudo = widget.currentUser.pseudo!;
+      userPseudo = currentUser.pseudo!;
     }
     return "${userPseudo[0].toUpperCase()}${userPseudo.substring(1)}";
   }
@@ -89,150 +90,180 @@ class _ProfileAdminState extends State<ProfileAdmin> {
       }
     }
 
-    // int getUserReadBooks() {
-    //   int readBooks;
-    //   if (widget.currentUser.readBooks != null) {
-    //     readBooks = widget.currentUser.readBooks!.length;
-    //   } else {
-    //     readBooks = 0;
-    //   }
-    //   return readBooks;
-    // }
+    int getUserReadBooks(UserModel currentUser) {
+      int readBooks;
+      if (currentUser.readBooks != null) {
+        readBooks = currentUser.readBooks!.length;
+      } else {
+        readBooks = 0;
+      }
+      return readBooks;
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(top: 50),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/background.jpg'),
-                fit: BoxFit.cover),
-          ),
-          child: Stack(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 50),
-                height: 1200,
-                decoration: BoxDecoration(
-                  color: Colors.amber[50],
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Column(
-                    children: [
-                      Text(
-                        getUserPseudo(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 36,
-                        ),
+        child: StreamBuilder<UserModel>(
+            stream: DBStream().getUserData(widget.currentUser.uid!),
+            builder: (context, snapshot) {
+              UserModel _currentUser = UserModel();
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                //print("waiting");
+                return const Loading();
+              } else {
+                if (snapshot.hasError) {
+                  // print("y a une erreur : " + snapshot.error.toString());
+                  return const Loading();
+                } else {
+                  if (!snapshot.hasData) {
+                    //print("pas de data");
+                    return const Loading();
+                  } else {
+                    _currentUser = snapshot.data!;
+
+                    return Container(
+                      padding: const EdgeInsets.only(top: 50),
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/background.jpg'),
+                            fit: BoxFit.cover),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => EditUser(
-                          //         currentGroup: widget.currentGroup,
-                          //         currentUser: widget.currentUser)));
-                        },
-                        child: Text(
-                          "MODIFIER",
-                          style: TextStyle(color: Colors.red[300]),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 10),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "LIVRES LUS",
-                                  style: kTitleStyle,
-                                ),
-                                Text(
-                                  "PAGES LUES",
-                                  style: kTitleStyle,
-                                ),
-                              ],
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 50),
+                            height: 1200,
+                            decoration: BoxDecoration(
+                              color: Colors.amber[50],
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50),
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 100),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    getUserPseudo(_currentUser),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 36,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => EditUser(
+                                                  currentGroup:
+                                                      widget.currentGroup,
+                                                  currentUser: _currentUser)));
+                                    },
+                                    child: Text(
+                                      "MODIFIER",
+                                      style: TextStyle(color: Colors.red[300]),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.only(top: 10),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: const [
+                                            Text(
+                                              "LIVRES LUS",
+                                              style: kTitleStyle,
+                                            ),
+                                            Text(
+                                              "PAGES LUES",
+                                              style: kTitleStyle,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              getUserReadBooks(_currentUser)
+                                                  .toString(),
+                                              style: kSubtitleStyle,
+                                            ),
+                                            Text(
+                                              nbOfReadPages.toString(),
+                                              style: kSubtitleStyle,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  const Text(
+                                    "Continuer de lire",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 30),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Container(
+                                      // child: BookSection(
+                                      //   groupId: widget.currentGroup.id!,
+                                      //   groupName: widget.currentGroup.name!,
+                                      //   currentGroup: widget.currentGroup,
+                                      //   currentUser: widget.currentUser,
+                                      //   authModel: widget.authModel,
+                                      //   sectionCategory: "continuer",
+                                      // ),
+                                      ),
+                                  const Text(
+                                    "Favoris",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 30),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Container(
+                                      // child: BookSection(
+                                      //   groupId: widget.currentGroup.id!,
+                                      //   groupName: widget.currentGroup.name!,
+                                      //   currentGroup: widget.currentGroup,
+                                      //   currentUser: widget.currentUser,
+                                      //   authModel: widget.authModel,
+                                      //   sectionCategory: "favoris",
+                                      //),
+                                      ),
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "",
-                                  //getUserReadBooks().toString(),
-                                  style: kSubtitleStyle,
-                                ),
-                                Text(
-                                  nbOfReadPages.toString(),
-                                  style: kSubtitleStyle,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      const Text(
-                        "Continuer de lire",
-                        style: TextStyle(fontSize: 30),
-                        textAlign: TextAlign.start,
-                      ),
-                      Container(
-                          // child: BookSection(
-                          //   groupId: widget.currentGroup.id!,
-                          //   groupName: widget.currentGroup.name!,
-                          //   currentGroup: widget.currentGroup,
-                          //   currentUser: widget.currentUser,
-                          //   authModel: widget.authModel,
-                          //   sectionCategory: "continuer",
-                          // ),
                           ),
-                      const Text(
-                        "Favoris",
-                        style: TextStyle(fontSize: 30),
-                        textAlign: TextAlign.start,
+                          Positioned(
+                              child: Container(
+                            alignment: Alignment.center,
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.amber[50]),
+                            child: ClipRect(
+                              child: displayCircularAvatar(),
+                            ),
+                          ))
+                        ],
                       ),
-                      Container(
-                          // child: BookSection(
-                          //   groupId: widget.currentGroup.id!,
-                          //   groupName: widget.currentGroup.name!,
-                          //   currentGroup: widget.currentGroup,
-                          //   currentUser: widget.currentUser,
-                          //   authModel: widget.authModel,
-                          //   sectionCategory: "favoris",
-                          //),
-                          ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                  child: Container(
-                alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height * 0.2,
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.amber[50]),
-                child: ClipRect(
-                  child: displayCircularAvatar(),
-                ),
-              ))
-            ],
-          ),
-        ),
+                    );
+                  }
+                }
+              }
+            }),
       ),
     );
   }
