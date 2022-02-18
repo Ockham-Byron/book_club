@@ -25,8 +25,8 @@ class DBFuture {
   //Register UserData
   Future<String> createUser(UserModel user) async {
     String resultMessage = "error";
-    // List<String> readBooks = [];
-    // List<String> favoriteBooks = [];
+    List<String> readBooks = [];
+    List<String> favoriteBooks = [];
     // List<String> dontWantToReadBooks = [];
 
     try {
@@ -34,10 +34,10 @@ class DBFuture {
         "pseudo": user.pseudo!.trim(),
         "email": user.email!.trim(),
         "pictureUrl": user.pictureUrl!.trim(),
-        "groupId": user.groupId!.trim(),
-        // "readBooks": readBooks,
-        // "favoriteBooks": favoriteBooks,
-        // "readPages": user.readPages,
+
+        "readBooks": readBooks,
+        "favoriteBooks": favoriteBooks,
+
         // "dontWantToReadBooks": dontWantToReadBooks
       });
       resultMessage = "success";
@@ -63,31 +63,31 @@ class DBFuture {
   }
 
   Future<String> editUserMail(String userId, String mail) async {
-    String retVal = "error";
+    String message = "error";
 
     try {
       await usersCollection.doc(userId).update({
         "email": mail.trim(),
       });
-      retVal = "success";
+      message = "success";
     } catch (e) {
-      print(e);
+      //print(e);
     }
-    return retVal;
+    return message;
   }
 
   Future<String> editUserPicture(String userId, String pictureUrl) async {
-    String retVal = "error";
+    String message = "error";
 
     try {
       await usersCollection.doc(userId).update({
         "pictureUrl": pictureUrl.trim(),
       });
-      retVal = "success";
+      message = "success";
     } catch (e) {
-      print(e);
+      //print(e);
     }
-    return retVal;
+    return message;
   }
 
   //Delete User

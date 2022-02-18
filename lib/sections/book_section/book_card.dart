@@ -54,11 +54,11 @@ class _BookCardState extends State<BookCard> {
     return GestureDetector(
       onTap: () => _goToReviewHistory(context),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         width: 150,
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: 100,
               //height: 200,
               child: Image.network(_currentBookCoverUrl()),
@@ -66,12 +66,12 @@ class _BookCardState extends State<BookCard> {
             Text(
               widget.book!.title ?? "Pas de titre",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 20, color: Theme.of(context).primaryColor),
+              style:
+                  TextStyle(fontSize: 20, color: Theme.of(context).focusColor),
             ),
             Text(
               widget.book!.author ?? "Pas d'auteur",
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
             ),
             IconButton(
                 onPressed: () {
@@ -87,7 +87,7 @@ class _BookCardState extends State<BookCard> {
                 },
                 icon: Icon(
                   Icons.close,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).focusColor,
                 ))
           ],
         ),

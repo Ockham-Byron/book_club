@@ -53,14 +53,19 @@ class _AppRootState extends State<AppRoot> {
       if (currentUid != null) {
         //print("root currentUid : " + currentUid.toString());
         return StreamProvider<UserModel>.value(
+          catchError: (context, error) {
+            print("c'est le bazar");
+            return UserModel();
+          },
           value: DBStream().getUserData(currentUid!),
           initialData: UserModel(),
           child: const LoggedIn(),
         );
       } else {
-        return const Loading();
+        return SplashScreen();
       }
     } else {
+      print("c'est le bordel");
       return SplashScreen();
     }
   }
@@ -91,7 +96,7 @@ class LoggedIn extends StatelessWidget {
         displayScreen = const NoGroup();
       }
     } else {
-      return const Loading();
+      return SplashScreen();
     }
 
     return displayScreen;

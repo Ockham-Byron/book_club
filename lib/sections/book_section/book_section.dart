@@ -25,42 +25,6 @@ class BookSection extends StatefulWidget {
 
 class _BookSectionState extends State<BookSection> {
   String nothingText = "";
-  // late Future<List<BookModel>> books = DBFuture()
-  //     .getContinueReadingBooks(widget.currentGroup.id!, widget.currentUser);
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _initSections().whenComplete(() {
-  //     setState(() {});
-  //   });
-  // }
-
-  // Future _initSections() async {
-  //   if (widget.sectionCategory == "continuer") {
-  //     books = DBFuture()
-  //         .getContinueReadingBooks(widget.currentGroup.id!, widget.currentUser);
-  //     nothingText = "Rien à lire pour l'instant !";
-  //   } else if (widget.sectionCategory == "favoris") {
-  //     books = DBFuture().getFavoriteBooks(widget.groupId, widget.currentUser);
-  //     nothingText = "Aucun favori pour l'instant";
-  //   }
-  // }
-
-  // @override
-  // void didChangeDependencies() async {
-  //   if (widget.sectionCategory == "continuer") {
-  //     books = DBFuture()
-  //         .getContinueReadingBooks(widget.currentGroup.id!, widget.currentUser);
-  //     nothingText = "Rien à lire pour l'instant !";
-  //   } else if (widget.sectionCategory == "favoris") {
-  //     books = DBFuture().getFavoriteBooks(widget.groupId, widget.currentUser);
-  //     nothingText = "Aucun favori pour l'instant";
-  //   }
-
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
