@@ -6,6 +6,7 @@ class UserModel {
   String? groupId;
   List<String>? readBooks;
   List<String>? favoriteBooks;
+  List<String>? dontWantToReadBooks;
 
   UserModel(
       {this.uid,
@@ -14,5 +15,6 @@ class UserModel {
       this.pictureUrl,
       this.groupId,
       this.readBooks,
-      this.favoriteBooks});
+      this.favoriteBooks,
+      this.dontWantToReadBooks});
 }

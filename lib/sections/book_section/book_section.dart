@@ -6,6 +6,7 @@ import 'package:book_club/sections/book_section/book_card.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookSection extends StatefulWidget {
   final GroupModel currentGroup;
@@ -51,7 +52,9 @@ class _BookSectionState extends State<BookSection> {
               List<BookModel> selectedBooks = [];
               if (widget.sectionCategory == "continuer") {
                 for (var book in allBooks) {
-                  if (widget.currentUser.readBooks!.contains(book.id)) {
+                  if (widget.currentUser.readBooks!.contains(book.id) ||
+                      widget.currentUser.dontWantToReadBooks!
+                          .contains(book.id)) {
                     //print("déjà lu");
                   } else {
                     selectedBooks.add(book);
@@ -84,6 +87,7 @@ class _BookSectionState extends State<BookSection> {
                           book: selectedBooks[index - 1],
                           currentGroup: widget.currentGroup,
                           currentUser: widget.currentUser,
+                          sectionCategory: widget.sectionCategory,
                         );
                       }
                     },

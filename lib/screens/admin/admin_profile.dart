@@ -218,7 +218,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                   ),
                                   BookSection(
                                     currentGroup: widget.currentGroup,
-                                    currentUser: widget.currentUser,
+                                    currentUser: _currentUser,
                                     sectionCategory: "continuer",
                                   ),
                                   const Text(
@@ -229,7 +229,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                   ),
                                   BookSection(
                                     currentGroup: widget.currentGroup,
-                                    currentUser: widget.currentUser,
+                                    currentUser: _currentUser,
                                     sectionCategory: "favoris",
                                   ),
                                 ],

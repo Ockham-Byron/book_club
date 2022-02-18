@@ -1,6 +1,7 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/sections/book_section/finish_book.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {
@@ -8,13 +9,15 @@ class BookCard extends StatefulWidget {
 
   final GroupModel currentGroup;
   final UserModel currentUser;
+  final String sectionCategory;
 
-  const BookCard({
-    Key? key,
-    this.book,
-    required this.currentGroup,
-    required this.currentUser,
-  }) : super(key: key);
+  const BookCard(
+      {Key? key,
+      this.book,
+      required this.currentGroup,
+      required this.currentUser,
+      required this.sectionCategory})
+      : super(key: key);
 
   @override
   _BookCardState createState() => _BookCardState();
@@ -75,15 +78,14 @@ class _BookCardState extends State<BookCard> {
             ),
             IconButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => FinishedBook(
-                  //               finishedBook: widget.book!,
-                  //               currentGroup: widget.currentGroup,
-                  //               currentUser: widget.currentUser,
-                  //               authModel: widget.authModel,
-                  //             )));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FinishedBook(
+                                finishedBook: widget.book!,
+                                currentGroup: widget.currentGroup,
+                                currentUser: widget.currentUser,
+                              )));
                 },
                 icon: Icon(
                   Icons.close,

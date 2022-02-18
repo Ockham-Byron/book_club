@@ -16,7 +16,9 @@ class DBStream {
         pictureUrl: snapshot.get("pictureUrl"),
         groupId: snapshot.data()!["groupId"],
         readBooks: List<String>.from(snapshot.data()!["readBooks"]),
-        favoriteBooks: List<String>.from(snapshot.data()!["favoriteBooks"]));
+        favoriteBooks: List<String>.from(snapshot.data()!["favoriteBooks"]),
+        dontWantToReadBooks:
+            List<String>.from(snapshot.data()!["dontWantToReadBooks"]));
   }
 
   // get user doc stream

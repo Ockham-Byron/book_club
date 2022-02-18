@@ -27,16 +27,16 @@ class DBFuture {
     String resultMessage = "error";
     List<String> readBooks = [];
     List<String> favoriteBooks = [];
-    // List<String> dontWantToReadBooks = [];
+    List<String> dontWantToReadBooks = [];
 
     try {
       await usersCollection.doc(user.uid).set({
         "pseudo": user.pseudo!.trim(),
         "email": user.email!.trim(),
         "pictureUrl": user.pictureUrl!.trim(),
-
         "readBooks": readBooks,
         "favoriteBooks": favoriteBooks,
+        "dontWantToReadBooks": dontWantToReadBooks
 
         // "dontWantToReadBooks": dontWantToReadBooks
       });
@@ -333,6 +333,22 @@ class DBFuture {
       message = "success";
     } catch (e) {
       //print(e);
+    }
+
+    return message;
+  }
+
+  Future<String> dontWantToReadBook(String bookId, String userId) async {
+    String message = "error";
+    List<String> dontWantToReadBooks = [];
+
+    try {
+      dontWantToReadBooks.add(bookId);
+      await usersCollection.doc(userId).update(
+          {"dontWantToReadBooks": FieldValue.arrayUnion(dontWantToReadBooks)});
+      message = "success";
+    } catch (e) {
+      message = "error";
     }
 
     return message;
