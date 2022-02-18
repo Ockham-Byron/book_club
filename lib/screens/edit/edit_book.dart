@@ -5,9 +5,9 @@ import 'package:book_club/root.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
 
-import 'package:book_club/shared/background_container.dart';
+import 'package:book_club/shared/containers/background_container.dart';
 
-import 'package:book_club/shared/shadow_container.dart';
+import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';

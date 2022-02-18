@@ -1,7 +1,7 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/services/db_future.dart';
-import 'package:book_club/shared/shadow_container.dart';
+import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 

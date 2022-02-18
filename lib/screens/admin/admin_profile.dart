@@ -2,6 +2,7 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/edit/edit_user.dart';
+import 'package:book_club/sections/book_section/book_section.dart';
 import 'package:book_club/services/db_stream.dart';
 
 import 'package:book_club/shared/loading.dart';
@@ -215,16 +216,11 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                         color: Colors.black, fontSize: 30),
                                     textAlign: TextAlign.start,
                                   ),
-                                  Container(
-                                      // child: BookSection(
-                                      //   groupId: widget.currentGroup.id!,
-                                      //   groupName: widget.currentGroup.name!,
-                                      //   currentGroup: widget.currentGroup,
-                                      //   currentUser: widget.currentUser,
-                                      //   authModel: widget.authModel,
-                                      //   sectionCategory: "continuer",
-                                      // ),
-                                      ),
+                                  BookSection(
+                                    currentGroup: widget.currentGroup,
+                                    currentUser: widget.currentUser,
+                                    sectionCategory: "continuer",
+                                  ),
                                   const Text(
                                     "Favoris",
                                     style: TextStyle(

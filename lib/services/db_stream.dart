@@ -47,6 +47,30 @@ class DBStream {
         .map(_groupDataFromSnapshot);
   }
 
+  //book list from snapshot
+  List<BookModel> _booksListFromSnapshot(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    return snapshot.docs.map((doc) {
+      return BookModel(
+          id: doc.id,
+          title: doc.data()["title"],
+          author: doc.data()["author"],
+          length: doc.data()["length"],
+          dueDate: doc.data()["dueDate"],
+          cover: doc.data()["cover"]);
+    }).toList();
+  }
+
+  //books Stream
+  Stream<List<BookModel>> getAllBooks(String groupId) {
+    return _firestore
+        .collection("groups")
+        .doc(groupId)
+        .collection("books")
+        .snapshots()
+        .map(_booksListFromSnapshot);
+  }
+
   //book data from snapshot
   BookModel _bookDataFromSnapshot(DocumentSnapshot snapshot) {
     return BookModel(

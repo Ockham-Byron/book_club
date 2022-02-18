@@ -1,7 +1,7 @@
 import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
 
-import 'package:book_club/shared/shadow_container.dart';
+import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
