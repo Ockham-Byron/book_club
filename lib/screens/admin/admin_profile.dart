@@ -227,16 +227,11 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                         color: Colors.black, fontSize: 30),
                                     textAlign: TextAlign.start,
                                   ),
-                                  Container(
-                                      // child: BookSection(
-                                      //   groupId: widget.currentGroup.id!,
-                                      //   groupName: widget.currentGroup.name!,
-                                      //   currentGroup: widget.currentGroup,
-                                      //   currentUser: widget.currentUser,
-                                      //   authModel: widget.authModel,
-                                      //   sectionCategory: "favoris",
-                                      //),
-                                      ),
+                                  BookSection(
+                                    currentGroup: widget.currentGroup,
+                                    currentUser: widget.currentUser,
+                                    sectionCategory: "favoris",
+                                  ),
                                 ],
                               ),
                             ),

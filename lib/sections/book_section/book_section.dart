@@ -67,6 +67,9 @@ class _BookSectionState extends State<BookSection> {
     return StreamBuilder<List<BookModel>>(
       stream: DBStream().getAllBooks(widget.currentGroup.id!),
       builder: (context, snapshot) {
+        if (widget.sectionCategory == "favoris") {
+          nothingText = "pas de favoris";
+        }
         if (snapshot.connectionState == ConnectionState.waiting) {
           print("waiting");
           return const Loading();
@@ -77,37 +80,63 @@ class _BookSectionState extends State<BookSection> {
           } else {
             if (!snapshot.hasData) {
               print("pas de data");
-              return Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  nothingText,
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              );
+              return const Loading();
             } else {
-              return Container(
-                padding: const EdgeInsets.only(top: 20),
-                width: 350,
-                height: 350,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data!.length + 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) {
-                      return Container();
-                    } else {
-                      return BookCard(
-                        book: snapshot.data![index - 1],
-                        currentGroup: widget.currentGroup,
-                        currentUser: widget.currentUser,
-                      );
-                    }
-                  },
-                ),
-              );
+              //define the selected lists of books
+              List<BookModel> allBooks = snapshot.data!;
+              List<BookModel> selectedBooks = [];
+              if (widget.sectionCategory == "continuer") {
+                for (var book in allBooks) {
+                  if (widget.currentUser.readBooks!.contains(book.id)) {
+                    //print("déjà lu");
+                  } else {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "Vous avez tout lu";
+              }
+              if (widget.sectionCategory == "favoris") {
+                for (var book in allBooks) {
+                  if (widget.currentUser.favoriteBooks!.contains(book.id)) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "aucun favori";
+              }
+
+              if (selectedBooks.isNotEmpty) {
+                return Container(
+                  padding: const EdgeInsets.only(top: 20),
+                  width: 350,
+                  height: 350,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: selectedBooks.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return Container();
+                      } else {
+                        return BookCard(
+                          book: selectedBooks[index - 1],
+                          currentGroup: widget.currentGroup,
+                          currentUser: widget.currentUser,
+                        );
+                      }
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    nothingText,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
             }
           }
         }

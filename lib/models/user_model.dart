@@ -5,6 +5,7 @@ class UserModel {
   String? pictureUrl;
   String? groupId;
   List<String>? readBooks;
+  List<String>? favoriteBooks;
 
   UserModel(
       {this.uid,
@@ -12,5 +13,6 @@ class UserModel {
       this.email,
       this.pictureUrl,
       this.groupId,
-      this.readBooks});
+      this.readBooks,
+      this.favoriteBooks});
 }
