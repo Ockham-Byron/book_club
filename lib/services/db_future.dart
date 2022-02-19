@@ -338,6 +338,34 @@ class DBFuture {
     return message;
   }
 
+  Future<String> cancelFavoriteBook(
+    String groupId,
+    String bookId,
+    String userId,
+  ) async {
+    String message = "error";
+    List<String> favoriteBooks = [];
+
+    try {
+      favoriteBooks.add(bookId);
+      await usersCollection.doc(userId).update({
+        "favoriteBooks": FieldValue.arrayRemove(favoriteBooks),
+      });
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .update({"favorite": false});
+      message = "success";
+    } catch (e) {
+      message = "error";
+    }
+
+    return message;
+  }
+
   Future<String> dontWantToReadBook(String bookId, String userId) async {
     String message = "error";
     List<String> dontWantToReadBooks = [];

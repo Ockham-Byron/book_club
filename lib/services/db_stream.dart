@@ -1,5 +1,6 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
+import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -115,5 +116,31 @@ class DBStream {
     }
 
     return book;
+  }
+
+  //get review list from snapshot
+
+  List<ReviewModel> _reviewsListFromSnapshot(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    return snapshot.docs.map((doc) {
+      return ReviewModel(
+        reviewId: doc.id,
+        rating: doc.data()["rating"],
+        review: doc.data()["review"],
+        favorite: doc.data()["favorite"],
+      );
+    }).toList();
+  }
+
+  //reviews Stream
+  Stream<List<ReviewModel>> getAllReviews(String groupId, String bookId) {
+    return _firestore
+        .collection("groups")
+        .doc(groupId)
+        .collection("books")
+        .doc(bookId)
+        .collection("reviews")
+        .snapshots()
+        .map(_reviewsListFromSnapshot);
   }
 }

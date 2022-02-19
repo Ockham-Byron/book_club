@@ -1,6 +1,8 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/history/book_detail.dart';
+import 'package:book_club/sections/book_section/cancel_favorite.dart';
 import 'package:book_club/sections/book_section/finish_book.dart';
 import 'package:flutter/material.dart';
 
@@ -37,25 +39,22 @@ class _BookCardState extends State<BookCard> {
     return currentBookCoverUrl;
   }
 
-  void _goToReviewHistory(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ReviewHistory(
-    //       groupId: widget.groupId!,
-    //       bookId: widget.book!.id!,
-    //       currentGroup: widget.currentGroup,
-    //       currentBook: widget.book!,
-    //       currentUser: widget.currentUser,
-    //       authModel: widget.authModel,
-    //     ),
-    //   ),
-    // );
+  void _goToBookDetail(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookDetail(
+          currentGroup: widget.currentGroup,
+          currentBook: widget.book!,
+          currentUser: widget.currentUser,
+        ),
+      ),
+    );
   }
 
   Widget _displayBookCard() {
     return GestureDetector(
-      onTap: () => _goToReviewHistory(context),
+      onTap: () => _goToBookDetail(context),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         width: 150,
@@ -78,14 +77,25 @@ class _BookCardState extends State<BookCard> {
             ),
             IconButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FinishedBook(
-                                finishedBook: widget.book!,
-                                currentGroup: widget.currentGroup,
-                                currentUser: widget.currentUser,
-                              )));
+                  if (widget.sectionCategory == "continuer") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FinishedBook(
+                                  finishedBook: widget.book!,
+                                  currentGroup: widget.currentGroup,
+                                  currentUser: widget.currentUser,
+                                )));
+                  } else if (widget.sectionCategory == "favoris") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CancelFavorite(
+                                  favoriteBook: widget.book!,
+                                  currentGroup: widget.currentGroup,
+                                  currentUser: widget.currentUser,
+                                )));
+                  }
                 },
                 icon: Icon(
                   Icons.close,

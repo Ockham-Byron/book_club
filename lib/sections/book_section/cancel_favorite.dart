@@ -24,38 +24,33 @@ class CancelFavorite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _currentBookCoverUrl() {
+      String currentBookCoverUrl;
+
+      if (favoriteBook.cover == "") {
+        currentBookCoverUrl =
+            "https://cdn.pixabay.com/photo/2020/12/14/15/52/book-5831278_1280.jpg";
+      } else {
+        currentBookCoverUrl = favoriteBook.cover!;
+      }
+
+      return currentBookCoverUrl;
+    }
+
     return Scaffold(
       body: BackgroundContainer(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 230, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 200, horizontal: 20),
           child: ShadowContainer(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(
+                    height: 150, child: Image.network(_currentBookCoverUrl())),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AddReview(
-                    //               bookId: finishedBook.id!,
-                    //               fromRoute: ReviewHistory(
-                    //                 bookId: finishedBook.id!,
-                    //                 groupId: currentGroup.id!,
-                    //                 currentBook: finishedBook,
-                    //                 currentGroup: currentGroup,
-                    //                 currentUser: currentUser,
-                    //                 authModel: authModel,
-                    //               ),
-                    //               currentGroup: currentGroup,
-                    //             )));
-                  },
-                  child: const Text("Vous avez terminé le livre ?"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // DBFuture().dontWantToReadBook(
-                    //     finishedBook.id!, _currentUser.uid!);
+                    DBFuture().cancelFavoriteBook(
+                        currentGroup.id!, favoriteBook.id!, currentUser.uid!);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
