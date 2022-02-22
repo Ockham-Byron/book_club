@@ -245,10 +245,8 @@ class _BookDetailState extends State<BookDetail> {
                                 FinishButton(
                                     currentGroup: widget.currentGroup,
                                     currentUser: widget.currentUser,
-                                    fromScreen: BookDetail(
-                                        currentGroup: widget.currentGroup,
-                                        currentBook: widget.currentBook,
-                                        currentUser: widget.currentUser)),
+                                    bookId: widget.currentBook.id!,
+                                    fromScreen: "bookDetail"),
                                 const Text(
                                   "Avis du groupe",
                                   style: TextStyle(fontSize: 30),

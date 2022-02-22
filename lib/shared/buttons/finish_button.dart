@@ -1,3 +1,4 @@
+import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
@@ -12,11 +13,13 @@ import 'package:flutter/material.dart';
 class FinishButton extends StatefulWidget {
   final GroupModel currentGroup;
   final UserModel currentUser;
-  final Widget fromScreen;
+  final String bookId;
+  final String fromScreen;
   const FinishButton(
       {Key? key,
       required this.currentGroup,
       required this.currentUser,
+      required this.bookId,
       required this.fromScreen})
       : super(key: key);
 
@@ -26,22 +29,30 @@ class FinishButton extends StatefulWidget {
 
 class _FinishButtonState extends State<FinishButton> {
   void _goToReview() {
+    Widget goToScreen;
+    if (widget.fromScreen == "bookDetail") {
+      goToScreen = const AppRoot();
+    } else {
+      goToScreen = const AppRoot();
+    }
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => AddReview(
             currentGroup: widget.currentGroup,
             currentUser: widget.currentUser,
             bookId: widget.currentGroup.currentBookId!,
-            fromRoute: widget.fromScreen),
+            fromRoute: goToScreen),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    String finishedMessage = "Livre terminé";
     return FutureBuilder(
-      future: DBFuture().hasReadTheBook(widget.currentGroup.id!,
-          widget.currentGroup.currentBookId!, widget.currentUser.uid!),
+      future: DBFuture().hasReadTheBook(
+          widget.currentGroup.id!, widget.bookId, widget.currentUser.uid!),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Loading();
@@ -60,13 +71,12 @@ class _FinishButtonState extends State<FinishButton> {
               ],
             );
           } else {
-            String finishedMessage = "coucou";
             if (widget.fromScreen == const AppRoot()) {
               setState(() {
                 finishedMessage = "Livre terminé !";
               });
             }
-            // else if (widget.fromScreen == BookDetail) {
+            // else if (widget.fromScreen == BookDetail()) {
             //   finishedMessage =
             //       "Indique que, toi aussi, tu as terminé ce livre";
             // }
