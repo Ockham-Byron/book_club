@@ -110,6 +110,7 @@ class _SingleBookCardState extends State<SingleBookCard> {
               FinishButton(
                 currentGroup: widget.currentGroup,
                 currentUser: widget.currentUser,
+                book: _currentBook,
                 bookId: widget.currentGroup.currentBookId!,
                 fromScreen: "singleBookHome",
               ),

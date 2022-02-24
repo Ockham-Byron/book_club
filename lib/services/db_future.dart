@@ -1,6 +1,7 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/services/db_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DBFuture {
@@ -288,6 +289,7 @@ class DBFuture {
     return hasReadTheBook;
   }
 
+  // add a review to the book
   Future<String> reviewBook(String groupId, String bookId, String userId,
       int rating, String review, bool favorite) async {
     String retVal = "error";

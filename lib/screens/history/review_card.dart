@@ -2,6 +2,8 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/services/db_future.dart';
+import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
 
@@ -23,15 +25,6 @@ class ReviewCard extends StatefulWidget {
 }
 
 class _ReviewCardState extends State<ReviewCard> {
-  // UserModel user = UserModel();
-
-  // @override
-  // void didChangeDependencies() async {
-  //   super.didChangeDependencies();
-  //   user = await DBFuture().getUser(widget.review.userId!);
-  //   setState(() {});
-  // }
-
   void _goToEditReview() {
     // Navigator.of(context).push(MaterialPageRoute(
     //     builder: (context) => EditReview(
@@ -64,15 +57,22 @@ class _ReviewCardState extends State<ReviewCard> {
         children: [
           Column(
             children: [
-              Text(
-                (widget.currentUser.uid != null)
-                    ? widget.currentUser.pseudo!
-                    : "pas de nom ?",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor),
-              ),
+              StreamBuilder<UserModel>(
+                  stream: DBStream().getUserData(widget.review.reviewId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      UserModel _user = snapshot.data!;
+                      return Text(
+                        (_user.uid != null) ? _user.pseudo! : "pas de nom ?",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
               const SizedBox(
                 height: 10,
               ),

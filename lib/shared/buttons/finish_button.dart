@@ -13,12 +13,14 @@ import 'package:flutter/material.dart';
 class FinishButton extends StatefulWidget {
   final GroupModel currentGroup;
   final UserModel currentUser;
+  final BookModel book;
   final String bookId;
   final String fromScreen;
   const FinishButton(
       {Key? key,
       required this.currentGroup,
       required this.currentUser,
+      required this.book,
       required this.bookId,
       required this.fromScreen})
       : super(key: key);
@@ -31,6 +33,11 @@ class _FinishButtonState extends State<FinishButton> {
   void _goToReview() {
     Widget goToScreen;
     if (widget.fromScreen == "bookDetail") {
+      goToScreen = BookDetail(
+          currentGroup: widget.currentGroup,
+          currentBook: widget.book,
+          currentUser: widget.currentUser);
+    } else if (widget.fromScreen == "singleBookHome") {
       goToScreen = const AppRoot();
     } else {
       goToScreen = const AppRoot();
@@ -59,6 +66,7 @@ class _FinishButtonState extends State<FinishButton> {
         } else {
           if (snapshot.data == true) {
             return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.check,
@@ -71,15 +79,12 @@ class _FinishButtonState extends State<FinishButton> {
               ],
             );
           } else {
-            if (widget.fromScreen == const AppRoot()) {
-              setState(() {
-                finishedMessage = "Livre terminé !";
-              });
+            if (widget.fromScreen == "singleBookHome") {
+              finishedMessage = "coucou";
+            } else {
+              finishedMessage =
+                  "Indique que, toi aussi, tu as terminé ce livre";
             }
-            // else if (widget.fromScreen == BookDetail()) {
-            //   finishedMessage =
-            //       "Indique que, toi aussi, tu as terminé ce livre";
-            // }
             return ElevatedButton(
               onPressed: _goToReview,
               child: Text(

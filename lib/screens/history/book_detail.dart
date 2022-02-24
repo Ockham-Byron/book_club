@@ -245,6 +245,7 @@ class _BookDetailState extends State<BookDetail> {
                                 FinishButton(
                                     currentGroup: widget.currentGroup,
                                     currentUser: widget.currentUser,
+                                    book: widget.currentBook,
                                     bookId: widget.currentBook.id!,
                                     fromScreen: "bookDetail"),
                                 const Text(
