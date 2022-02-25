@@ -1,6 +1,8 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/admin/admin_group.dart';
 import 'package:book_club/screens/admin/admin_profile.dart';
+import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_home.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -47,36 +49,26 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToGroupManage() {
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => GroupManageRef(
-      //           currentGroup: currentGroup,
-      //           currentUser: currentUser,
-      //           currentBook: currentBook,
-      //           authModel: authModel,
-      //         )));
+      print("go to Group");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AdminGroup(
+                currentGroup: currentGroup,
+                currentUser: currentUser,
+              )));
     }
 
     void _goToProfileManage() {
-      //print("go to profile");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfileAdmin(
                 currentUser: currentUser,
                 currentGroup: currentGroup,
-                // currentBook: currentBook,
-                // authModel: authModel,
               )));
     }
 
-    _goToBooksHistory() {
-      //print("go to book history");
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => BookHistory(
-      //         groupId: currentGroup.id!,
-      //         groupName: currentGroup.name!,
-      //         currentGroup: currentGroup,
-      //         currentUser: currentUser,
-      //         currentBook: currentBook,
-      //         authModel: authModel)));
+    void _goToBooksHistory() {
+      print("go to book history");
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const BookHistory()));
     }
 
     String getUserPseudo() {

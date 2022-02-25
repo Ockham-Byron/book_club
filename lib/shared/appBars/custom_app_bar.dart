@@ -70,7 +70,7 @@ class CustomAppBar extends StatelessWidget {
               child: Text(
                 currentGroup.name ?? "groupe sans nom",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 30),
+                style: const TextStyle(color: Colors.black, fontSize: 30),
               ),
             ),
           ),

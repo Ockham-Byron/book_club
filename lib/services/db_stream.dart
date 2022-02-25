@@ -31,6 +31,27 @@ class DBStream {
         .map(_userDataFromSnapshot);
   }
 
+  //users list from snapshots
+  List<UserModel> _listOfMembers(QuerySnapshot<Map<String, dynamic>> snapshot) {
+    return snapshot.docs.map((doc) {
+      return UserModel(
+          uid: doc.id,
+          pseudo: doc.data()["pseudo"],
+          pictureUrl: doc.data()["pictureUrl"],
+          email: doc.data()["email"],
+          groupId: doc.data()["groupId"],
+          readBooks: List<String>.from(doc.data()["readBooks"]),
+          favoriteBooks: List<String>.from(doc.data()["favoriteBooks"]),
+          dontWantToReadBooks:
+              List<String>.from(doc.data()["dontWantToReadBooks"]));
+    }).toList();
+  }
+
+  //stream of users list
+  Stream<List<UserModel>> getAllUsers() {
+    return _firestore.collection("users").snapshots().map(_listOfMembers);
+  }
+
   // group data from snapshots
   GroupModel _groupDataFromSnapshot(DocumentSnapshot snapshot) {
     return GroupModel(

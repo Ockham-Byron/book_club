@@ -1,6 +1,7 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/root.dart';
 import 'package:book_club/screens/edit/edit_user.dart';
 import 'package:book_club/sections/book_section/book_section.dart';
 import 'package:book_club/services/db_stream.dart';
@@ -237,17 +238,35 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                             ),
                           ),
                           Positioned(
-                              child: Container(
-                            alignment: Alignment.center,
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.amber[50]),
-                            child: ClipRect(
-                              child: displayCircularAvatar(),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.amber[50]),
+                              child: ClipRect(
+                                child: displayCircularAvatar(),
+                              ),
                             ),
-                          ))
+                          ),
+                          Positioned(
+                              left: 30,
+                              top: -15,
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AppRoot()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
+                              ))
                         ],
                       ),
                     );
