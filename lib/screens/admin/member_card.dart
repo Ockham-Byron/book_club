@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 
@@ -8,7 +10,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 class MemberCard extends StatelessWidget {
   final UserModel user;
   final GroupModel currentGroup;
-  const MemberCard({Key? key, required this.user, required this.currentGroup})
+  MemberCard({Key? key, required this.user, required this.currentGroup})
       : super(key: key);
 
   bool withProfilePicture() {
@@ -49,8 +51,14 @@ class MemberCard extends StatelessWidget {
   //   return nbOfGroupBooks;
   // }
 
+  // Used to generate random integers for the random colors
+  final _random = Random();
+
   @override
   Widget build(BuildContext context) {
+    final Color? _foregroundColor =
+        Colors.primaries[_random.nextInt(Colors.primaries.length)]
+            [_random.nextInt(9) * 100];
     Widget displayCircularAvatar() {
       if (withProfilePicture()) {
         return CircularProfileAvatar(
@@ -61,7 +69,7 @@ class MemberCard extends StatelessWidget {
       } else {
         return CircularProfileAvatar(
           "https://digitalpainting.school/static/img/default_avatar.png",
-          foregroundColor: Colors.brown,
+          foregroundColor: _foregroundColor ?? Colors.blue,
           initialsText: Text(
             getUserPseudo()[0].toUpperCase(),
             style: const TextStyle(
