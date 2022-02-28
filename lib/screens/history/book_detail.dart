@@ -6,6 +6,7 @@ import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/screens/history/review_card.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
+import 'package:book_club/shared/app_drawer.dart';
 import 'package:book_club/shared/buttons/finish_button.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/loading.dart';
@@ -120,7 +121,7 @@ class _BookDetailState extends State<BookDetail> {
 
   Widget _displayBookInfo() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       height: 150,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,8 +182,7 @@ class _BookDetailState extends State<BookDetail> {
               .getAllReviews(widget.currentGroup.id!, widget.currentBook.id!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              print("waiting");
-              return Loading();
+              return const Loading();
             } else {
               if (snapshot.data!.isNotEmpty) {
                 List<ReviewModel> reviews = snapshot.data!;
@@ -210,7 +210,7 @@ class _BookDetailState extends State<BookDetail> {
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
-                                  children: [
+                                  children: const [
                                     Text(
                                       "LU PAR",
                                       style: kTitleStyle,
@@ -340,6 +340,10 @@ class _BookDetailState extends State<BookDetail> {
             }
           },
         ),
+      ),
+      drawer: AppDrawer(
+        currentGroup: widget.currentGroup,
+        currentUser: widget.currentUser,
       ),
     );
   }

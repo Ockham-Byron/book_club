@@ -67,8 +67,11 @@ class AppDrawer extends StatelessWidget {
 
     void _goToBooksHistory() {
       print("go to book history");
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const BookHistory()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => BookHistory(
+                currentGroup: currentGroup,
+                currentUser: currentUser,
+              )));
     }
 
     String getUserPseudo() {

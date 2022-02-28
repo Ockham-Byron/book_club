@@ -2,6 +2,7 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/member_card.dart';
+import 'package:book_club/screens/history/book_history.dart';
 
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
@@ -108,20 +109,16 @@ class _AdminGroupState extends State<AdminGroup> {
     return groupMembers;
   }
 
-  void _goToHistory() async {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => BookHistory(
-    //       groupId: widget.currentGroup.id!,
-    //       groupName: widget.currentGroup.name!,
-    //       currentGroup: widget.currentGroup,
-    //       currentUser: widget.currentUser,
-    //       currentBook: widget.currentBook,
-    //       authModel: widget.authModel,
-    //     ),
-    //   ),
-    // );
+  void _goToBookHistory() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookHistory(
+          currentGroup: widget.currentGroup,
+          currentUser: widget.currentUser,
+        ),
+      ),
+    );
   }
 
   // This function is triggered when the copy icon is pressed
@@ -246,7 +243,7 @@ class _AdminGroupState extends State<AdminGroup> {
                     ),
                   ),
                   ElevatedButton(
-                      onPressed: _goToHistory,
+                      onPressed: _goToBookHistory,
                       child: const Text("Voir tous les livres du groupe")),
                   const SizedBox(
                     height: 30,

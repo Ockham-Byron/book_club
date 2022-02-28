@@ -2,6 +2,7 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
+import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
 
@@ -98,15 +99,11 @@ class _EditBookState extends State<EditBook> {
           MaterialPageRoute(builder: (context) => const AppRoot()));
     } else if (_returnString == "success" &&
         widget.fromScreen == "fromHistory") {
-      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //     builder: (context) => BookHistory(
-      //           groupId: widget.currentGroup.id!,
-      //           groupName: widget.currentGroup.name!,
-      //           currentGroup: widget.currentGroup,
-      //           currentUser: widget.currentUser,
-      //           currentBook: widget.currentBook,
-      //           authModel: widget.authModel,
-      //         )));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => BookHistory(
+                currentGroup: widget.currentGroup,
+                currentUser: widget.currentUser,
+              )));
     }
   }
 
