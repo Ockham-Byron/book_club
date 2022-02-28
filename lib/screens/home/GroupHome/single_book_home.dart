@@ -28,9 +28,12 @@ class _SingleBookHomeState extends State<SingleBookHome> {
       body: BackgroundContainer(
         child: Column(
           children: [
-            CustomAppBar(
-              currentUser: widget.currentUser,
-              currentGroup: widget.currentGroup,
+            SizedBox(
+              height: 120,
+              child: CustomAppBar(
+                currentUser: widget.currentUser,
+                currentGroup: widget.currentGroup,
+              ),
             ),
             Expanded(
               child: Container(

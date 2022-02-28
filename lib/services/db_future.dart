@@ -384,6 +384,36 @@ class DBFuture {
     return message;
   }
 
+  //Edit Review
+  Future<String> editReview({
+    required String userId,
+    required String groupId,
+    required String bookId,
+    required String review,
+    required bool favorite,
+    required int rating,
+  }) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .update({
+        "review": review,
+        "rating": rating,
+        "favorite": favorite,
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   Future<String> dontWantToReadBook(String bookId, String userId) async {
     String message = "error";
     List<String> dontWantToReadBooks = [];

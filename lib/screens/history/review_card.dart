@@ -2,6 +2,7 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/edit/edit_review.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
@@ -26,29 +27,28 @@ class ReviewCard extends StatefulWidget {
 
 class _ReviewCardState extends State<ReviewCard> {
   void _goToEditReview() {
-    // Navigator.of(context).push(MaterialPageRoute(
-    //     builder: (context) => EditReview(
-    //           currentGroup: widget.currentGroup,
-    //           book: widget.book,
-    //           currentReview: widget.review,
-    //           currentUser: widget.currentUser,
-    //           authModel: widget.authModel,
-    //         )));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditReview(
+              currentGroup: widget.currentGroup,
+              book: widget.book,
+              currentReview: widget.review,
+              currentUser: widget.currentUser,
+            )));
   }
 
-  //Widget _editWidget() {
-  // if (widget.currentUser.uid! == widget.review.reviewId) {
-  //   return GestureDetector(
-  //     onTap: () => _goToEditReview(),
-  //     child: Icon(
-  //       Icons.edit,
-  //       color: Theme.of(context).primaryColor,
-  //     ),
-  //   );
-  // } else {
-  //   return Container();
-  // }
-  //}
+  Widget _editWidget() {
+    if (widget.currentUser.uid! == widget.review.reviewId) {
+      return GestureDetector(
+        onTap: () => _goToEditReview(),
+        child: Icon(
+          Icons.edit,
+          color: Theme.of(context).focusColor,
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class _ReviewCardState extends State<ReviewCard> {
                   ),
                 )
               : const Text(""),
-          // _editWidget(),
+          _editWidget(),
         ],
       ),
     );
