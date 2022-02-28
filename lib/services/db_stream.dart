@@ -139,6 +139,31 @@ class DBStream {
     return book;
   }
 
+  // review data from snapshots
+  ReviewModel _reviewDataFromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return ReviewModel(
+      reviewId: snapshot.id,
+      rating: snapshot.get("rating"),
+      review: snapshot.get("review"),
+      favorite: snapshot.get("favorite"),
+    );
+  }
+
+  // get review doc stream
+  Stream<ReviewModel> getReviewData(
+      String groupId, String bookId, String reviewId) {
+    return _firestore
+        .collection("groups")
+        .doc(groupId)
+        .collection("books")
+        .doc(bookId)
+        .collection("reviews")
+        .doc(reviewId)
+        .snapshots()
+        .map(_reviewDataFromSnapshot);
+  }
+
   //get review list from snapshot
 
   List<ReviewModel> _reviewsListFromSnapshot(

@@ -348,6 +348,13 @@ class DBFuture {
       await usersCollection.doc(userId).update({
         "favoriteBooks": FieldValue.arrayUnion(favoriteBooks),
       });
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .update({"favorite": true});
       message = "success";
     } catch (e) {
       //print(e);

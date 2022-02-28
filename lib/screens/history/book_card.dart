@@ -1,9 +1,16 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
+import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/screens/edit/edit_book.dart';
 import 'package:book_club/screens/history/book_detail.dart';
+import 'package:book_club/screens/history/book_history.dart';
+import 'package:book_club/services/db_future.dart';
+import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
+import 'package:book_club/shared/loading.dart';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {
@@ -22,18 +29,6 @@ class BookCard extends StatefulWidget {
 }
 
 class _BookCardState extends State<BookCard> {
-  // bool _isFavorited = false;
-
-  // void _toggleFavorite() {
-  //   setState(() {
-  //     if (_isFavorited = false) {
-  //       _isFavorited = true;
-  //     } else {
-  //       _isFavorited = false;
-  //     }
-  //   });
-  // }
-
   String _currentBookCoverUrl() {
     String currentBookCoverUrl;
 
@@ -46,18 +41,6 @@ class _BookCardState extends State<BookCard> {
 
     return currentBookCoverUrl;
   }
-
-  // String _nbOfPages() {
-  //   String nbOfPages;
-
-  //   if (widget.book!.length != null) {
-  //     nbOfPages = widget.book!.length!.toString() + " pages";
-  //   } else {
-  //     nbOfPages = "Nombre de pages inconnu";
-  //   }
-
-  //   return nbOfPages;
-  // }
 
   void _goToBookDetail(BuildContext context) {
     Navigator.push(
@@ -74,46 +57,150 @@ class _BookCardState extends State<BookCard> {
 
   @override
   Widget build(BuildContext context) {
-    // Widget _displayFavorite() {
-    //   return TextButton.icon(
-    //     onPressed: () {
-    //       if (widget.currentUser.favoriteBooks!.contains(widget.book!.id)) {
-    //         DBFuture().cancelFavoriteBook(
-    //             widget.groupId!, widget.book!.id!, widget.currentUser.uid!);
-    //         _toggleFavorite();
-    //       } else {
-    //         DBFuture().favoriteBook(
-    //             widget.groupId!, widget.book!.id!, widget.currentUser.uid!);
-    //         _toggleFavorite();
-    //       }
-    //     },
-    //     icon: Icon(Icons.favorite,
-    //         color: _isFavorited == true
-    //             ? Theme.of(context).primaryColor
-    //             : Colors.grey),
-    //     label: Text(
-    //       "Favori",
-    //       style: TextStyle(
-    //           color: _isFavorited == true
-    //               ? Theme.of(context).primaryColor
-    //               : Colors.grey),
-    //     ),
-    //   );
-    // }
+    Widget _displayFavorite() {
+      return StreamBuilder<ReviewModel>(
+          stream: DBStream().getReviewData(widget.currentGroup.id!,
+              widget.book.id!, widget.currentUser.uid!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Loading();
+            } else {
+              if (snapshot.hasData) {
+                ReviewModel _review = snapshot.data!;
+                bool _isFavorited = _review.favorite!;
+                bool _hasReadTheBook;
+                if (widget.currentUser.uid == _review.reviewId) {
+                  _hasReadTheBook = true;
+                } else {
+                  _hasReadTheBook = false;
+                }
+                void _toggleFavorite() {
+                  setState(() {
+                    if (_isFavorited = false) {
+                      _isFavorited = true;
+                    } else {
+                      _isFavorited = false;
+                    }
+                  });
+                }
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {
+                          if (_hasReadTheBook == false) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => AddReview(
+                                        currentGroup: widget.currentGroup,
+                                        currentUser: widget.currentUser,
+                                        bookId: widget.book.id!,
+                                        fromRoute: BookHistory(
+                                            currentGroup: widget.currentGroup,
+                                            currentUser: widget.currentUser))),
+                                (route) => false);
+                          }
+                        },
+                        icon: Icon(Icons.check,
+                            color: _hasReadTheBook == true
+                                ? Theme.of(context).focusColor
+                                : Colors.grey),
+                        label: Text(
+                          "Lu",
+                          style: TextStyle(
+                              color: _hasReadTheBook == true
+                                  ? Theme.of(context).focusColor
+                                  : Colors.grey),
+                        )),
+                    TextButton.icon(
+                      onPressed: () {
+                        if (_isFavorited) {
+                          DBFuture().cancelFavoriteBook(widget.currentGroup.id!,
+                              widget.book.id!, widget.currentUser.uid!);
+                          _toggleFavorite();
+                        } else {
+                          DBFuture().favoriteBook(widget.currentGroup.id!,
+                              widget.book.id!, widget.currentUser.uid!);
+                          _toggleFavorite();
+                        }
+                      },
+                      icon: Icon(Icons.favorite,
+                          color: _isFavorited == true
+                              ? Theme.of(context).focusColor
+                              : Colors.grey),
+                      label: Text(
+                        "Favori",
+                        style: TextStyle(
+                            color: _isFavorited == true
+                                ? Theme.of(context).focusColor
+                                : Colors.grey),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => AddReview(
+                                    currentGroup: widget.currentGroup,
+                                    currentUser: widget.currentUser,
+                                    bookId: widget.book.id!,
+                                    fromRoute: BookHistory(
+                                        currentGroup: widget.currentGroup,
+                                        currentUser: widget.currentUser))),
+                          );
+                        },
+                        icon: const Icon(Icons.check, color: Colors.grey),
+                        label: const Text(
+                          "Lu",
+                          style: TextStyle(color: Colors.grey),
+                        )),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => AddReview(
+                                  currentGroup: widget.currentGroup,
+                                  currentUser: widget.currentUser,
+                                  bookId: widget.book.id!,
+                                  fromRoute: BookHistory(
+                                      currentGroup: widget.currentGroup,
+                                      currentUser: widget.currentUser))),
+                        );
+                      },
+                      icon: const Icon(Icons.favorite, color: Colors.grey),
+                      label: const Text(
+                        "Favori",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            }
+          });
+    }
 
     return SizedBox(
-      height: 250,
+      height: 240,
       child: GestureDetector(
         onTap: () => _goToBookDetail(context),
         child: ShadowContainer(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 200,
+                height: 150,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 100,
                       child: Image.network(_currentBookCoverUrl()),
                     ),
@@ -161,18 +248,7 @@ class _BookCardState extends State<BookCard> {
                   ],
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     TextButton.icon(
-              //         onPressed: () {},
-              //         icon: Icon(
-              //           Icons.check,
-              //         ),
-              //         label: Text("Lu")),
-              //     _displayFavorite(),
-              //   ],
-              // ),
+              _displayFavorite(),
             ],
           ),
         ),
