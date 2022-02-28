@@ -32,62 +32,7 @@ class BookDetail extends StatefulWidget {
 class _BookDetailState extends State<BookDetail> {
   // late Future<List<ReviewModel>> reviews = DBFuture()
   //     .getReviewHistory(widget.currentGroup, widget.groupId, widget.bookId);
-  bool _hasReadTheBook = false;
-  late int nbOfReviews = 0;
-  late int nbOfFavorites = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _getNbOfReviews().whenComplete(() {
-  //     setState(() {});
-  //   });
-  // }
-
-  // Future _getNbOfReviews() async {
-  //   nbOfReviews =
-  //       await DBFuture().getNbOfReviews(widget.groupId, widget.bookId);
-  //   nbOfFavorites =
-  //       await DBFuture().getNbOfFavorites(widget.groupId, widget.bookId);
-  // }
-
-  // @override
-  // void didChangeDependencies() async {
-  //   reviews = DBFuture()
-  //       .getReviewHistory(widget.currentGroup, widget.groupId, widget.bookId);
-  //   //check if the user is done with book
-  //   if (widget.currentGroup.currentBookId != null) {
-  //     if (await DBFuture().isUserDoneWithBook(
-  //         widget.currentGroup.id!, widget.bookId, widget.currentUser.uid!)) {
-  //       _doneWithBook = true;
-  //     } else {
-  //       _doneWithBook = false;
-  //     }
-  //   }
-
-  //   super.didChangeDependencies();
-  // }
-
-  // Widget displayCircularAvatar() {
-  //   if (withProfilePicture()) {
-  //     return CircularProfileAvatar(
-  //       widget.currentUser.pictureUrl,
-  //       showInitialTextAbovePicture: false,
-  //     );
-  //   } else {
-  //     return CircularProfileAvatar(
-  //       "https://digitalpainting.school/static/img/default_avatar.png",
-  //       foregroundColor: Theme.of(context).focusColor.withOpacity(0.5),
-  //       initialsText: Text(
-  //         widget.currentUser.pseudo![0].toUpperCase(),
-  //         style: TextStyle(
-  //             fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
-  //       ),
-  //       showInitialTextAbovePicture: true,
-  //     );
-  //   }
-  // }
+  //bool _hasReadTheBook = false;
 
   void _goToReview() {
     Navigator.of(context).push(
@@ -146,11 +91,11 @@ class _BookDetailState extends State<BookDetail> {
                 widget.currentBook.title ?? "Pas de titre",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20, color: Theme.of(context).primaryColor),
+                    fontSize: 20, color: Theme.of(context).focusColor),
               ),
               Text(
                 widget.currentBook.author ?? "Pas d'auteur",
-                style: TextStyle(fontSize: 20, color: Colors.grey),
+                style: const TextStyle(fontSize: 20, color: Colors.grey),
               ),
             ],
           ),
@@ -186,6 +131,17 @@ class _BookDetailState extends State<BookDetail> {
             } else {
               if (snapshot.data!.isNotEmpty) {
                 List<ReviewModel> reviews = snapshot.data!;
+                String nbOfFavorites() {
+                  int nbOfFavorites = 0;
+                  for (var item in reviews) {
+                    if (item.favorite == true) {
+                      nbOfFavorites += 1;
+                    }
+                  }
+
+                  return nbOfFavorites.toString();
+                }
+
                 return ListView.builder(
                   itemCount: reviews.length + 1,
                   itemBuilder: (BuildContext context, int index) {
@@ -229,15 +185,11 @@ class _BookDetailState extends State<BookDetail> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
-                                      //ajouter nombre de reviews
-                                      nbOfReviews.toString(),
-
+                                      reviews.length.toString(),
                                       style: kSubtitleStyle,
                                     ),
                                     Text(
-                                      //ajouter note
-                                      nbOfFavorites.toString(),
-
+                                      nbOfFavorites(),
                                       style: kSubtitleStyle,
                                     ),
                                   ],
@@ -250,7 +202,8 @@ class _BookDetailState extends State<BookDetail> {
                                     fromScreen: "bookDetail"),
                                 const Text(
                                   "Avis du groupe",
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 30),
                                 ),
                                 const SizedBox(
                                   height: 20,
