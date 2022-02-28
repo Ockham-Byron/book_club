@@ -1,6 +1,8 @@
+import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/member_card.dart';
+import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/containers/background_container.dart';
@@ -115,8 +117,7 @@ class _AdminGroupState extends State<AdminGroup> {
 
   List<String>? getGroupMembers() {
     List<String>? groupMembers;
-    if (widget.currentGroup.members!.length < 0) {
-      print("0 membres, comme c'est bizarre");
+    if (widget.currentGroup.members!.isEmpty) {
       groupMembers = [widget.currentGroup.leader!];
     } else {
       groupMembers = widget.currentGroup.members!;
@@ -170,10 +171,6 @@ class _AdminGroupState extends State<AdminGroup> {
                         "MEMBRES",
                         style: kTitleStyle,
                       ),
-                      // Text(
-                      //   "CRITIQUES",
-                      //   style: kTitleStyle,
-                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -182,11 +179,22 @@ class _AdminGroupState extends State<AdminGroup> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                        "0",
-                        //getGroupBooks().toString(),
-                        style: kSubtitleStyle,
-                      ),
+                      StreamBuilder<List<BookModel>>(
+                          stream:
+                              DBStream().getAllBooks(widget.currentGroup.id!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Loading();
+                            } else {
+                              List<BookModel> books = snapshot.data!;
+                              return Text(
+                                books.length.toString(),
+                                //getGroupBooks().toString(),
+                                style: kSubtitleStyle,
+                              );
+                            }
+                          }),
                       Text(
                         getNbGroupMembers().toString(),
                         style: kSubtitleStyle,
@@ -243,7 +251,10 @@ class _AdminGroupState extends State<AdminGroup> {
                   ),
                   const Text(
                     "Membres du groupe",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(
                     height: 20,

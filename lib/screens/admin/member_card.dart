@@ -56,9 +56,10 @@ class MemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? _foregroundColor =
-        Colors.primaries[_random.nextInt(Colors.primaries.length)]
-            [_random.nextInt(9) * 100];
+    final Color? _foregroundColor = Colors
+        .primaries[_random.nextInt(Colors.primaries.length)]
+            [_random.nextInt(9) * 100]
+        ?.withOpacity(0.6);
     Widget displayCircularAvatar() {
       if (withProfilePicture()) {
         return CircularProfileAvatar(
@@ -108,7 +109,7 @@ class MemberCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.auto_stories,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).focusColor,
                     ),
                     const SizedBox(
                       width: 10,
@@ -120,7 +121,7 @@ class MemberCard extends StatelessWidget {
                     Text(
                       getUserReadBooks().toString(),
                       style: TextStyle(
-                          color: Theme.of(context).primaryColor, fontSize: 15),
+                          color: Theme.of(context).focusColor, fontSize: 15),
                     ),
                     const Text(
                       " / ",
