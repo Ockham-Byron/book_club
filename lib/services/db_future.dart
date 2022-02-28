@@ -173,6 +173,22 @@ class DBFuture {
     return message;
   }
 
+  //Edit groupName
+  Future<String> editGroupName(
+      {required String groupId, required String groupName}) async {
+    String message = "error";
+
+    try {
+      await groupsCollection.doc(groupId).update({
+        "name": groupName.trim(),
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   //Manage picker of the next book
   Future<String> changePicker(String groupId) async {
     String message = "error";

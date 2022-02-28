@@ -2,14 +2,17 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/member_card.dart';
-import 'package:book_club/services/db_future.dart';
+
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
+import 'package:book_club/shared/app_drawer.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../edit/edit_groupname.dart';
 
 class AdminGroup extends StatefulWidget {
   final GroupModel currentGroup;
@@ -34,14 +37,6 @@ class _AdminGroupState extends State<AdminGroup> {
       groupId = "Id inconnu, ce qui est très étrange";
     }
     return groupId;
-  }
-
-  String _displayGroupName() {
-    if (widget.currentGroup.name != null) {
-      return widget.currentGroup.name!;
-    } else {
-      return "Groupe sans nom";
-    }
   }
 
   bool withProfilePicture() {
@@ -72,15 +67,36 @@ class _AdminGroupState extends State<AdminGroup> {
     }
   }
 
-  // int getGroupBooks() {
-  //   int groupBooks;
-  //   if (widget.currentGroup.nbOfBooks != null) {
-  //     groupBooks = widget.currentGroup.nbOfBooks!;
-  //   } else {
-  //     groupBooks = 0;
-  //   }
-  //   return groupBooks;
-  // }
+  Widget displayEditButton() {
+    if (widget.currentUser.uid == widget.currentGroup.leader) {
+      return StreamBuilder<GroupModel>(
+          stream: DBStream().getGroupData(widget.currentGroup.id!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container();
+            } else {
+              GroupModel _currentGroup = snapshot.data!;
+              return TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditGroupName(
+                            currentGroup: _currentGroup,
+                            currentUser: widget.currentUser,
+                          )));
+                },
+                child: Text(
+                  "MODIFIER",
+                  style: TextStyle(color: Theme.of(context).focusColor),
+                ),
+              );
+            }
+          });
+    } else {
+      return Container(
+        height: 50,
+      );
+    }
+  }
 
   int getNbGroupMembers() {
     int groupMembers;
@@ -145,24 +161,10 @@ class _AdminGroupState extends State<AdminGroup> {
               ),
               child: Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      // Navigator.of(context).push(
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             EditGroupName(
-                      //               currentGroup:
-                      //                   widget.currentGroup,
-                      //             )));
-                    },
-                    child: Text(
-                      "MODIFIER",
-                      style: TextStyle(color: Theme.of(context).focusColor),
-                    ),
-                  ),
+                  displayEditButton(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
+                    children: const [
                       Text(
                         "LIVRES",
                         style: kTitleStyle,
@@ -295,185 +297,15 @@ class _AdminGroupState extends State<AdminGroup> {
           ],
         ),
       ),
+      drawer: AppDrawer(
+        currentGroup: widget.currentGroup,
+        currentUser: widget.currentUser,
+      ),
     );
-
-    // return Scaffold(
-    //   body: BackgroundContainer(
-    //     child: Column(
-    //       children: [
-    //         CustomAppBar(
-    //             currentUser: widget.currentUser,
-    //             currentGroup: widget.currentGroup),
-    //         Container(
-    //           width: MediaQuery.of(context).size.width,
-    //           decoration: BoxDecoration(
-    //             color: Theme.of(context).canvasColor,
-    //             borderRadius: const BorderRadius.only(
-    //               topLeft: Radius.circular(50),
-    //               topRight: Radius.circular(50),
-    //             ),
-    //           ),
-    //           child: Column(),
-    //         ),
-    //         Container(
-    //           child: StreamBuilder<List<UserModel>>(
-    //             stream: DBStream().getAllUsers(),
-    //             builder: (context, snapshot) {
-    //               if (snapshot.connectionState == ConnectionState.waiting) {
-    //                 print("waiting");
-    //                 return const Loading();
-    //               } else {
-    //                 if (snapshot.hasError) {
-    //                   print("y a un problème dans le data");
-    //                   return const Loading();
-    //                 } else {
-    //                   if (!snapshot.hasData) {
-    //                     print("y a pas de data");
-    //                     return const Loading();
-    //                   } else {
-    //                     return ListView.builder(
-    //                         itemCount: snapshot.data!.length + 1,
-    //                         itemBuilder: (BuildContext context, int index) {
-    //                           if (index == 0) {
-    //                             return Column(
-    //                               children: [
-    //                                 Column(
-    //                                   children: [
-    //                                     TextButton(
-    //                                         onPressed: () {
-    //                                           // Navigator.of(context).push(
-    //                                           //     MaterialPageRoute(
-    //                                           //         builder: (context) =>
-    //                                           //             EditGroupName(
-    //                                           //               currentGroup:
-    //                                           //                   widget.currentGroup,
-    //                                           //             )));
-    //                                         },
-    //                                         child: Text(
-    //                                           "MODIFIER",
-    //                                           style: TextStyle(
-    //                                               color: Theme.of(context)
-    //                                                   .primaryColor),
-    //                                         )),
-    //                                     Row(
-    //                                       mainAxisAlignment:
-    //                                           MainAxisAlignment.spaceAround,
-    //                                       children: [
-    //                                         Text(
-    //                                           "LIVRES",
-    //                                           style: kTitleStyle,
-    //                                         ),
-    //                                         Text(
-    //                                           "MEMBRES",
-    //                                           style: kTitleStyle,
-    //                                         ),
-    //                                         // Text(
-    //                                         //   "CRITIQUES",
-    //                                         //   style: kTitleStyle,
-    //                                         // ),
-    //                                       ],
-    //                                     ),
-    //                                     const SizedBox(
-    //                                       height: 10,
-    //                                     ),
-    //                                     Row(
-    //                                       mainAxisAlignment:
-    //                                           MainAxisAlignment.spaceAround,
-    //                                       children: [
-    //                                         Text(
-    //                                           "0",
-    //                                           //getGroupBooks().toString(),
-    //                                           style: kSubtitleStyle,
-    //                                         ),
-    //                                         Text(
-    //                                           getNbGroupMembers().toString(),
-    //                                           style: kSubtitleStyle,
-    //                                         ),
-    //                                       ],
-    //                                     ),
-    //                                     Container(
-    //                                       width: 350,
-    //                                       padding: EdgeInsets.all(20),
-    //                                       margin: EdgeInsets.symmetric(
-    //                                           vertical: 20),
-    //                                       decoration: BoxDecoration(
-    //                                           border: Border.all(
-    //                                               width: 1,
-    //                                               color: Theme.of(context)
-    //                                                   .primaryColor)),
-    //                                       child: Column(
-    //                                         children: [
-    //                                           const Text(
-    //                                               "Id du groupe à partager aux nouveaux membres"),
-    //                                           const SizedBox(
-    //                                             height: 30,
-    //                                           ),
-    //                                           Row(
-    //                                             mainAxisAlignment:
-    //                                                 MainAxisAlignment.center,
-    //                                             children: [
-    //                                               Text(_getGroupId()!),
-    //                                               const SizedBox(
-    //                                                 width: 20,
-    //                                               ),
-    //                                               GestureDetector(
-    //                                                 child: Icon(
-    //                                                   Icons.copy,
-    //                                                   color: Theme.of(context)
-    //                                                       .primaryColor,
-    //                                                 ),
-    //                                                 onTap: _copyToClipboard,
-    //                                               ),
-    //                                             ],
-    //                                           ),
-    //                                         ],
-    //                                       ),
-    //                                     ),
-    //                                     ElevatedButton(
-    //                                         onPressed: _goToHistory,
-    //                                         child: Text(
-    //                                             "Voir tous les livres du groupe")),
-    //                                     SizedBox(
-    //                                       height: 50,
-    //                                     ),
-    //                                     Text(
-    //                                       "Membres du groupe",
-    //                                       style: TextStyle(
-    //                                           fontSize: 30,
-    //                                           fontWeight: FontWeight.w500),
-    //                                     ),
-    //                                     SizedBox(
-    //                                       height: 20,
-    //                                     )
-    //                                   ],
-    //                                 ),
-    //                               ],
-    //                             );
-    //                           } else {
-    //                             return Padding(
-    //                               padding:
-    //                                   const EdgeInsets.fromLTRB(10, 10, 10, 0),
-    //                               child: MemberCard(
-    //                                 user: snapshot.data![index - 1],
-    //                                 currentGroup: widget.currentGroup,
-    //                               ),
-    //                             );
-    //                           }
-    //                         });
-    //                   }
-    //                 }
-    //               }
-    //             },
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
 
-final kTitleStyle = TextStyle(
+const kTitleStyle = TextStyle(
   fontSize: 20,
   color: Colors.grey,
   fontWeight: FontWeight.w700,

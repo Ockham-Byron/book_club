@@ -1,6 +1,9 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
+import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -12,6 +15,18 @@ class CustomAppBar extends StatelessWidget {
       : super(key: key);
 
   final AuthService _auth = AuthService();
+
+  void _signOut(BuildContext context) async {
+    await _auth.signOut();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AppRoot(),
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +82,21 @@ class CustomAppBar extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
                   color: Colors.grey.shade200.withOpacity(0.5)),
-              child: Text(
-                currentGroup.name ?? "groupe sans nom",
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black, fontSize: 30),
-              ),
+              child: StreamBuilder<GroupModel>(
+                  stream: DBStream().getGroupData(currentGroup.id!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Loading();
+                    } else {
+                      GroupModel _currentGroup = snapshot.data!;
+                      return Text(
+                        _currentGroup.name ?? "groupe sans nom",
+                        textAlign: TextAlign.center,
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 30),
+                      );
+                    }
+                  }),
             ),
           ),
           const SizedBox(
@@ -83,7 +108,7 @@ class CustomAppBar extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () async {
-                await _auth.signOut();
+                _signOut(context);
               })
         ],
       ),
