@@ -80,7 +80,7 @@ class _FinishButtonState extends State<FinishButton> {
             );
           } else {
             if (widget.fromScreen == "singleBookHome") {
-              finishedMessage = "coucou";
+              finishedMessage = "J'ai terminé";
             } else {
               finishedMessage =
                   "Indique que, toi aussi, tu as terminé ce livre";

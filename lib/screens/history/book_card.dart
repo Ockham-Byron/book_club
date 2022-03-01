@@ -55,6 +55,30 @@ class _BookCardState extends State<BookCard> {
     );
   }
 
+  Widget _displayEdit(BookModel _currentBook) {
+    if (widget.currentUser.uid == _currentBook.submittedBy) {
+      return RotatedBox(
+        quarterTurns: 3,
+        child: TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditBook(
+                        currentGroup: widget.currentGroup,
+                        currentBook: _currentBook,
+                        currentUser: widget.currentUser,
+                        fromScreen: "fromHome",
+                      )));
+            },
+            child: Text(
+              "MODIFIER",
+              style: TextStyle(color: Theme.of(context).focusColor),
+            )),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget _displayFavorite() {
@@ -227,24 +251,7 @@ class _BookCardState extends State<BookCard> {
                         ],
                       ),
                     ),
-                    RotatedBox(
-                      quarterTurns: 3,
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EditBook(
-                                      currentGroup: widget.currentGroup,
-                                      currentBook: widget.book,
-                                      currentUser: widget.currentUser,
-                                      fromScreen: "fromHistory",
-                                    )));
-                          },
-                          child: Text(
-                            "MODIFIER",
-                            style:
-                                TextStyle(color: Theme.of(context).focusColor),
-                          )),
-                    )
+                    _displayEdit(widget.book),
                   ],
                 ),
               ),

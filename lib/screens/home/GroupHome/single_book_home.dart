@@ -29,7 +29,7 @@ class _SingleBookHomeState extends State<SingleBookHome> {
         child: Column(
           children: [
             SizedBox(
-              height: 120,
+              height: 160,
               child: CustomAppBar(
                 currentUser: widget.currentUser,
                 currentGroup: widget.currentGroup,
