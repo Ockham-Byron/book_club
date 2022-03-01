@@ -6,7 +6,6 @@ import 'package:book_club/sections/book_section/book_card.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class BookSection extends StatefulWidget {
   final GroupModel currentGroup;
@@ -26,6 +25,7 @@ class BookSection extends StatefulWidget {
 
 class _BookSectionState extends State<BookSection> {
   String nothingText = "";
+  String nothingImage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +36,12 @@ class _BookSectionState extends State<BookSection> {
           nothingText = "pas de favoris";
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("waiting");
           return const Loading();
         } else {
           if (snapshot.hasError) {
-            print("y a un problème");
             return const Loading();
           } else {
             if (!snapshot.hasData) {
-              print("pas de data");
               return const Loading();
             } else {
               //define the selected lists of books
@@ -55,12 +52,13 @@ class _BookSectionState extends State<BookSection> {
                   if (widget.currentUser.readBooks!.contains(book.id) ||
                       widget.currentUser.dontWantToReadBooks!
                           .contains(book.id)) {
-                    //print("déjà lu");
                   } else {
                     selectedBooks.add(book);
                   }
                 }
                 nothingText = "Vous avez tout lu";
+                nothingImage =
+                    "https://upload.wikimedia.org/wikipedia/commons/7/7f/Dicoo_bienvenue.png";
               }
               if (widget.sectionCategory == "favoris") {
                 for (var book in allBooks) {
@@ -68,7 +66,9 @@ class _BookSectionState extends State<BookSection> {
                     selectedBooks.add(book);
                   }
                 }
-                nothingText = "aucun favori";
+                nothingText = "Aucun favori ;(";
+                nothingImage =
+                    "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
               }
 
               if (selectedBooks.isNotEmpty) {
@@ -96,12 +96,19 @@ class _BookSectionState extends State<BookSection> {
               } else {
                 return Container(
                   padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    nothingText,
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 150, child: Image.network(nothingImage)),
+                      const SizedBox(width: 20),
+                      Text(
+                        nothingText,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 );
               }

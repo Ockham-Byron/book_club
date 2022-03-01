@@ -145,9 +145,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
         context,
         MaterialPageRoute(
           builder: (context) => AddBook(
-            // onGroupCreation: false,
-            // onError: false,
-            // currentUser: currentUser,
             currentGroup: widget.currentGroup,
           ),
         ),
@@ -155,7 +152,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
     }
 
     if (widget.currentGroup.currentBookId != null) {
-      //print("bookId : " + widget.currentGroup.currentBookId.toString());
       return StreamBuilder<BookModel>(
           stream: DBStream().getBookData(
               groupId: widget.currentGroup.id!,

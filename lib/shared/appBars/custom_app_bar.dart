@@ -2,8 +2,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
-import 'package:book_club/services/db_stream.dart';
-import 'package:book_club/shared/loading.dart';
+
 import 'package:flutter/material.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -78,26 +77,15 @@ class CustomAppBar extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              width: 200.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: Colors.grey.shade200.withOpacity(0.5)),
-              child: StreamBuilder<GroupModel>(
-                  stream: DBStream().getGroupData(currentGroup.id!),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Loading();
-                    } else {
-                      GroupModel _currentGroup = snapshot.data!;
-                      return Text(
-                        _currentGroup.name ?? "groupe sans nom",
-                        textAlign: TextAlign.center,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 30),
-                      );
-                    }
-                  }),
-            ),
+                width: 200.0,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.grey.shade200.withOpacity(0.5)),
+                child: Text(
+                  currentGroup.name ?? "groupe sans nom",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.black, fontSize: 30),
+                )),
           ),
           const SizedBox(
             width: 20,

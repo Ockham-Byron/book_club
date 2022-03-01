@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/admin_group.dart';
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
@@ -30,23 +33,16 @@ class _EditGroupNameState extends State<EditGroupName> {
   }
 
   void _editGroupName(String groupId, String groupName) async {
-    String _message;
-
-    _message =
-        await DBFuture().editGroupName(groupId: groupId, groupName: groupName);
-
-    if (_message == "success") {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => AdminGroup(
-              currentGroup: widget.currentGroup,
-              currentUser: widget.currentUser)));
-    }
+    await DBFuture().editGroupName(groupId: groupId, groupName: groupName);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => AdminGroup(
+            currentGroup: widget.currentGroup,
+            currentUser: widget.currentUser)));
   }
 
   final TextEditingController _groupNameInput = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    //UserModel _currentUser = Provider.of<UserModel>(context, listen: false);
     return Scaffold(
       body: BackgroundContainer(
         child: Center(
@@ -54,47 +50,49 @@ class _EditGroupNameState extends State<EditGroupName> {
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ShadowContainer(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextFormField(
-                    autofocus: true,
-                    focusNode: fgrname,
-                    onTap: () {
-                      setState(() {
-                        FocusScope.of(context).requestFocus(fgrname);
-                      });
-                    },
-                    textInputAction: TextInputAction.next,
-                    controller: _groupNameInput,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.group,
-                        color: Theme.of(context).primaryColor,
+              child: Form(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextFormField(
+                      autofocus: true,
+                      focusNode: fgrname,
+                      onTap: () {
+                        setState(() {
+                          FocusScope.of(context).requestFocus(fgrname);
+                        });
+                      },
+                      textInputAction: TextInputAction.next,
+                      controller: _groupNameInput,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.group,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        labelText: "Nom du groupe",
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
                       ),
-                      labelText: "Nom du groupe",
-                      labelStyle:
-                          TextStyle(color: Theme.of(context).primaryColor),
+                      style: Theme.of(context).textTheme.headline6,
                     ),
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _editGroupName(
-                          widget.currentGroup.id!, _groupNameInput.text);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      child: Text(
-                        "Modifier".toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _editGroupName(
+                            widget.currentGroup.id!, _groupNameInput.text);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
+                        child: Text(
+                          "Modifier".toUpperCase(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
