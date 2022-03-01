@@ -65,58 +65,75 @@ class _BookDetailState extends State<BookDetail> {
   }
 
   Widget _displayBookInfo() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      height: 150,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 90,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(_currentBookCoverUrl()),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Column(
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          height: 150,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                widget.currentBook.title ?? "Pas de titre",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 20, color: Theme.of(context).focusColor),
+              Container(
+                width: 90,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage(_currentBookCoverUrl()),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              Text(
-                widget.currentBook.author ?? "Pas d'auteur",
-                style: const TextStyle(fontSize: 20, color: Colors.grey),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.currentBook.title ?? "Pas de titre",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20, color: Theme.of(context).focusColor),
+                  ),
+                  Text(
+                    widget.currentBook.author ?? "Pas d'auteur",
+                    style: const TextStyle(fontSize: 20, color: Colors.grey),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    widget.currentBook.length.toString() + " pages",
+                    style: const TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+          //const Text("Livre proposé par"),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Livre proposé par "),
+            StreamBuilder<UserModel>(
+                stream: DBStream().getUserData(widget.currentBook.submittedBy!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loading();
+                  } else {
+                    UserModel _user = snapshot.data!;
+                    return Text(
+                      "${_user.pseudo![0].toUpperCase()}${_user.pseudo!.substring(1)}",
+                      style: TextStyle(color: Theme.of(context).focusColor),
+                    );
+                  }
+                })
+          ],
+        ),
+      ],
     );
   }
-
-  // Widget _displayAddReview() {
-  //   if (!_doneWithBook) {
-  //     return Padding(
-  //       padding: const EdgeInsets.all(20.0),
-  //       child: ElevatedButton(
-  //           onPressed: () => _goToReview(),
-  //           child:
-  //               const Text("Indique que, toi, aussi, tu as terminé ce livre")),
-  //     );
-  //   } else {
-  //     return const Text("");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +180,9 @@ class _BookDetailState extends State<BookDetail> {
                             child: Column(
                               children: [
                                 _displayBookInfo(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -200,6 +220,9 @@ class _BookDetailState extends State<BookDetail> {
                                     book: widget.currentBook,
                                     bookId: widget.currentBook.id!,
                                     fromScreen: "bookDetail"),
+                                const SizedBox(
+                                  height: 30,
+                                ),
                                 const Text(
                                   "Avis du groupe",
                                   style: TextStyle(
@@ -254,8 +277,9 @@ class _BookDetailState extends State<BookDetail> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            _displayBookInfo(),
                             Container(
-                              height: 300,
+                              height: 200,
                               decoration: const BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(
@@ -275,7 +299,7 @@ class _BookDetailState extends State<BookDetail> {
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            const SizedBox(height: 100),
+                            const SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: () => _goToReview(),
                               child: const Text("Ajouter la première critique"),

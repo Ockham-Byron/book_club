@@ -1,5 +1,6 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
+import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
@@ -12,7 +13,10 @@ import 'package:intl/intl.dart';
 
 class AddBook extends StatefulWidget {
   final GroupModel currentGroup;
-  const AddBook({Key? key, required this.currentGroup}) : super(key: key);
+  final UserModel currentUser;
+  const AddBook(
+      {Key? key, required this.currentGroup, required this.currentUser})
+      : super(key: key);
 
   @override
   _AddBookState createState() => _AddBookState();
@@ -157,6 +161,7 @@ class _AddBookState extends State<AddBook> {
                       author: _bookAuthorInput.text,
                       length: int.parse(_bookLengthInput.text),
                       cover: _bookCoverInput.text,
+                      submittedBy: widget.currentUser.uid,
                       dueDate: Timestamp.fromDate(_selectedDate));
                   if (widget.currentGroup.id != null) {
                     _addBook(context, widget.currentGroup.id!, book);

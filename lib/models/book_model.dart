@@ -7,6 +7,7 @@ class BookModel {
   int? length;
   String? cover;
   Timestamp? dueDate;
+  String? submittedBy;
   // String? ownerId;
   // String? lenderId;
   // List<String>? nbOfReaders;
@@ -18,6 +19,7 @@ class BookModel {
       this.author,
       this.length,
       this.dueDate,
+      this.submittedBy,
       // this.ownerId,
       // this.lenderId,
       // this.nbOfReaders,

@@ -234,7 +234,8 @@ class DBFuture {
         "author": book.author,
         "length": book.length,
         "dueDate": book.dueDate,
-        "cover": book.cover
+        "cover": book.cover,
+        "submittedBy": book.submittedBy,
       });
 
       //add book to the Group schedule

@@ -82,6 +82,7 @@ class DBStream {
           author: doc.data()["author"],
           length: doc.data()["length"],
           dueDate: doc.data()["dueDate"],
+          submittedBy: doc.data()["submittedBy"],
           cover: doc.data()["cover"]);
     }).toList();
   }
@@ -104,7 +105,8 @@ class DBStream {
         author: snapshot.get("author"),
         length: snapshot.get("length"),
         dueDate: snapshot.get("dueDate"),
-        cover: snapshot.get("cover"));
+        cover: snapshot.get("cover"),
+        submittedBy: snapshot.get("submittedBy"));
   }
 
   //get book doc stream

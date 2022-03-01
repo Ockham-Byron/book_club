@@ -24,6 +24,7 @@ class _NextBookInfoState extends State<NextBookInfo> {
       MaterialPageRoute(
         builder: (context) => AddBook(
           currentGroup: widget.currentGroup,
+          currentUser: widget.currentUser,
           //currentUser: _pickingUser,
         ),
       ),

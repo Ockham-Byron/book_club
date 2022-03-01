@@ -76,6 +76,30 @@ class _SingleBookCardState extends State<SingleBookCard> {
     return currentBookCoverUrl;
   }
 
+  Widget _displayEdit(BookModel _currentBook) {
+    if (widget.currentUser.uid == _currentBook.submittedBy) {
+      return RotatedBox(
+        quarterTurns: 3,
+        child: TextButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditBook(
+                        currentGroup: widget.currentGroup,
+                        currentBook: _currentBook,
+                        currentUser: widget.currentUser,
+                        fromScreen: "fromHome",
+                      )));
+            },
+            child: Text(
+              "MODIFIER",
+              style: TextStyle(color: Theme.of(context).focusColor),
+            )),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   Widget _displayCurrentBookInfo(BookModel _currentBook) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -117,23 +141,7 @@ class _SingleBookCardState extends State<SingleBookCard> {
             ],
           ),
         ),
-        RotatedBox(
-          quarterTurns: 3,
-          child: TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditBook(
-                          currentGroup: widget.currentGroup,
-                          currentBook: _currentBook,
-                          currentUser: widget.currentUser,
-                          fromScreen: "fromHome",
-                        )));
-              },
-              child: Text(
-                "MODIFIER",
-                style: TextStyle(color: Theme.of(context).focusColor),
-              )),
-        )
+        _displayEdit(_currentBook)
       ],
     );
   }
@@ -146,6 +154,7 @@ class _SingleBookCardState extends State<SingleBookCard> {
         MaterialPageRoute(
           builder: (context) => AddBook(
             currentGroup: widget.currentGroup,
+            currentUser: widget.currentUser,
           ),
         ),
       );

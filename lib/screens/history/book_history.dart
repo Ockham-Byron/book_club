@@ -8,6 +8,7 @@ import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/app_drawer.dart';
 import 'package:book_club/shared/containers/background_container.dart';
+import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/loading.dart';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -70,9 +71,7 @@ class _BookHistoryState extends State<BookHistory> {
       context,
       MaterialPageRoute(
         builder: (context) => AddBook(
-          // onGroupCreation: false,
-          // onError: false,
-          // currentUser: currentUser,
+          currentUser: widget.currentUser,
           currentGroup: widget.currentGroup,
         ),
       ),
@@ -125,36 +124,42 @@ class _BookHistoryState extends State<BookHistory> {
               } else {
                 //Si pas de critique
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(
-                          right: 50,
-                        ),
-                        child: Image.network(
-                            "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          "Il n'y a pas encore de livre dans ce groupe ;(",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 20,
+                  padding: const EdgeInsets.symmetric(vertical: 180.0),
+                  child: ShadowContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(
+                              right: 50,
+                            ),
+                            child: Image.network(
+                                "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text(
+                              "Il n'y a pas encore de livre dans ce groupe ;(",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          ElevatedButton(
+                            onPressed: () => _goToAddBook(),
+                            child: const Text("Ajouter le premier livre"),
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _goToAddBook(),
-                        child: const Text("Ajouter le premier livre"),
-                      ),
-                    ],
+                    ),
                   ),
                 );
               }
