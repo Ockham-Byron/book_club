@@ -1,5 +1,7 @@
+import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
 import 'package:book_club/shared/custom_form_field.dart';
+
 import 'package:flutter/material.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -35,21 +37,90 @@ class _RegisterFormState extends State<RegisterForm> {
   //key for the form's validation
   final _formKey = GlobalKey<FormState>();
 
-  //function to register the user
-  void _signUpUser(
-      String email, String password, String pseudo, String pictureUrl) async {
-    try {
-      String _message =
-          await AuthService().registerUser(email, password, pseudo, pictureUrl);
-      if (_message == "success") {
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(_message)));
-      }
-    } catch (e) {
-      //
-    }
+  //Message will be displayed if there is an error coming from Firebase
+  String errorMessage = "";
+
+  //Alert popup existing mail
+  Future<void> _showDialogExistingMail() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(errorMessage),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    'Si vous avez oublié votre mot de passe, vous pouvez le modifier. '),
+                const Text(
+                    "Si la mémoire vous revient, retournez à l'écran de connection"),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Modifier mot de passe".toUpperCase(),
+                        style: TextStyle(color: Theme.of(context).focusColor),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text("Se connecter".toUpperCase(),
+                          style:
+                              TextStyle(color: Theme.of(context).focusColor)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //Alert popup existing mail
+  Future<void> _showDialogProblem() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(errorMessage),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                    'Un problème inconnu est survenu, veuillez réessayer plus tard'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -110,7 +181,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     if (val.isValidPassword) {
                       return null;
                     } else {
-                      print("password non valide");
                       return "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial";
                     }
                   } else {
@@ -144,12 +214,6 @@ class _RegisterFormState extends State<RegisterForm> {
                   }
                 },
                 decoration: InputDecoration(
-                  // enabledBorder: UnderlineInputBorder(
-                  //     borderSide:
-                  //         BorderSide(color: Theme.of(context).canvasColor)),
-                  // focusedBorder: UnderlineInputBorder(
-                  //     borderSide:
-                  //         BorderSide(color: Theme.of(context).focusColor)),
                   prefixIcon: Icon(Icons.lock_outline,
                       color: Theme.of(context).focusColor),
                   labelText: "mot de passe bis repetita",
@@ -168,10 +232,10 @@ class _RegisterFormState extends State<RegisterForm> {
                 hintText: "adresse url de votre photo de profil",
                 focusNode: fpicture,
                 validator: (val) {
-                  if (val!.isValidImageUrl || val == "non") {
+                  if (val!.isValidImageUrl || val == "") {
                     return null;
                   } else {
-                    return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, écrivez "non"';
+                    return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
                   }
                 },
                 textEditingController: _pictureInput,
@@ -181,23 +245,35 @@ class _RegisterFormState extends State<RegisterForm> {
               const SizedBox(
                 height: 10,
               ),
+
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).focusColor,
                   minimumSize: const Size(250, 50),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (_passwordInput.text == _passwordBisInput.text) {
-                      _signUpUser(_emailInput.text, _passwordInput.text,
-                          _pseudoInput.text, _pictureInput.text);
+                    String message;
+                    message = await AuthService().registerUser(
+                        _emailInput.text,
+                        _passwordInput.text,
+                        _pseudoInput.text,
+                        _pictureInput.text);
+
+                    if (message == "Il existe déjà un compte avec ce mail.") {
+                      _showDialogExistingMail();
+                    } else if (message == "success") {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const AppRoot()),
+                          (route) => false);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("mots de passe différents"),
-                        ),
-                      );
+                      _showDialogProblem();
                     }
+
+                    //setState(() {});
+
+                    // _showDialog();
                   }
                 },
                 child: const Text(
@@ -218,20 +294,4 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
     );
   }
-
-  // InputDecoration fieldDecoration(
-  //     BuildContext context, IconData icon, String labelText) {
-  //   return InputDecoration(
-  //       enabledBorder: UnderlineInputBorder(
-  //           borderSide: BorderSide(color: Theme.of(context).canvasColor)),
-  //       focusedBorder: UnderlineInputBorder(
-  //           borderSide: BorderSide(color: Theme.of(context).focusColor)),
-  //       errorBorder: UnderlineInputBorder(
-  //         borderSide: BorderSide(color: Theme.of(context).shadowColor),
-  //       ),
-  //       prefixIcon: Icon(icon, color: Theme.of(context).focusColor),
-  //       labelText: labelText,
-  //       labelStyle: TextStyle(color: Theme.of(context).focusColor),
-  //       errorStyle: TextStyle(color: Theme.of(context).shadowColor));
-  // }
 }

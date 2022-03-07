@@ -57,12 +57,13 @@ class AuthService {
         message = "success";
       }
       message = "success";
-    } catch (signUpError) {
-      if (signUpError is PlatformException) {
-        if (signUpError.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-          message =
-              "$email a déjà été enregistré. Avez-vous oublié votre mot de passe ?";
-        }
+    } on FirebaseAuthException catch (signUpError) {
+      print(signUpError);
+      if (signUpError.message ==
+          "The email address is already in use by another account.") {
+        message = "Il existe déjà un compte avec ce mail.";
+      } else {
+        message = "Il y a eu un problème...";
       }
     }
     return message;
