@@ -21,17 +21,18 @@ class AuthService {
 
   //Sign in with email and password
 
-  Future<bool> logInUser(String email, String password) async {
-    bool retValue = false;
+  Future<String> logInUser(String email, String password) async {
+    String message = "error";
 
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      retValue = true;
-    } catch (e) {
-      // print(e);
+      message = "success";
+    } on FirebaseAuthException catch (error) {
+      print(error.message);
+      message = error.message.toString();
     }
 
-    return retValue;
+    return message;
   }
 
   //Register with email and password
@@ -58,12 +59,11 @@ class AuthService {
       }
       message = "success";
     } on FirebaseAuthException catch (signUpError) {
-      print(signUpError);
       if (signUpError.message ==
           "The email address is already in use by another account.") {
         message = "Il existe déjà un compte avec ce mail.";
       } else {
-        message = "Il y a eu un problème...";
+        message = "erreur inconnue";
       }
     }
     return message;
@@ -81,14 +81,21 @@ class AuthService {
 
   // Reset Password
   Future<String> sendPasswordResetEmail(String email) async {
-    String retVal = "error";
+    String message = "error";
     try {
       _auth.sendPasswordResetEmail(email: email);
-      retVal = "sucess";
-    } catch (e) {
-      //print(e);
+      message = "success";
+    } on PlatformException catch (emailError) {
+      print("prblème mail :");
+      print(emailError.message);
+      if (emailError.message ==
+          "There is no user record corresponding to this identifier. The user may have been deleted.") {
+        message = "Aucun compte correspondant à ce mail.";
+      } else {
+        message = "erreur inconnue";
+      }
     }
-    return retVal;
+    return message;
   }
 
   // Reset email

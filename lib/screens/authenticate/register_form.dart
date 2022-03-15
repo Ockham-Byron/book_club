@@ -1,4 +1,5 @@
 import 'package:book_club/root.dart';
+import 'package:book_club/screens/authenticate/reset_password.dart';
 import 'package:book_club/services/auth.dart';
 import 'package:book_club/shared/custom_form_field.dart';
 
@@ -37,9 +38,6 @@ class _RegisterFormState extends State<RegisterForm> {
   //key for the form's validation
   final _formKey = GlobalKey<FormState>();
 
-  //Message will be displayed if there is an error coming from Firebase
-  String errorMessage = "";
-
   //Alert popup existing mail
   Future<void> _showDialogExistingMail() async {
     return showDialog<void>(
@@ -47,7 +45,7 @@ class _RegisterFormState extends State<RegisterForm> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(errorMessage),
+          title: const Text("Cet email correspond déjà à un compte"),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -62,7 +60,10 @@ class _RegisterFormState extends State<RegisterForm> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => ResetPassword())));
+                      },
                       child: Text(
                         "Modifier mot de passe".toUpperCase(),
                         style: TextStyle(color: Theme.of(context).focusColor),
@@ -93,14 +94,14 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  //Alert popup existing mail
+  //Alert popup unknown problem
   Future<void> _showDialogProblem() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(errorMessage),
+          title: const Text(";_("),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -270,10 +271,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     } else {
                       _showDialogProblem();
                     }
-
-                    //setState(() {});
-
-                    // _showDialog();
                   }
                 },
                 child: const Text(
