@@ -133,7 +133,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                         children: [
                           Container(
                             margin: const EdgeInsets.only(top: 50),
-                            height: 1200,
+                            height: 1350,
                             decoration: BoxDecoration(
                               color: Colors.amber[50],
                               borderRadius: const BorderRadius.only(
@@ -233,6 +233,17 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                     currentUser: _currentUser,
                                     sectionCategory: "favoris",
                                   ),
+                                  const Text(
+                                    "Tous les livres lus",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 30),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  BookSection(
+                                    currentGroup: widget.currentGroup,
+                                    currentUser: _currentUser,
+                                    sectionCategory: "lus",
+                                  )
                                 ],
                               ),
                             ),

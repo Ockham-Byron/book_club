@@ -70,12 +70,22 @@ class _BookSectionState extends State<BookSection> {
                 nothingImage =
                     "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
               }
+              if (widget.sectionCategory == "lus") {
+                for (var book in allBooks) {
+                  if (widget.currentUser.readBooks!.contains(book.id)) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "Vous n'avez encore lu aucun livre ;(";
+                nothingImage =
+                    "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+              }
 
               if (selectedBooks.isNotEmpty) {
                 return Container(
                   padding: const EdgeInsets.only(top: 20),
                   width: 350,
-                  height: 350,
+                  height: 300,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: selectedBooks.length + 1,

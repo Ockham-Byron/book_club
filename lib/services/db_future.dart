@@ -392,6 +392,37 @@ class DBFuture {
     return message;
   }
 
+  Future<String> cancelReadBook(
+    String groupId,
+    String bookId,
+    String userId,
+  ) async {
+    String message = "error";
+    List<String> readBooks = [];
+
+    try {
+      readBooks.add(bookId);
+      await usersCollection.doc(userId).update({
+        "readBooks": FieldValue.arrayRemove(readBooks),
+      });
+      await usersCollection.doc(userId).update({
+        "favoriteBooks": FieldValue.arrayRemove(readBooks),
+      });
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .collection("reviews")
+          .doc(userId)
+          .delete();
+      message = "success";
+    } catch (e) {
+      message = "error";
+    }
+
+    return message;
+  }
+
   //Edit Review
   Future<String> editReview({
     required String userId,

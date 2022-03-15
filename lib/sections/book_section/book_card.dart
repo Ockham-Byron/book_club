@@ -3,6 +3,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/sections/book_section/cancel_favorite.dart';
+import 'package:book_club/sections/book_section/cancel_read.dart';
 import 'package:book_club/sections/book_section/finish_book.dart';
 import 'package:flutter/material.dart';
 
@@ -92,6 +93,15 @@ class _BookCardState extends State<BookCard> {
                         MaterialPageRoute(
                             builder: (context) => CancelFavorite(
                                   favoriteBook: widget.book!,
+                                  currentGroup: widget.currentGroup,
+                                  currentUser: widget.currentUser,
+                                )));
+                  } else if (widget.sectionCategory == "lus") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CancelRead(
+                                  readBook: widget.book!,
                                   currentGroup: widget.currentGroup,
                                   currentUser: widget.currentUser,
                                 )));
