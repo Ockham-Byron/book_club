@@ -1,6 +1,7 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/sections/book_section/book_card.dart';
 
 import 'package:book_club/services/db_stream.dart';
@@ -26,6 +27,7 @@ class BookSection extends StatefulWidget {
 class _BookSectionState extends State<BookSection> {
   String nothingText = "";
   String nothingImage = "";
+  VoidCallback? goTo;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,14 @@ class _BookSectionState extends State<BookSection> {
                 nothingText = "Aucun favori ;(";
                 nothingImage =
                     "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+                goTo = () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => BookHistory(
+                              currentGroup: widget.currentGroup,
+                              currentUser: widget.currentUser)),
+                      (route) => false);
+                };
               }
               if (widget.sectionCategory == "lus") {
                 for (var book in allBooks) {
@@ -79,6 +89,14 @@ class _BookSectionState extends State<BookSection> {
                 nothingText = "Vous n'avez encore lu aucun livre ;(";
                 nothingImage =
                     "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+                goTo = () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => BookHistory(
+                              currentGroup: widget.currentGroup,
+                              currentUser: widget.currentUser)),
+                      (route) => false);
+                };
               }
 
               if (selectedBooks.isNotEmpty) {
@@ -104,21 +122,25 @@ class _BookSectionState extends State<BookSection> {
                   ),
                 );
               } else {
-                return Container(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 150, child: Image.network(nothingImage)),
-                      const SizedBox(width: 20),
-                      Text(
-                        nothingText,
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                return GestureDetector(
+                  onTap: goTo,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            height: 150, child: Image.network(nothingImage)),
+                        const SizedBox(width: 20),
+                        Text(
+                          nothingText,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
