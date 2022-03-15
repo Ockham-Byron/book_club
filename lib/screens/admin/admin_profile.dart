@@ -2,12 +2,12 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
+import 'package:book_club/screens/admin/nb_of_read_pages.dart';
 import 'package:book_club/screens/edit/edit_user.dart';
 import 'package:book_club/sections/book_section/book_section.dart';
 import 'package:book_club/services/db_stream.dart';
 
 import 'package:book_club/shared/loading.dart';
-import 'package:collection/collection.dart';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
@@ -33,24 +33,6 @@ class _ProfileAdminState extends State<ProfileAdmin> {
   late int nbOfReadPages = 0;
   List<BookModel> readBooks = [];
   List<int> readBooksPages = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _countReadPages().whenComplete(() => {setState(() {})});
-  }
-
-  Future _countReadPages() async {
-    for (String bookId in widget.currentUser.readBooks!) {
-      readBooks.add(await DBStream().getBook(bookId, widget.currentGroup.id!));
-    }
-    for (BookModel book in readBooks) {
-      readBooksPages.add(book.length!);
-      //print(readBooksPages);
-    }
-
-    nbOfReadPages = readBooksPages.sum;
-  }
 
   bool withProfilePicture() {
     if (widget.currentUser.pictureUrl == "") {
@@ -199,10 +181,10 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                                   .toString(),
                                               style: kSubtitleStyle,
                                             ),
-                                            Text(
-                                              nbOfReadPages.toString(),
-                                              style: kSubtitleStyle,
-                                            )
+                                            ReadPages(
+                                                currentGroup:
+                                                    widget.currentGroup,
+                                                currentUser: _currentUser)
                                           ],
                                         )
                                       ],

@@ -51,21 +51,18 @@ class FinishedBook extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AddReview(
-                    //               bookId: finishedBook.id!,
-                    //               fromRoute: ReviewHistory(
-                    //                 bookId: finishedBook.id!,
-                    //                 groupId: currentGroup.id!,
-                    //                 currentBook: finishedBook,
-                    //                 currentGroup: currentGroup,
-                    //                 currentUser: currentUser,
-
-                    //               ),
-                    //               currentGroup: currentGroup,
-                    //             )));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddReview(
+                                  currentUser: currentUser,
+                                  bookId: finishedBook.id!,
+                                  fromRoute: ProfileAdmin(
+                                    currentGroup: currentGroup,
+                                    currentUser: currentUser,
+                                  ),
+                                  currentGroup: currentGroup,
+                                )));
                   },
                   child: const Text("Vous avez terminé le livre ?"),
                 ),
