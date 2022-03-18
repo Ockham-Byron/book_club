@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../models/book_model.dart';
 import '../../services/db_future.dart';
+import '../../services/db_stream.dart';
 
 class MemberCard extends StatelessWidget {
   final UserModel user;
@@ -195,11 +197,21 @@ class MemberCard extends StatelessWidget {
                       " / ",
                       style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
-                    const Text(
-                      "0",
-                      //getnbOfGroupBooks().toString(),
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    )
+                    StreamBuilder<List<BookModel>>(
+                        stream: DBStream().getAllBooks(currentGroup.id!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else {
+                            List<BookModel> books = snapshot.data!;
+                            return Text(
+                              books.length.toString(),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 15),
+                            );
+                          }
+                        }),
                   ],
                 )
               ],

@@ -157,28 +157,6 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  //function to logIn the user
-  // void _logInUser(String email, String password) async {
-  //   try {
-  //     if (await AuthService().logInUser(email, password)) {
-  //       Navigator.of(context).pushReplacement(
-  //         MaterialPageRoute(
-  //           builder: (context) => const AppRoot(),
-  //         ),
-  //       );
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text(
-  //               "Mauvais email ou mauvais mot de passe, du coup ça marche pas"),
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     //print(e);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(

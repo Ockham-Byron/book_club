@@ -168,12 +168,23 @@ class _AdminGroupState extends State<AdminGroup> {
                           displayEditButton(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
-                              Text(
-                                "LIVRES",
-                                style: kTitleStyle,
+                            children: [
+                              GestureDetector(
+                                onTap: (() {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BookHistory(
+                                          currentGroup: widget.currentGroup,
+                                          currentUser: widget.currentUser),
+                                    ),
+                                  );
+                                }),
+                                child: const Text(
+                                  "LIVRES",
+                                  style: kTitleStyle,
+                                ),
                               ),
-                              Text(
+                              const Text(
                                 "MEMBRES",
                                 style: kTitleStyle,
                               ),
