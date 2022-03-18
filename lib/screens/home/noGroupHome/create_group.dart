@@ -1,11 +1,14 @@
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
+import 'package:book_club/screens/home/noGroupHome/no_group_home.dart';
 
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
+
+import '../../../shared/custom_form_field.dart';
 
 class CreateGroup extends StatefulWidget {
   final UserModel currentUser;
@@ -16,6 +19,9 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
+  //key for the form's validation
+  final _formKey = GlobalKey<FormState>();
+
   FocusNode? fgrname;
 
   void _createGroup(String groupName, UserModel user) async {
@@ -38,39 +44,36 @@ class _CreateGroupState extends State<CreateGroup> {
       body: BackgroundContainer(
         child: Center(
           child: Container(
-            height: 200,
+            height: 250,
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ShadowContainer(
               child: Form(
+                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    TextFormField(
-                      autofocus: true,
+                    CustomFormField(
+                      hintText: "Nom du groupe",
+                      iconData: Icons.group,
                       focusNode: fgrname,
-                      onTap: () {
-                        setState(() {
-                          FocusScope.of(context).requestFocus(fgrname);
-                        });
+                      textEditingController: _groupNameInput,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Merci de donner un nom au groupe";
+                        } else if (val.length < 4) {
+                          return "Le nom doit comporter au moins 4 caractères";
+                        } else {
+                          return null;
+                        }
                       },
-                      textInputAction: TextInputAction.next,
-                      controller: _groupNameInput,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.group,
-                          color: Theme.of(context).focusColor,
-                        ),
-                        labelText: "Nom du groupe",
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).focusColor),
-                      ),
-                      style: Theme.of(context).textTheme.bodyText2,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        UserModel currentUser = widget.currentUser;
+                        if (_formKey.currentState!.validate()) {
+                          UserModel currentUser = widget.currentUser;
 
-                        _createGroup(_groupNameInput.text, currentUser);
+                          _createGroup(_groupNameInput.text, currentUser);
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -83,6 +86,18 @@ class _CreateGroupState extends State<CreateGroup> {
                         ),
                       ),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const NoGroup(),
+                              ),
+                              (route) => false);
+                        },
+                        child: Text(
+                          "Annuler".toUpperCase(),
+                          style: TextStyle(color: Theme.of(context).focusColor),
+                        ))
                   ],
                 ),
               ),
