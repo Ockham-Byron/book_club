@@ -148,109 +148,61 @@ class _SingleBookCardState extends State<SingleBookCard> {
 
   @override
   Widget build(BuildContext context) {
-    void _goToAddBook() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddBook(
-            currentGroup: widget.currentGroup,
-            currentUser: widget.currentUser,
-          ),
-        ),
-      );
-    }
-
-    if (widget.currentGroup.currentBookId != null) {
-      return StreamBuilder<BookModel>(
-          stream: DBStream().getBookData(
-              groupId: widget.currentGroup.id!,
-              bookId: widget.currentGroup.currentBookId!),
-          initialData: BookModel(),
-          builder: (context, snapshot) {
-            BookModel _currentBook = BookModel();
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              //print("waiting");
+    return StreamBuilder<BookModel>(
+        stream: DBStream().getBookData(
+            groupId: widget.currentGroup.id!,
+            bookId: widget.currentGroup.currentBookId!),
+        initialData: BookModel(),
+        builder: (context, snapshot) {
+          BookModel _currentBook = BookModel();
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            //print("waiting");
+            return const Loading();
+          } else {
+            if (snapshot.hasError) {
+              //print("y a une erreur : " + snapshot.error.toString());
               return const Loading();
             } else {
-              if (snapshot.hasError) {
-                //print("y a une erreur : " + snapshot.error.toString());
+              if (!snapshot.hasData) {
+                //print("pas de data");
                 return const Loading();
               } else {
-                if (!snapshot.hasData) {
-                  //print("pas de data");
-                  return const Loading();
-                } else {
-                  _currentBook = snapshot.data!;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Livre à lire pour le ",
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            _displayDueDate(_currentBook),
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          Text(_displayRemainingDays(_currentBook)),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          _displayCurrentBookInfo(_currentBook),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                        ],
-                      )
-                    ],
-                  );
-                }
+                _currentBook = snapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Livre à lire pour le ",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          _displayDueDate(_currentBook),
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                        Text(_displayRemainingDays(_currentBook)),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        _displayCurrentBookInfo(_currentBook),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                      ],
+                    )
+                  ],
+                );
               }
             }
-          });
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(
-                right: 50,
-              ),
-              child: Image.network(
-                  "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                "Il n'y a pas encore de livre dans ce groupe ;(",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            ElevatedButton(
-              onPressed: () => _goToAddBook(),
-              child: const Text("Ajouter le premier livre"),
-            ),
-          ],
-        ),
-      );
-    }
+          }
+        });
   }
 }
