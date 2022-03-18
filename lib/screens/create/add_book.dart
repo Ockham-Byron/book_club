@@ -8,8 +8,11 @@ import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+
+import '../../shared/custom_form_field.dart';
 
 class AddBook extends StatefulWidget {
   final GroupModel currentGroup;
@@ -23,6 +26,15 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
+  //key for the form's validation
+  final _formKey = GlobalKey<FormState>();
+
+  //focus
+  FocusNode? ftitle;
+  FocusNode? fauthor;
+  FocusNode? flength;
+  FocusNode? fcover;
+
   //controllers of inputs
   final TextEditingController _bookTitleInput = TextEditingController();
   final TextEditingController _bookAuthorInput = TextEditingController();
@@ -79,105 +91,124 @@ class _AddBookState extends State<AddBook> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ShadowContainer(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _bookTitleInput,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.book,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CustomFormField(
+                            focusNode: ftitle,
+                            hintText: "Titre du livre",
+                            iconData: Icons.book,
+                            textEditingController: _bookTitleInput,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Merci d'indiquer le titre du livre";
+                              } else {
+                                return null;
+                              }
+                            }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomFormField(
+                            focusNode: fauthor,
+                            textEditingController: _bookAuthorInput,
+                            iconData: Icons.face,
+                            hintText: "Auteur.e du livre",
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Merci d'indiquer l'auteur du livre";
+                              } else {
+                                return null;
+                              }
+                            }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomFormField(
+                          keyboardType: TextInputType.number,
+                          focusNode: flength,
+                          textEditingController: _bookLengthInput,
+                          iconData: Icons.format_list_numbered,
+                          hintText: "Nombre de pages",
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomFormField(
+                          focusNode: fcover,
+                          textEditingController: _bookCoverInput,
+                          iconData: Icons.auto_stories,
+                          hintText: "Url de la couverture du livre",
+                          validator: (val) {
+                            if (val!.isValidImageUrl || val == "") {
+                              return null;
+                            } else {
+                              return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Rdv pour échanger sur ce livre",
+                          style: TextStyle(
+                              color: Theme.of(context).focusColor,
+                              fontSize: 20),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(DateFormat("dd/MM à HH:mm").format(_selectedDate),
+                            style: Theme.of(context).textTheme.headline6),
+                        TextButton(
+                          onPressed: () => _selectDate(context),
+                          child: Icon(
+                            Icons.calendar_today,
+                            color: Theme.of(context).focusColor,
                           ),
-                          labelText: "Titre du livre",
                         ),
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bookAuthorInput,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.face,
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              BookModel? book = BookModel(
+                                  title: _bookTitleInput.text,
+                                  author: _bookAuthorInput.text,
+                                  length: int.parse(_bookLengthInput.text),
+                                  cover: _bookCoverInput.text,
+                                  submittedBy: widget.currentUser.uid,
+                                  dueDate: Timestamp.fromDate(_selectedDate));
+                              if (widget.currentGroup.id != null) {
+                                _addBook(
+                                    context, widget.currentGroup.id!, book);
+                              } else {
+                                // print(widget.currentGroup);
+                                // print("pas de groupId");
+                              }
+                            }
+                          },
+                          child: Text(
+                            "Ajoutez le livre".toUpperCase(),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
                           ),
-                          labelText: "Auteur.e du livre",
                         ),
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bookLengthInput,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.format_list_numbered,
-                          ),
-                          labelText: "Nombre de pages",
-                        ),
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: _bookCoverInput,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.auto_stories,
-                          ),
-                          labelText: "Url de la couverture du livre",
-                        ),
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Rdv pour échanger sur ce livre",
-                        style: TextStyle(
-                            color: Theme.of(context).focusColor, fontSize: 20),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(DateFormat("dd/MM à HH:mm").format(_selectedDate),
-                          style: Theme.of(context).textTheme.headline6),
-                      TextButton(
-                        onPressed: () => _selectDate(context),
-                        child: Icon(
-                          Icons.calendar_today,
-                          color: Theme.of(context).focusColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  BookModel? book = BookModel(
-                      title: _bookTitleInput.text,
-                      author: _bookAuthorInput.text,
-                      length: int.parse(_bookLengthInput.text),
-                      cover: _bookCoverInput.text,
-                      submittedBy: widget.currentUser.uid,
-                      dueDate: Timestamp.fromDate(_selectedDate));
-                  if (widget.currentGroup.id != null) {
-                    _addBook(context, widget.currentGroup.id!, book);
-                  } else {
-                    // print(widget.currentGroup);
-                    // print("pas de groupId");
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Text(
-                    "Ajoutez le livre".toUpperCase(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Annuler".toUpperCase(),
+                              style: TextStyle(
+                                  color: Theme.of(context).focusColor)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

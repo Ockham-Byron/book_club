@@ -10,6 +10,8 @@ import 'package:book_club/shared/containers/background_container.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../create/add_book.dart';
+
 class SingleBookHome extends StatefulWidget {
   final UserModel currentUser;
   final GroupModel currentGroup;
@@ -22,6 +24,67 @@ class SingleBookHome extends StatefulWidget {
 }
 
 class _SingleBookHomeState extends State<SingleBookHome> {
+  void _goToAddBook() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddBook(
+          currentGroup: widget.currentGroup,
+          currentUser: widget.currentUser,
+        ),
+      ),
+    );
+  }
+
+  _displayHomeWidget() {
+    if (widget.currentGroup.currentBookId != null) {
+      return Column(
+        children: [
+          SingleBookCard(
+              currentUser: widget.currentUser,
+              currentGroup: widget.currentGroup),
+          NextBookInfo(
+              currentGroup: widget.currentGroup,
+              currentUser: widget.currentUser)
+        ],
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                right: 50,
+              ),
+              child: Image.network(
+                  "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                "Il n'y a pas encore de livre dans ce groupe ;(",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            ElevatedButton(
+              onPressed: () => _goToAddBook(),
+              child: const Text("Ajouter le premier livre"),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,12 +152,7 @@ class _SingleBookHomeState extends State<SingleBookHome> {
                         ],
                       ),
                     ),
-                    SingleBookCard(
-                        currentUser: widget.currentUser,
-                        currentGroup: widget.currentGroup),
-                    NextBookInfo(
-                        currentGroup: widget.currentGroup,
-                        currentUser: widget.currentUser)
+                    _displayHomeWidget()
                   ],
                 ),
               ),

@@ -10,10 +10,12 @@ class CustomFormField extends StatelessWidget {
     this.textEditingController,
     this.inputFormatters,
     this.validator,
+    this.keyboardType,
   }) : super(key: key);
   final String hintText;
   final IconData? iconData;
   final FocusNode? focusNode;
+  final TextInputType? keyboardType;
   final TextEditingController? textEditingController;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
@@ -22,6 +24,7 @@ class CustomFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
+        keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         validator: validator,
         controller: textEditingController,
