@@ -10,7 +10,7 @@ import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/loading.dart';
-import 'package:favorite_button/favorite_button.dart';
+
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {

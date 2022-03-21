@@ -49,7 +49,6 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToGroupManage() {
-      print("go to Group");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AdminGroup(
                 currentGroup: currentGroup,
@@ -66,7 +65,6 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToBooksHistory() {
-      print("go to book history");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => BookHistory(
                 currentGroup: currentGroup,

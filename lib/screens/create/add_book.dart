@@ -38,7 +38,7 @@ class _AddBookState extends State<AddBook> {
   //controllers of inputs
   final TextEditingController _bookTitleInput = TextEditingController();
   final TextEditingController _bookAuthorInput = TextEditingController();
-  final TextEditingController _bookLengthInput = TextEditingController();
+  final TextEditingController? _bookLengthInput = TextEditingController();
   final TextEditingController _bookCoverInput = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
@@ -174,10 +174,16 @@ class _AddBookState extends State<AddBook> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              int bookLength;
+                              if (_bookLengthInput!.text == "") {
+                                bookLength = 0;
+                              } else {
+                                bookLength = int.parse(_bookLengthInput!.text);
+                              }
                               BookModel? book = BookModel(
                                   title: _bookTitleInput.text,
                                   author: _bookAuthorInput.text,
-                                  length: int.parse(_bookLengthInput.text),
+                                  length: bookLength,
                                   cover: _bookCoverInput.text,
                                   submittedBy: widget.currentUser.uid,
                                   dueDate: Timestamp.fromDate(_selectedDate));

@@ -76,12 +76,6 @@ class ResetPassword extends StatelessWidget {
     );
   }
 
-  void _resetPassword(String email) async {
-    try {} catch (e) {
-      // print(e);
-    }
-  }
-
   final TextEditingController _emailInput = TextEditingController();
 
   @override
@@ -152,7 +146,7 @@ class ResetPassword extends StatelessWidget {
                           }
                           //dire d'aller voir son email
                         } catch (e) {
-                          print("y a un problème");
+                          //
                         }
                       }
                     },

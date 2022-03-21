@@ -130,7 +130,6 @@ class _RegisterFormState extends State<RegisterForm> {
       heightFactor: 0.88,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
-        //height: 600,
         child: Form(
           key: _formKey,
           child: Column(
@@ -169,7 +168,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 focusNode: fmail,
                 textEditingController: _emailInput,
                 validator: (val) {
-                  if (!val!.isValidEmail) return 'Entrez un courriel valide';
+                  if (!val!.isValidEmail) {
+                    return 'Entrez un courriel valide';
+                  } else {
+                    return null;
+                  }
                 },
               ),
 

@@ -25,7 +25,7 @@ class _ReadPagesState extends State<ReadPages> {
         stream: DBStream().getAllBooks(widget.currentGroup.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
+            return const Loading();
           } else {
             int nbOfReadPages = 0;
             List<BookModel> allBooks = snapshot.data!;

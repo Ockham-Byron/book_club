@@ -30,14 +30,6 @@ class BookHistory extends StatefulWidget {
 }
 
 class _BookHistoryState extends State<BookHistory> {
-  String _displayGroupName() {
-    if (widget.currentGroup.name != null) {
-      return widget.currentGroup.name!;
-    } else {
-      return "Groupe sans nom";
-    }
-  }
-
   bool withProfilePicture() {
     if (widget.currentUser.pictureUrl == "") {
       return false;

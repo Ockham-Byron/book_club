@@ -6,7 +6,7 @@ import 'package:book_club/screens/authenticate/login.dart';
 import 'package:book_club/screens/home/GroupHome/group_home.dart';
 import 'package:book_club/screens/home/noGroupHome/no_group_home.dart';
 import 'package:book_club/services/db_stream.dart';
-import 'package:book_club/shared/loading.dart';
+
 import 'package:book_club/shared/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +54,6 @@ class _AppRootState extends State<AppRoot> {
         //print("root currentUid : " + currentUid.toString());
         return StreamProvider<UserModel>.value(
           catchError: (context, error) {
-            print("c'est le bazar");
             return UserModel();
           },
           value: DBStream().getUserData(currentUid!),
@@ -65,7 +64,6 @@ class _AppRootState extends State<AppRoot> {
         return SplashScreen();
       }
     } else {
-      print("c'est le bordel");
       return SplashScreen();
     }
   }

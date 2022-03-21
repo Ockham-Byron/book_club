@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/review_model.dart';
@@ -121,7 +119,7 @@ class _EditReviewState extends State<EditReview> {
                             fontSize: 18,
                             color: Theme.of(context).primaryColor),
                         underline: Container(
-                          margin: EdgeInsets.only(top: 20),
+                          margin: const EdgeInsets.only(top: 20),
                           height: 2,
                           color: Theme.of(context).focusColor,
                         ),

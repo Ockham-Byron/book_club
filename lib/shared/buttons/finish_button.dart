@@ -5,7 +5,7 @@ import 'package:book_club/root.dart';
 
 import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/screens/history/book_detail.dart';
-import 'package:book_club/screens/home/GroupHome/single_book_card.dart';
+
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';

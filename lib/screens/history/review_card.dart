@@ -3,7 +3,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/edit/edit_review.dart';
-import 'package:book_club/services/db_future.dart';
+
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +14,13 @@ class ReviewCard extends StatefulWidget {
   final GroupModel currentGroup;
   final BookModel book;
 
-  ReviewCard({
+  const ReviewCard({
+    Key? key,
     required this.review,
     required this.currentUser,
     required this.currentGroup,
     required this.book,
-  });
+  }) : super(key: key);
 
   @override
   _ReviewCardState createState() => _ReviewCardState();

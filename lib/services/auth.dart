@@ -28,7 +28,7 @@ class AuthService {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       message = "success";
     } on FirebaseAuthException catch (error) {
-      print(error.message);
+      //print(error.message);
       message = error.message.toString();
     }
 
@@ -86,8 +86,8 @@ class AuthService {
       _auth.sendPasswordResetEmail(email: email);
       message = "success";
     } on PlatformException catch (emailError) {
-      print("prblème mail :");
-      print(emailError.message);
+      //print("prblème mail :");
+      //print(emailError.message);
       if (emailError.message ==
           "There is no user record corresponding to this identifier. The user may have been deleted.") {
         message = "Aucun compte correspondant à ce mail.";
@@ -100,17 +100,20 @@ class AuthService {
 
   // Reset email
   Future<String> resetEmail(String email) async {
-    String retVal = "error";
+    String message = "error";
     try {
       await _auth.currentUser!.updateEmail(email);
-      retVal = "success";
-    } on PlatformException catch (e) {
-      //print(e);
-      retVal = "exception";
+      message = "success";
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      if (e.message ==
+          "This operation is sensitive and requires recent authentication. Log in again before retrying this request.") {
+        message = "exception";
+      }
     } catch (e) {
-      //print(e);
+      //print("autre problème");
     }
-    return retVal;
+    return message;
   }
 
   // Reset password

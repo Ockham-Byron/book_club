@@ -1,6 +1,6 @@
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
-import 'package:book_club/screens/home/noGroupHome/no_group_home.dart';
+
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
@@ -9,7 +9,6 @@ import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/custom_form_field.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../models/group_model.dart';
 import 'create_group.dart';
@@ -144,7 +143,7 @@ class _JoinGroupState extends State<JoinGroup> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Loading();
+                              return const Loading();
                             } else {
                               List<GroupModel> groups = snapshot.data!;
                               List<String> groupsId = [];
