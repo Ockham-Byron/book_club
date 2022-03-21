@@ -69,12 +69,12 @@ class _BookDetailState extends State<BookDetail> {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 20),
-          height: 150,
+          height: 180,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 90,
+                width: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
@@ -110,7 +110,6 @@ class _BookDetailState extends State<BookDetail> {
               ),
             ],
           ),
-          //const Text("Livre proposé par"),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

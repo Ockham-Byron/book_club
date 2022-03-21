@@ -109,18 +109,6 @@ class _AdminGroupState extends State<AdminGroup> {
     return groupMembers;
   }
 
-  void _goToBookHistory() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookHistory(
-          currentGroup: widget.currentGroup,
-          currentUser: widget.currentUser,
-        ),
-      ),
-    );
-  }
-
   // This function is triggered when the copy icon is pressed
   Future<void> _copyToClipboard() async {
     await Clipboard.setData(ClipboardData(text: _getGroupId()));
@@ -147,6 +135,18 @@ class _AdminGroupState extends State<AdminGroup> {
             return const Loading();
           } else {
             GroupModel _currentGroup = snapshot.data!;
+            void _goToBookHistory() async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookHistory(
+                    currentGroup: _currentGroup,
+                    currentUser: widget.currentUser,
+                  ),
+                ),
+              );
+            }
+
             return Scaffold(
               body: BackgroundContainer(
                 child: ListView(
@@ -174,7 +174,7 @@ class _AdminGroupState extends State<AdminGroup> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => BookHistory(
-                                          currentGroup: widget.currentGroup,
+                                          currentGroup: _currentGroup,
                                           currentUser: widget.currentUser),
                                     ),
                                   );

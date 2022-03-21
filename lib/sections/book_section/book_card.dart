@@ -62,7 +62,7 @@ class _BookCardState extends State<BookCard> {
         child: Column(
           children: [
             SizedBox(
-              width: 100,
+              width: 80,
               //height: 200,
               child: Image.network(_currentBookCoverUrl()),
             ),
@@ -74,7 +74,8 @@ class _BookCardState extends State<BookCard> {
             ),
             Text(
               widget.book!.author ?? "Pas d'auteur",
-              style: const TextStyle(fontSize: 20, color: Colors.grey),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
             ),
             IconButton(
                 onPressed: () {

@@ -9,6 +9,7 @@ import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/group_model.dart';
+import '../../shared/custom_form_field.dart';
 
 class EditGroupName extends StatefulWidget {
   final GroupModel currentGroup;
@@ -22,7 +23,13 @@ class EditGroupName extends StatefulWidget {
 }
 
 class _EditGroupNameState extends State<EditGroupName> {
+  //key for the form's validation
+  final _formKey = GlobalKey<FormState>();
+
+  //focus
   FocusNode? fgrname;
+
+  //initial data
   String? initialName;
 
   @override
@@ -46,39 +53,35 @@ class _EditGroupNameState extends State<EditGroupName> {
     return Scaffold(
       body: BackgroundContainer(
         child: Center(
-          child: Container(
-            height: 200,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ShadowContainer(
+          child: Column(children: [
+            const SizedBox(
+              height: 250,
+            ),
+            ShadowContainer(
               child: Form(
+                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    TextFormField(
-                      autofocus: true,
+                    CustomFormField(
                       focusNode: fgrname,
-                      onTap: () {
-                        setState(() {
-                          FocusScope.of(context).requestFocus(fgrname);
-                        });
+                      textEditingController: _groupNameInput,
+                      iconData: Icons.group,
+                      hintText: "Nom du groupe",
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Merci d'indiquer un nom de groupe";
+                        } else {
+                          return null;
+                        }
                       },
-                      textInputAction: TextInputAction.next,
-                      controller: _groupNameInput,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.group,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        labelText: "Nom du groupe",
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                      style: Theme.of(context).textTheme.headline6,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _editGroupName(
-                            widget.currentGroup.id!, _groupNameInput.text);
+                        if (_formKey.currentState!.validate()) {
+                          _editGroupName(
+                              widget.currentGroup.id!, _groupNameInput.text);
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -91,11 +94,19 @@ class _EditGroupNameState extends State<EditGroupName> {
                         ),
                       ),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "Annuler".toUpperCase(),
+                          style: TextStyle(color: Theme.of(context).focusColor),
+                        ))
                   ],
                 ),
               ),
             ),
-          ),
+          ]),
         ),
       ),
     );

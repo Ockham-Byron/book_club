@@ -130,7 +130,7 @@ class _BookSectionState extends State<BookSection> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                            height: 150, child: Image.network(nothingImage)),
+                            height: 140, child: Image.network(nothingImage)),
                         const SizedBox(width: 20),
                         Text(
                           nothingText,
