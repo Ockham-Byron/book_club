@@ -80,21 +80,34 @@ class AuthService {
   }
 
   // Reset Password
+  // Future<String> sendPasswordResetEmail(String email) async {
+  //   String message = "error";
+  //   try {
+  //     _auth.sendPasswordResetEmail(email: email);
+  //     message = "success";
+  //   } on FirebaseAuthException catch (emailError) {
+  //     print("problème mail :");
+  //     print(emailError.message);
+  //     if (emailError.message ==
+  //         "There is no user record corresponding to this identifier. The user may have been deleted.") {
+  //       message = "Aucun compte correspondant à ce mail.";
+  //     } else {
+  //       message = "erreur inconnue";
+  //     }
+  //   }
+  //   return message;
+  // }
+
   Future<String> sendPasswordResetEmail(String email) async {
     String message = "error";
     try {
       _auth.sendPasswordResetEmail(email: email);
+
       message = "success";
-    } on PlatformException catch (emailError) {
-      //print("prblème mail :");
-      //print(emailError.message);
-      if (emailError.message ==
-          "There is no user record corresponding to this identifier. The user may have been deleted.") {
-        message = "Aucun compte correspondant à ce mail.";
-      } else {
-        message = "erreur inconnue";
-      }
+    } catch (e) {
+      print(e);
     }
+
     return message;
   }
 
@@ -105,7 +118,6 @@ class AuthService {
       await _auth.currentUser!.updateEmail(email);
       message = "success";
     } on FirebaseAuthException catch (e) {
-      print(e.message);
       if (e.message ==
           "This operation is sensitive and requires recent authentication. Log in again before retrying this request.") {
         message = "exception";
@@ -135,8 +147,9 @@ class AuthService {
     try {
       _auth.currentUser!.delete();
       message = "success";
-    } catch (e) {
-      //print(e);
+    } on PlatformException catch (e) {
+      print(e.message);
+      message = "error";
     }
     return message;
   }

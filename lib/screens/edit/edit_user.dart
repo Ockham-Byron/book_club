@@ -10,6 +10,8 @@ import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mailto/mailto.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../shared/custom_form_field.dart';
 
@@ -62,6 +64,175 @@ class _EditUserState extends State<EditUser> {
   final TextEditingController _userMailInput = TextEditingController();
   final TextEditingController _userProfileInput = TextEditingController();
 
+  //Alert popup sensitive operation
+  Future<void> _showDialogSensitiveOperation() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Opération sensible !"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "Pour des raisons de sécurité, vous devez vous connecter de nouveau pour la mener en toute sécurité."),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Annuler".toUpperCase(),
+                        style: TextStyle(color: Theme.of(context).focusColor),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _signOut(context);
+                      },
+                      child: Text("Se déconnecter".toUpperCase(),
+                          style:
+                              TextStyle(color: Theme.of(context).focusColor)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+//Alert popup non existing email
+  Future<void> _showDialogNoExistingEmail() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Aucun compte ne correspond à ce mail"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "Pour des raisons de sécurité, vous devez vous connecter de nouveau pour la mener en toute sécurité."),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Annuler".toUpperCase(),
+                        style: TextStyle(color: Theme.of(context).focusColor),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _signOut(context);
+                      },
+                      child: Text("Se déconnecter".toUpperCase(),
+                          style:
+                              TextStyle(color: Theme.of(context).focusColor)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+//Alert popup email sent
+  Future<void> _showDialogEmailSent() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Mail envoyé !"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "Veuillez consulter votre messagerie et suivre les instructions décrites dans le mail reçu pour changer votre mot de passe."),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "ATTENTION : si vous n'avez pas reçu de mail (pas même dans vos spams), c'est probablement qu'il n'existe plus de compte associé à cet email et que vous devez vous créer un compte.",
+                  style: TextStyle(color: Theme.of(context).focusColor),
+                ),
+                const Text("Sinon, vous pouvez écrire à "),
+                GestureDetector(
+                  onTap: (() => launchMailto()),
+                  child: Text("hola@ikameleon.com"),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => ProfileAdmin(
+                          currentUser: widget.currentUser,
+                          currentGroup: widget.currentGroup),
+                    ),
+                    (route) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  launchMailto() async {
+    final mailtoLink = Mailto(
+      to: ['jlagabrielle@gmail.com'],
+
+      subject: '[BookClub] problème pour changer mon mot de passe',
+      //body: 'mailto example body',
+    );
+
+    await launch('$mailtoLink');
+  }
+
   void _editUserPseudo(
       String pseudo, String userId, BuildContext context) async {
     try {
@@ -96,45 +267,6 @@ class _EditUserState extends State<EditUser> {
     }
   }
 
-  void _deleteUser(String userId, String groupId, BuildContext context) async {
-    try {
-      String _returnString = await AuthService().deleteUser();
-
-      if (_returnString == "success") {
-        DBFuture().deleteUserFromDb(
-          widget.currentUser.uid!,
-        );
-
-        DBFuture().deleteUserFromGroup(
-          widget.currentUser.uid!,
-          widget.currentGroup.id!,
-        );
-
-        Fluttertoast.showToast(
-            msg: "Votre compte est supprimé, bonjour tristesse...",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        _signOut(context);
-      } else if (_returnString == "error") {
-        Fluttertoast.showToast(
-            msg:
-                "Opération sensible ! Vous devez vous connecter de nouveau pour la mener en toute sécurité.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } catch (e) {
-      //print(e);
-    }
-  }
-
   void _editUserPicture(String pictureUrl, String userId) async {
     try {
       String _returnString =
@@ -165,65 +297,16 @@ class _EditUserState extends State<EditUser> {
     }
   }
 
-  void _editUserMail({required String userId, required String mail}) async {
-    try {
-      String _returnString = await AuthService().resetEmail(mail);
-      if (_returnString == "success") {
-        DBFuture().editUserMail(userId, mail);
-        Fluttertoast.showToast(
-            msg:
-                "Votre mail est modifié ! Changer d'adresse sans bouger de son canapé, quel confort...",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).focusColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else if (_returnString == "exception") {
-        Fluttertoast.showToast(
-            msg:
-                "Opération sensible ! Vous devez vous connecter de nouveau pour la mener en toute sécurité.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).focusColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else {
-        Fluttertoast.showToast(
-            msg:
-                "Opération sensible ! Vous devez vous connecter de nouveau pour la mener en toute sécurité.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).focusColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } catch (e) {
-      //print(e);
-    }
-  }
-
-  void _resetPassword(String email) async {
-    try {
-      await AuthService().sendPasswordResetEmail(email);
-    } catch (e) {
-      //print(e);
-    }
-  }
-
   void _signOut(BuildContext context) async {
-    String _returnedString = await AuthService().signOut();
-    if (_returnedString == "success") {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AppRoot(),
-        ),
-        (route) => false,
-      );
-    }
+    await AuthService().signOut();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AppRoot(),
+      ),
+      (route) => false,
+    );
   }
 
   @override
@@ -336,8 +419,39 @@ class _EditUserState extends State<EditUser> {
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: ShadowContainer(
                         child: TextButton(
-                          onPressed: () => _deleteUser(widget.currentUser.uid!,
-                              widget.currentGroup.id!, context),
+                          onPressed: () async {
+                            String _message = await AuthService().deleteUser();
+                            if (_message == "success") {
+                              DBFuture()
+                                  .deleteUserFromDb(widget.currentUser.uid!);
+                              DBFuture().deleteUserFromGroup(
+                                  widget.currentUser.uid!,
+                                  widget.currentGroup.id!);
+
+                              if (widget.currentGroup.leader ==
+                                  widget.currentUser.uid) {
+                                DBFuture()
+                                    .deleteGroupFromDb(widget.currentGroup.id!);
+                              }
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Votre compte est supprimé, bonjour tristesse...",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AppRoot(),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              _showDialogSensitiveOperation();
+                            }
+                          },
                           child: Text(
                             "Supprimer mon compte".toUpperCase(),
                             style:
@@ -464,13 +578,30 @@ class _EditUserState extends State<EditUser> {
                                         borderRadius:
                                             BorderRadius.circular(50.0)),
                                     primary: Theme.of(context).focusColor),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_mailFormKey.currentState!.validate()) {
-                                    _editUserMail(
-                                      userId: widget.currentUser.uid!,
-                                      mail: _userMailInput.text,
-                                    );
-                                    Navigator.of(context).pop();
+                                    String message;
+                                    message = await AuthService()
+                                        .resetEmail(_userMailInput.text);
+                                    if (message == "success") {
+                                      DBFuture().editUserMail(
+                                          widget.currentUser.uid!,
+                                          _userMailInput.text);
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "Votre mail est modifié ! Changer d'adresse sans bouger de son canapé, quel confort...",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor:
+                                              Theme.of(context).focusColor,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      _showDialogSensitiveOperation();
+                                    }
+                                    // Navigator.of(context).pop();
                                   }
                                 },
                                 child: Padding(
@@ -525,7 +656,7 @@ class _EditUserState extends State<EditUser> {
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Center(
                     child: Container(
-                      height: 320,
+                      height: 340,
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: ShadowContainer(
                         child: Form(
@@ -536,6 +667,13 @@ class _EditUserState extends State<EditUser> {
                                 textEditingController: _userMailInput,
                                 iconData: Icons.alternate_email,
                                 hintText: "Votre courriel",
+                                validator: (val) {
+                                  if (!val!.isValidEmail) {
+                                    return "Entrez un courriel valide";
+                                  } else {
+                                    return null;
+                                  }
+                                },
                               ),
                               const SizedBox(
                                 height: 20,
@@ -553,8 +691,17 @@ class _EditUserState extends State<EditUser> {
                                         borderRadius:
                                             BorderRadius.circular(50.0)),
                                     primary: Theme.of(context).focusColor),
-                                onPressed: () {
-                                  _resetPassword(_userMailInput.text);
+                                onPressed: () async {
+                                  if (_passwordFormKey.currentState!
+                                      .validate()) {
+                                    String message;
+                                    message = await AuthService()
+                                        .sendPasswordResetEmail(
+                                            _userMailInput.text);
+                                    if (message == "success") {
+                                      _showDialogEmailSent();
+                                    }
+                                  }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(

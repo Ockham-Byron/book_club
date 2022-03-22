@@ -219,6 +219,20 @@ class DBFuture {
     return message;
   }
 
+  //Delete Group
+  Future<String> deleteGroupFromDb(String groupId) async {
+    String message = "error";
+
+    try {
+      await groupsCollection.doc(groupId).delete();
+
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   /* ---------------------------- */
   /* ----------- BOOK ----------- */
   /* ---------------------------- */

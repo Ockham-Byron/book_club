@@ -1,3 +1,4 @@
+import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -76,6 +77,43 @@ class ResetPassword extends StatelessWidget {
     );
   }
 
+//Alert popup email sent
+  Future<void> _showDialogEmailSent(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Mail envoyé !"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                    "Veuillez consulter votre messagerie et suivre les instructions décrites dans le mail reçu pour changer votre mot de passe."),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const AppRoot(),
+                    ),
+                    (route) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final TextEditingController _emailInput = TextEditingController();
 
   @override
@@ -139,7 +177,7 @@ class ResetPassword extends StatelessWidget {
                           message = await AuthService()
                               .sendPasswordResetEmail(_emailInput.text);
                           if (message == "success") {
-                            //show dialog aller consulter son email
+                            _showDialogEmailSent(context);
                           } else if (message ==
                               "Aucun compte correspondant à ce mail.") {
                             _showDialogExistingMail(context);
