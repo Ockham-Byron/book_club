@@ -219,6 +219,16 @@ class DBFuture {
     return message;
   }
 
+  Future<String> changeLeader(String groupId, String userId) async {
+    String message = "error";
+    try {
+      await groupsCollection.doc(groupId).update({"leader": userId});
+    } catch (e) {
+      //
+    }
+    return message;
+  }
+
   //Delete Group
   Future<String> deleteGroupFromDb(String groupId) async {
     String message = "error";

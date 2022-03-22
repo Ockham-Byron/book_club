@@ -75,7 +75,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (error) {
-      return null;
+      //return null;
     }
   }
 

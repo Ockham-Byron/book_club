@@ -31,12 +31,11 @@ String getUserPseudo(UserModel user) {
 }
 
 // Used to generate random integers for the random colors
-final _random = Random();
+// final random = Random();
 
-final Color? _foregroundColor = Colors
-    .primaries[_random.nextInt(Colors.primaries.length)]
-        [_random.nextInt(9) * 100]
-    ?.withOpacity(0.6);
+// final Color? foregroundColor = Colors
+//     .primaries[random.nextInt(Colors.primaries.length)][random.nextInt(9) * 100]
+//     ?.withOpacity(0.6);
 
 bool withProfilePicture(UserModel user) {
   if (user.pictureUrl == "") {
@@ -46,7 +45,7 @@ bool withProfilePicture(UserModel user) {
   }
 }
 
-Widget displayCircularAvatar(UserModel user) {
+Widget displayCircularAvatar(UserModel user, Color color) {
   if (withProfilePicture(user)) {
     return CircularProfileAvatar(
       user.pictureUrl!,
@@ -56,7 +55,7 @@ Widget displayCircularAvatar(UserModel user) {
   } else {
     return CircularProfileAvatar(
       "https://digitalpainting.school/static/img/default_avatar.png",
-      foregroundColor: _foregroundColor ?? Colors.blue,
+      foregroundColor: color,
       initialsText: Text(
         getUserPseudo(user)[0].toUpperCase(),
         style: const TextStyle(
@@ -67,7 +66,7 @@ Widget displayCircularAvatar(UserModel user) {
   }
 }
 
-Widget displayProfileWithBadge(UserModel user, GroupModel group) {
+Widget displayProfileWithBadge(UserModel user, GroupModel group, Color color) {
   if (user.uid == group.leader) {
     return Badge(
       badgeContent: const Icon(
@@ -77,13 +76,23 @@ Widget displayProfileWithBadge(UserModel user, GroupModel group) {
       badgeColor: Colors.white.withOpacity(0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: displayCircularAvatar(user),
+        child: displayCircularAvatar(user, color),
       ),
     );
   } else {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: displayCircularAvatar(user),
+      child: displayCircularAvatar(user, color),
     );
   }
+}
+
+String getGroupId(GroupModel group) {
+  String groupId;
+  if (group.id != null) {
+    groupId = group.id!;
+  } else {
+    groupId = "Id inconnu, ce qui est très étrange";
+  }
+  return groupId;
 }
