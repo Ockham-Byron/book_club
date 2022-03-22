@@ -7,6 +7,7 @@ import 'package:book_club/services/db_future.dart';
 
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
+import 'package:book_club/shared/display_services.dart';
 
 import 'package:flutter/material.dart';
 
@@ -24,19 +25,6 @@ class CancelRead extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _currentBookCoverUrl() {
-      String currentBookCoverUrl;
-
-      if (readBook.cover == "") {
-        currentBookCoverUrl =
-            "https://cdn.pixabay.com/photo/2020/12/14/15/52/book-5831278_1280.jpg";
-      } else {
-        currentBookCoverUrl = readBook.cover!;
-      }
-
-      return currentBookCoverUrl;
-    }
-
     return Scaffold(
       body: BackgroundContainer(
         child: Padding(
@@ -46,7 +34,8 @@ class CancelRead extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                    height: 150, child: Image.network(_currentBookCoverUrl())),
+                    height: 150,
+                    child: Image.network(displayBookCoverUrl(readBook))),
                 ElevatedButton(
                   onPressed: () {
                     DBFuture().cancelReadBook(

@@ -103,7 +103,7 @@ class _BookSectionState extends State<BookSection> {
                 return Container(
                   padding: const EdgeInsets.only(top: 20),
                   width: 350,
-                  height: 300,
+                  height: 320,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: selectedBooks.length + 1,

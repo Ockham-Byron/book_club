@@ -4,6 +4,7 @@ import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/edit/edit_book.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/buttons/finish_button.dart';
+import 'package:book_club/shared/display_services.dart';
 import 'package:book_club/shared/loading.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,19 +62,6 @@ class _SingleBookCardState extends State<SingleBookCard> {
     return currentBookDue;
   }
 
-  String _currentBookCoverUrl(BookModel _currentBook) {
-    String currentBookCoverUrl;
-
-    if (_currentBook.cover == "") {
-      currentBookCoverUrl =
-          "https://www.azendportafolio.com/static/img/not-found.png";
-    } else {
-      currentBookCoverUrl = _currentBook.cover!;
-    }
-
-    return currentBookCoverUrl;
-  }
-
   Widget _displayEdit(BookModel _currentBook) {
     if (widget.currentUser.uid == _currentBook.submittedBy) {
       return RotatedBox(
@@ -106,8 +94,11 @@ class _SingleBookCardState extends State<SingleBookCard> {
           height: 150,
           width: 100,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(_currentBookCoverUrl(_currentBook)))),
+            borderRadius: BorderRadius.circular(20),
+            image: DecorationImage(
+                image: NetworkImage(displayBookCoverUrl(_currentBook)),
+                fit: BoxFit.fill),
+          ),
         ),
         SizedBox(
           height: 150,

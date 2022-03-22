@@ -5,6 +5,7 @@ import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/sections/book_section/cancel_favorite.dart';
 import 'package:book_club/sections/book_section/cancel_read.dart';
 import 'package:book_club/sections/book_section/finish_book.dart';
+import 'package:book_club/shared/display_services.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {
@@ -61,21 +62,26 @@ class _BookCardState extends State<BookCard> {
         width: 150,
         child: Column(
           children: [
-            SizedBox(
-              width: 80,
-              //height: 200,
-              child: Image.network(_currentBookCoverUrl()),
+            Container(
+              height: 200,
+              width: 140,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(displayBookCoverUrl(widget.book!)),
+                    fit: BoxFit.fill),
+              ),
             ),
+            const SizedBox(height: 5),
             Text(
               widget.book!.title ?? "Pas de titre",
               textAlign: TextAlign.center,
               style:
-                  TextStyle(fontSize: 20, color: Theme.of(context).focusColor),
+                  TextStyle(fontSize: 15, color: Theme.of(context).focusColor),
             ),
             Text(
               widget.book!.author ?? "Pas d'auteur",
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: const TextStyle(fontSize: 15, color: Colors.grey),
             ),
             IconButton(
                 onPressed: () {

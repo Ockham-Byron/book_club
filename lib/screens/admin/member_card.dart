@@ -4,6 +4,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/services/auth.dart';
+import 'package:book_club/shared/display_services.dart';
 
 import 'package:flutter/material.dart';
 
@@ -13,25 +14,26 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../models/book_model.dart';
 import '../../services/db_future.dart';
 import '../../services/db_stream.dart';
+import 'package:badges/badges.dart';
 
 class MemberCard extends StatelessWidget {
   final UserModel user;
   final UserModel currentUser;
   final GroupModel currentGroup;
-  MemberCard(
+  const MemberCard(
       {Key? key,
       required this.user,
       required this.currentUser,
       required this.currentGroup})
       : super(key: key);
 
-  bool withProfilePicture() {
-    if (user.pictureUrl == "") {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  // bool withProfilePicture() {
+  //   if (user.pictureUrl == "") {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   String getUserPseudo() {
     String userPseudo;
@@ -107,33 +109,18 @@ class MemberCard extends StatelessWidget {
     }
   }
 
-  // Used to generate random integers for the random colors
-  final _random = Random();
-
   @override
   Widget build(BuildContext context) {
-    final Color? _foregroundColor = Colors
-        .primaries[_random.nextInt(Colors.primaries.length)]
-            [_random.nextInt(9) * 100]
-        ?.withOpacity(0.6);
-    Widget displayCircularAvatar() {
-      if (withProfilePicture()) {
-        return CircularProfileAvatar(
-          user.pictureUrl!,
-          showInitialTextAbovePicture: false,
-          radius: 50,
-        );
+    Widget _displayChangeLeader() {
+      if (user.uid == currentGroup.leader) {
+        return TextButton(
+            onPressed: () {},
+            child: Text(
+              "Changer d'admin",
+              style: TextStyle(color: Theme.of(context).focusColor),
+            ));
       } else {
-        return CircularProfileAvatar(
-          "https://digitalpainting.school/static/img/default_avatar.png",
-          foregroundColor: _foregroundColor ?? Colors.blue,
-          initialsText: Text(
-            getUserPseudo()[0].toUpperCase(),
-            style: const TextStyle(
-                fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          showInitialTextAbovePicture: true,
-        );
+        return Container();
       }
     }
 
@@ -156,17 +143,13 @@ class MemberCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            height: 100,
-            width: 100,
-            padding: const EdgeInsets.all(20.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: displayCircularAvatar(),
-            ),
-          ),
+              height: 100,
+              width: 100,
+              padding: const EdgeInsets.all(20.0),
+              child: displayProfileWithBadge(user, currentGroup)),
           Container(
             padding: const EdgeInsets.all(20),
-            height: 100,
+            height: 140,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +196,8 @@ class MemberCard extends StatelessWidget {
                           }
                         }),
                   ],
-                )
+                ),
+                _displayChangeLeader(),
               ],
             ),
           ),
