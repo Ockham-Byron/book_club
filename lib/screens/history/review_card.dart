@@ -53,64 +53,82 @@ class _ReviewCardState extends State<ReviewCard> {
 
   @override
   Widget build(BuildContext context) {
-    return ShadowContainer(
-      child: Row(
-        children: [
-          Column(
-            children: [
-              StreamBuilder<UserModel>(
-                  stream: DBStream().getUserData(widget.review.reviewId!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      UserModel _user = snapshot.data!;
-                      return Text(
-                        (_user.uid != null) ? _user.pseudo! : "pas de nom ?",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 0),
-                child: Text(
-                  "Note : " + widget.review.rating.toString(),
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).focusColor),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 80,
-            child: VerticalDivider(
-              thickness: 1,
-              width: 10,
-              color: Theme.of(context).focusColor,
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
             ),
-          ),
-          (widget.review.review != null)
-              ? Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            border: Border.all(
+              color: Colors.black,
+              width: 1,
+            )),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  StreamBuilder<UserModel>(
+                      stream: DBStream().getUserData(widget.review.reviewId!),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          UserModel _user = snapshot.data!;
+                          return Text(
+                            (_user.uid != null)
+                                ? _user.pseudo!
+                                : "pas de nom ?",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 0),
                     child: Text(
-                      widget.review.review!,
+                      "Note : " + widget.review.rating.toString(),
                       style: TextStyle(
-                          fontSize: 20, color: Theme.of(context).primaryColor),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).focusColor),
                     ),
                   ),
-                )
-              : const Text(""),
-          _editWidget(),
-        ],
+                ],
+              ),
+              SizedBox(
+                height: 80,
+                child: VerticalDivider(
+                  thickness: 1,
+                  width: 10,
+                  color: Theme.of(context).focusColor,
+                ),
+              ),
+              (widget.review.review != null)
+                  ? Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          widget.review.review!,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                      ),
+                    )
+                  : const Text(""),
+              _editWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }

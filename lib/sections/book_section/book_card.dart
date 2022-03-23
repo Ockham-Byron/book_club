@@ -66,6 +66,7 @@ class _BookCardState extends State<BookCard> {
               height: 200,
               width: 140,
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
                     image: NetworkImage(displayBookCoverUrl(widget.book!)),
                     fit: BoxFit.fill),

@@ -2,6 +2,7 @@ import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/edit/edit_book.dart';
+import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/buttons/finish_button.dart';
 import 'package:book_club/shared/display_services.dart';
@@ -157,37 +158,48 @@ class _SingleBookCardState extends State<SingleBookCard> {
                 return const Loading();
               } else {
                 _currentBook = snapshot.data!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BookDetail(
+                              currentBook: _currentBook,
+                              currentGroup: widget.currentGroup,
+                              currentUser: widget.currentUser,
+                            )))),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
-                          "Livre à lire pour le ",
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          _displayDueDate(_currentBook),
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                        Text(_displayRemainingDays(_currentBook)),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        _displayCurrentBookInfo(_currentBook),
-                        const SizedBox(
-                          height: 30,
-                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Livre à lire pour le ",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            Text(
+                              _displayDueDate(_currentBook),
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            Text(_displayRemainingDays(_currentBook)),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            _displayCurrentBookInfo(_currentBook),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 );
               }
             }
