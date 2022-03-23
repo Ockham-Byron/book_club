@@ -4,6 +4,7 @@ import 'package:book_club/screens/admin/admin_group.dart';
 import 'package:book_club/screens/admin/admin_profile.dart';
 import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_home.dart';
+import 'package:book_club/screens/legal/legal.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 import 'package:flutter/material.dart';
@@ -82,6 +83,11 @@ class AppDrawer extends StatelessWidget {
               )));
     }
 
+    void _goToLegal() {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const Legal()));
+    }
+
     String getUserPseudo() {
       String userPseudo;
       if (currentUser.pseudo == null) {
@@ -151,8 +157,15 @@ class AppDrawer extends StatelessWidget {
                           color: Theme.of(context).shadowColor, fontSize: 20),
                     ),
                     onTap: () => _goToDonation()),
+                ListTile(
+                    leading: const Icon(Icons.adjust, color: Colors.black),
+                    title: const Text(
+                      "A propos",
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                    onTap: () => _goToLegal()),
                 const SizedBox(
-                  height: 50,
+                  height: 5,
                 ),
                 Image.network(
                   "https://cdn.pixabay.com/photo/2018/04/24/11/32/book-3346785_1280.png",

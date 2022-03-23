@@ -5,6 +5,7 @@ import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/group_model.dart';
 import '../../shared/appBars/home_app_bar.dart';
@@ -23,6 +24,11 @@ class Donate extends StatefulWidget {
 }
 
 class _DonateState extends State<Donate> {
+  void _launchURL() async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
+  }
+
+  final String _url = 'https://ko-fi.com/ockhambyron';
   late WebViewXController webviewController;
   final initialContent =
       'https://ko-fi.com/ockhambyron/?hidefeed=true&widget=true&embed=true&preview=true';
@@ -44,7 +50,36 @@ class _DonateState extends State<Donate> {
     return Scaffold(
       appBar: const HomeAppBar(),
       body: Container(
-        child: _buildWebViewX(),
+        color: Colors.white,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Suivez-moi sur ma page Ko-Fi pour rester au courant de mes réalisations !",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.coffee,
+                    color: Theme.of(context).focusColor,
+                  ),
+                  title: Text(
+                    "Visitez ma page Ko-Fi",
+                    style: TextStyle(color: Theme.of(context).focusColor),
+                  ),
+                  onTap: _launchURL,
+                ),
+              ),
+              _buildWebViewX(),
+            ],
+          ),
+        ),
       ),
       drawer: AppDrawer(
         currentGroup: widget.currentGroup,
@@ -58,7 +93,7 @@ class _DonateState extends State<Donate> {
       key: const ValueKey('webviewx'),
       initialContent: initialContent,
       initialSourceType: SourceType.url,
-      height: screenSize.height,
+      height: 600,
       width: screenSize.width,
       onWebViewCreated: (controller) => webviewController = controller,
       onPageStarted: (src) =>
