@@ -4,6 +4,8 @@ import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/suggestion_model.dart';
+
 class DBStream {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -209,5 +211,47 @@ class DBStream {
         .collection("reviews")
         .snapshots()
         .map(_reviewsListFromSnapshot);
+  }
+
+  // suggestion data from snapshots
+  SuggestionModel _suggestionDataFromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return SuggestionModel(
+        id: snapshot.id,
+        userId: snapshot.get("userId"),
+        suggestion: snapshot.get("suggestion"),
+        votes: snapshot.get("votes"),
+        isWorkedByDev: snapshot.get("isWorkedByDev"));
+  }
+
+  // get suggestiondoc stream
+  Stream<SuggestionModel> getSuggestionData(String suggestionId) {
+    return _firestore
+        .collection("suggestions")
+        .doc(suggestionId)
+        .snapshots()
+        .map(_suggestionDataFromSnapshot);
+  }
+
+  //get suggestions list from snapshot
+
+  List<SuggestionModel> _suggestionsListFromSnapshot(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    return snapshot.docs.map((doc) {
+      return SuggestionModel(
+          id: doc.id,
+          userId: doc.data()["userId"],
+          suggestion: doc.data()["suggestion"],
+          votes: doc.data()["votes"],
+          isWorkedByDev: doc.data()["isWorkedByDev"]);
+    }).toList();
+  }
+
+  //suggestions Stream
+  Stream<List<SuggestionModel>> getAllSuggestions() {
+    return _firestore
+        .collection("suggestions")
+        .snapshots()
+        .map(_suggestionsListFromSnapshot);
   }
 }

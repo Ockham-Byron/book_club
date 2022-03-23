@@ -1,4 +1,5 @@
 import 'package:book_club/models/book_model.dart';
+import 'package:book_club/models/suggestion_model.dart';
 
 import 'package:book_club/models/user_model.dart';
 
@@ -18,6 +19,10 @@ class DBFuture {
   //Groups collection reference
   final CollectionReference groupsCollection =
       FirebaseFirestore.instance.collection("groups");
+
+  //Suggestions collection reference
+  final CollectionReference suggestionsCollection =
+      FirebaseFirestore.instance.collection("suggestions");
 
   /* ---------------------------- */
   /* ---------- USER ------------ */
@@ -490,6 +495,29 @@ class DBFuture {
       message = "error";
     }
 
+    return message;
+  }
+
+  /* ---------------------------- */
+  /* ------- SUGGESTIONS -------- */
+  /* ---------------------------- */
+
+  //Add Suggestion
+  Future<String> addSuggestion(
+      String userId, int votes, String suggestion, bool isWorkedByDev) async {
+    String message = "error";
+
+    try {
+      await suggestionsCollection.add({
+        "userId": userId,
+        "votes": votes,
+        "suggestion": suggestion,
+        "isWorkedByDev": isWorkedByDev,
+      });
+      message = "success";
+    } catch (e) {
+      message = "error";
+    }
     return message;
   }
 }

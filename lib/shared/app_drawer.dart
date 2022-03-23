@@ -5,6 +5,7 @@ import 'package:book_club/screens/admin/admin_profile.dart';
 import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_home.dart';
 import 'package:book_club/screens/legal/legal.dart';
+import 'package:book_club/screens/suggestions/suggestions.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 import 'package:flutter/material.dart';
@@ -79,6 +80,13 @@ class AppDrawer extends StatelessWidget {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => Donate(
                 currentGroup: currentGroup,
+                currentUser: currentUser,
+              )));
+    }
+
+    void _goToSuggestion() {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => Suggestions(
                 currentUser: currentUser,
               )));
     }
@@ -158,6 +166,15 @@ class AppDrawer extends StatelessWidget {
                     ),
                     onTap: () => _goToDonation()),
                 ListTile(
+                    leading: Icon(Icons.telegram,
+                        color: Theme.of(context).shadowColor),
+                    title: Text(
+                      "Vos suggestions pour améliorer l'app",
+                      style: TextStyle(
+                          color: Theme.of(context).shadowColor, fontSize: 20),
+                    ),
+                    onTap: () => _goToSuggestion()),
+                ListTile(
                     leading: const Icon(Icons.adjust, color: Colors.black),
                     title: const Text(
                       "A propos",
@@ -167,10 +184,11 @@ class AppDrawer extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Image.network(
-                  "https://cdn.pixabay.com/photo/2018/04/24/11/32/book-3346785_1280.png",
-                  fit: BoxFit.contain,
-                  width: 250,
+                Expanded(
+                  child: Image.network(
+                    "https://cdn.pixabay.com/photo/2018/04/24/11/32/book-3346785_1280.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ],
             ),
