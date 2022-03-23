@@ -4,6 +4,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/screens/admin/admin_profile.dart';
+import 'package:book_club/screens/admin/change_leader.dart';
 import 'package:book_club/services/auth.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/containers/background_container.dart';
@@ -222,6 +223,77 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
+//Alert popup delete Group
+  Future<void> _showDialogDeleteGroup() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: ListBody(children: const [
+            Icon(Icons.warning),
+            Text(
+              "Attention vous êtes responsable du groupe !",
+              textAlign: TextAlign.center,
+            )
+          ]),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "Si vous supprimez votre compte, cela supprimera tout le groupe."),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => ChangeLeader(
+                              currentGroup: widget.currentGroup,
+                              currentUser: widget.currentUser),
+                        ),
+                        ((route) => false));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      "Transférer l'administration avant de supprimer mon compte"
+                          .toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextButton(
+                    onPressed: () {
+                      //ajouter delete compte et groupe
+                    },
+                    child: Text(
+                      "Supprimer mon compte ET LE GROUPE".toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Theme.of(context).focusColor),
+                    ))
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   launchMailto() async {
     final mailtoLink = Mailto(
       to: ['jlagabrielle@gmail.com'],
@@ -420,36 +492,42 @@ class _EditUserState extends State<EditUser> {
                       child: ShadowContainer(
                         child: TextButton(
                           onPressed: () async {
-                            String _message = await AuthService().deleteUser();
-                            if (_message == "success") {
-                              DBFuture()
-                                  .deleteUserFromDb(widget.currentUser.uid!);
-                              DBFuture().deleteUserFromGroup(
-                                  widget.currentUser.uid!,
-                                  widget.currentGroup.id!);
-
-                              if (widget.currentGroup.leader ==
-                                  widget.currentUser.uid) {
-                                DBFuture()
-                                    .deleteGroupFromDb(widget.currentGroup.id!);
-                              }
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "Votre compte est supprimé, bonjour tristesse...",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context) => const AppRoot(),
-                                  ),
-                                  (route) => false);
+                            if (widget.currentUser.uid ==
+                                widget.currentGroup.leader) {
+                              _showDialogDeleteGroup();
                             } else {
-                              _showDialogSensitiveOperation();
+                              String _message =
+                                  await AuthService().deleteUser();
+                              if (_message == "success") {
+                                DBFuture()
+                                    .deleteUserFromDb(widget.currentUser.uid!);
+                                DBFuture().deleteUserFromGroup(
+                                    widget.currentUser.uid!,
+                                    widget.currentGroup.id!);
+
+                                if (widget.currentGroup.leader ==
+                                    widget.currentUser.uid) {
+                                  DBFuture().deleteGroupFromDb(
+                                      widget.currentGroup.id!);
+                                }
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Votre compte est supprimé, bonjour tristesse...",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => const AppRoot(),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                _showDialogSensitiveOperation();
+                              }
                             }
                           },
                           child: Text(

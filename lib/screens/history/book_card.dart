@@ -9,6 +9,7 @@ import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
+import 'package:book_club/shared/display_services.dart';
 import 'package:book_club/shared/loading.dart';
 
 import 'package:flutter/material.dart';
@@ -29,19 +30,6 @@ class BookCard extends StatefulWidget {
 }
 
 class _BookCardState extends State<BookCard> {
-  String _currentBookCoverUrl() {
-    String currentBookCoverUrl;
-
-    if (widget.book.cover == "") {
-      currentBookCoverUrl =
-          "https://www.azendportafolio.com/static/img/not-found.png";
-    } else {
-      currentBookCoverUrl = widget.book.cover!;
-    }
-
-    return currentBookCoverUrl;
-  }
-
   void _goToBookDetail(BuildContext context) {
     Navigator.push(
       context,
@@ -213,50 +201,60 @@ class _BookCardState extends State<BookCard> {
 
     return SizedBox(
       height: 240,
-      child: GestureDetector(
-        onTap: () => _goToBookDetail(context),
-        child: ShadowContainer(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 150,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: Image.network(_currentBookCoverUrl()),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.book.title ?? "Pas de titre",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Theme.of(context).focusColor),
-                          ),
-                          Text(
-                            widget.book.author ?? "Pas d'auteur",
-                            style: const TextStyle(
-                                fontSize: 20, color: Colors.grey),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(widget.book.length.toString() + " pages")
-                        ],
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => _goToBookDetail(context),
+          child: ShadowContainer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 150,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 150,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  displayBookCoverUrl(widget.book)),
+                              fit: BoxFit.fill),
+                        ),
                       ),
-                    ),
-                    _displayEdit(widget.book),
-                  ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.book.title ?? "Pas de titre",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Theme.of(context).focusColor),
+                            ),
+                            Text(
+                              widget.book.author ?? "Pas d'auteur",
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.grey),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(widget.book.length.toString() + " pages")
+                          ],
+                        ),
+                      ),
+                      _displayEdit(widget.book),
+                    ],
+                  ),
                 ),
-              ),
-              _displayFavorite(),
-            ],
+                _displayFavorite(),
+              ],
+            ),
           ),
         ),
       ),

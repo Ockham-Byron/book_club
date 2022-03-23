@@ -8,6 +8,8 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 import 'package:flutter/material.dart';
 
+import '../screens/donation/donate.dart';
+
 class AppDrawer extends StatelessWidget {
   final GroupModel currentGroup;
   final UserModel currentUser;
@@ -67,6 +69,14 @@ class AppDrawer extends StatelessWidget {
     void _goToBooksHistory() {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => BookHistory(
+                currentGroup: currentGroup,
+                currentUser: currentUser,
+              )));
+    }
+
+    void _goToDonation() {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => Donate(
                 currentGroup: currentGroup,
                 currentUser: currentUser,
               )));
@@ -132,6 +142,15 @@ class AppDrawer extends StatelessWidget {
                   title: "Livres",
                   goTo: _goToBooksHistory,
                 ),
+                ListTile(
+                    leading: Icon(Icons.coffee,
+                        color: Theme.of(context).shadowColor),
+                    title: Text(
+                      "Offrez-moi un café",
+                      style: TextStyle(
+                          color: Theme.of(context).shadowColor, fontSize: 20),
+                    ),
+                    onTap: () => _goToDonation()),
                 const SizedBox(
                   height: 50,
                 ),
