@@ -8,7 +8,14 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyDHuCUWdCGUqJEE-bOXifAqetT9ST8BMRU",
+      appId: "1:435158685506:web:9cfc33da09b4fc1ef55adb",
+      messagingSenderId: "435158685506",
+      projectId: "book-club-6f916",
+    ),
+  );
   runApp(const MyApp());
 }
 
