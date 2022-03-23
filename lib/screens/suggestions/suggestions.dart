@@ -26,8 +26,18 @@ class _SuggestionsState extends State<Suggestions> {
       body: BackgroundContainer(
         child: ListView(
           children: [
+            const SizedBox(
+              height: 100,
+              child: Center(
+                  child: Text(
+                "Suggestions",
+                style: TextStyle(fontSize: 30),
+              )),
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
+              constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height * 0.8),
               decoration: BoxDecoration(
                 color: Theme.of(context).canvasColor,
                 borderRadius: const BorderRadius.only(
@@ -37,61 +47,73 @@ class _SuggestionsState extends State<Suggestions> {
               ),
               child: Column(
                 children: [
-                  // _displayBookInfo(),
-                  StreamBuilder<List<SuggestionModel>>(
-                      stream: DBStream().getAllSuggestions(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Loading();
-                        } else {
-                          if (snapshot.data!.isEmpty) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 200,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
-                                        fit: BoxFit.contain),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
-                                  child: Text(
-                                    "Il n'y a pas encore de critique pour ce livre ;(",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 20,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-                            );
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: StreamBuilder<List<SuggestionModel>>(
+                        stream: DBStream().getAllSuggestions(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Loading();
                           } else {
-                            List<SuggestionModel> _suggestions = snapshot.data!;
+                            if (snapshot.data!.isEmpty) {
+                              return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 200,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
+                                          fit: BoxFit.contain),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Text(
+                                      "Il n'y a pas encore de critique pour ce livre ;(",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 20,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              );
+                            } else {
+                              List<SuggestionModel> _suggestions =
+                                  snapshot.data!;
 
-                            return ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: _suggestions.length + 1,
-                                itemBuilder: (BuildContext context, int index) {
-                                  if (index == 0) {
-                                    return Container();
-                                  } else {
-                                    return SuggestionCard(
-                                      suggestion: _suggestions[index - 1],
-                                    );
-                                  }
-                                });
+                              return ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: _suggestions.length + 1,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (index == 0) {
+                                      return Container();
+                                    } else {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: SuggestionCard(
+                                          suggestion: _suggestions[index - 1],
+                                        ),
+                                      );
+                                    }
+                                  });
+                            }
                           }
-                        }
-                      }),
+                        }),
+                  ),
                 ],
               ),
             ),

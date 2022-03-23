@@ -221,7 +221,8 @@ class DBStream {
         userId: snapshot.get("userId"),
         suggestion: snapshot.get("suggestion"),
         votes: snapshot.get("votes"),
-        isWorkedByDev: snapshot.get("isWorkedByDev"));
+        isWorkedByDev: snapshot.get("isWorkedByDev"),
+        isAnonymous: snapshot.get("isAnonymous"));
   }
 
   // get suggestiondoc stream
@@ -243,7 +244,8 @@ class DBStream {
           userId: doc.data()["userId"],
           suggestion: doc.data()["suggestion"],
           votes: doc.data()["votes"],
-          isWorkedByDev: doc.data()["isWorkedByDev"]);
+          isWorkedByDev: doc.data()["isWorkedByDev"],
+          isAnonymous: doc.data()["isAnonymous"]);
     }).toList();
   }
 

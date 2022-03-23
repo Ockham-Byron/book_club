@@ -503,8 +503,8 @@ class DBFuture {
   /* ---------------------------- */
 
   //Add Suggestion
-  Future<String> addSuggestion(
-      String userId, int votes, String suggestion, bool isWorkedByDev) async {
+  Future<String> addSuggestion(String userId, int votes, String suggestion,
+      bool isWorkedByDev, bool isAnonymous) async {
     String message = "error";
 
     try {
@@ -513,11 +513,44 @@ class DBFuture {
         "votes": votes,
         "suggestion": suggestion,
         "isWorkedByDev": isWorkedByDev,
+        "isAnonymous": isAnonymous
       });
       message = "success";
     } catch (e) {
       message = "error";
     }
+    return message;
+  }
+
+  //Add vote to suggestion
+  Future<String> voteForSuggestion(String suggestionId) async {
+    String message = "error";
+
+    try {
+      await suggestionsCollection
+          .doc(suggestionId)
+          .update({"votes": FieldValue.increment(1)});
+      message = "success";
+    } catch (e) {
+      message = "error";
+    }
+
+    return message;
+  }
+
+  //Cancel vote to suggestion
+  Future<String> cancelVoteForSuggestion(String suggestionId) async {
+    String message = "error";
+
+    try {
+      await suggestionsCollection
+          .doc(suggestionId)
+          .update({"votes": FieldValue.increment(-1)});
+      message = "success";
+    } catch (e) {
+      message = "error";
+    }
+
     return message;
   }
 }

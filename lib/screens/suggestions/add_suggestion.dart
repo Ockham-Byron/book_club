@@ -1,9 +1,7 @@
-import 'package:book_club/models/group_model.dart';
-import 'package:book_club/models/suggestion_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
-import 'package:favorite_button/favorite_button.dart';
+
 import 'package:flutter/material.dart';
 
 class AddSuggestion extends StatefulWidget {
@@ -19,10 +17,19 @@ class AddSuggestion extends StatefulWidget {
 }
 
 class _AddSuggestionState extends State<AddSuggestion> {
-  final reviewKey = GlobalKey<ScaffoldState>();
-  int _dropdownValue = 1;
-  bool favorite = false;
+  bool isChecked = false;
 
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Theme.of(context).focusColor;
+    }
+    return Theme.of(context).primaryColor;
+  }
   //controllers
 
   final TextEditingController _suggestionInput = TextEditingController();
@@ -33,7 +40,6 @@ class _AddSuggestionState extends State<AddSuggestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: reviewKey,
       body: Column(
         children: [
           const SizedBox(
@@ -71,13 +77,32 @@ class _AddSuggestionState extends State<AddSuggestion> {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Checkbox(
+                checkColor: Colors.white,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isChecked = value!;
+                  });
+                },
+              ),
+              Text(
+                "Publier anonymement",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ],
+          ),
           const SizedBox(
             height: 50,
           ),
           ElevatedButton(
             onPressed: () {
-              DBFuture().addSuggestion(
-                  widget.currentUser.uid!, 0, _suggestionInput.text, false);
+              DBFuture().addSuggestion(widget.currentUser.uid!, 0,
+                  _suggestionInput.text, false, isChecked);
               Navigator.of(context).pop();
             },
             child: Padding(
