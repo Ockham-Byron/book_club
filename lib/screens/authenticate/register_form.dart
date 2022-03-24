@@ -128,6 +128,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       heightFactor: 0.88,
+      //widthFactor: 0.5,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Form(
