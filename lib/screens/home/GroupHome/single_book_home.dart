@@ -10,6 +10,7 @@ import 'package:book_club/shared/containers/background_container.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../../shared/constraints.dart';
 import '../../create/add_book.dart';
 
 class SingleBookHome extends StatefulWidget {
@@ -87,6 +88,24 @@ class _SingleBookHomeState extends State<SingleBookHome> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+              width: mobileMaxWidth,
+              height: mobileContainerMaxHeight,
+              child: globalWidget(context),
+            ),
+          );
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
         child: Column(

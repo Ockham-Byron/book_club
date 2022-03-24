@@ -14,8 +14,7 @@ class LogIn extends StatelessWidget {
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
           return Center(
-            child: Container(
-              color: Colors.green,
+            child: SizedBox(
               width: mobileMaxWidth,
               height: mobileContainerMaxHeight,
               child: Scaffold(

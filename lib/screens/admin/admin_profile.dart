@@ -6,6 +6,7 @@ import 'package:book_club/screens/admin/nb_of_read_pages.dart';
 import 'package:book_club/screens/edit/edit_user.dart';
 import 'package:book_club/sections/book_section/book_section.dart';
 import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:book_club/shared/loading.dart';
 
@@ -84,6 +85,24 @@ class _ProfileAdminState extends State<ProfileAdmin> {
       return readBooks;
     }
 
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+              child: SizedBox(
+                  width: mobileMaxWidth,
+                  height: mobileContainerMaxHeight,
+                  child:
+                      globalWidget(getUserReadBooks, displayCircularAvatar)));
+        } else {
+          return globalWidget(getUserReadBooks, displayCircularAvatar);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(int Function(UserModel currentUser) getUserReadBooks,
+      Widget Function() displayCircularAvatar) {
     return Scaffold(
       body: SingleChildScrollView(
         child: StreamBuilder<UserModel>(
