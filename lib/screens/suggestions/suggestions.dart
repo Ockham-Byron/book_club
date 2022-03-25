@@ -3,6 +3,7 @@ import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/suggestions/add_suggestion.dart';
 import 'package:book_club/screens/suggestions/suggestion_card.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/db_stream.dart';
@@ -21,6 +22,24 @@ class Suggestions extends StatefulWidget {
 class _SuggestionsState extends State<Suggestions> {
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+              height: mobileContainerMaxHeight,
+              width: mobileMaxWidth,
+              child: globalWidget(context),
+            ),
+          );
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
       body: BackgroundContainer(
@@ -77,7 +96,7 @@ class _SuggestionsState extends State<Suggestions> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0),
                                     child: Text(
-                                      "Il n'y a pas encore de critique pour ce livre ;(",
+                                      "Il n'y a pas encore de suggestion, à vous l'honneur !",
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 20,
@@ -106,6 +125,7 @@ class _SuggestionsState extends State<Suggestions> {
                                             vertical: 8.0),
                                         child: SuggestionCard(
                                           suggestion: _suggestions[index - 1],
+                                          currentUser: widget.currentUser,
                                         ),
                                       );
                                     }

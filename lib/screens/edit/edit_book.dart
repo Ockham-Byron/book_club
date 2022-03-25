@@ -6,6 +6,7 @@ import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:book_club/shared/containers/background_container.dart';
 
@@ -121,123 +122,143 @@ class _EditBookState extends State<EditBook> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+              height: mobileContainerMaxHeight,
+              width: mobileMaxWidth,
+              child: globalWidget(context),
+            ),
+          );
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
       body: BackgroundContainer(
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.only(top: 50),
-            height: 700,
-            child: ShadowContainer(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CustomFormField(
-                        textEditingController: _bookTitleInput,
-                        iconData: Icons.book,
-                        hintText: "Titre du livre",
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Merci d'indiquer le titre du livre";
-                          } else {
-                            return null;
-                          }
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomFormField(
-                        textEditingController: _bookAuthorInput,
-                        iconData: Icons.face,
-                        hintText: "Auteur.e du livre",
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Merci d'indiquer l'auteur.e du livre";
-                          } else {
-                            return null;
-                          }
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomFormField(
-                      keyboardType: TextInputType.number,
-                      textEditingController: _bookLengthInput,
-                      iconData: Icons.format_list_numbered,
-                      hintText: "Nombre de pages",
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomFormField(
-                      textEditingController: _bookCoverInput,
-                      iconData: Icons.auto_stories,
-                      hintText: "Url de la couverture du livre",
-                      validator: (val) {
-                        if (val!.isValidImageUrl || val == "") {
-                          return null;
-                        } else {
-                          return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Rdv pour échanger sur ce livre le",
-                      style: TextStyle(
-                          color: Theme.of(context).focusColor, fontSize: 20),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(DateFormat("dd/MM à HH:mm").format(_selectedDate!),
-                        style: Theme.of(context).textTheme.headline6),
-                    TextButton(
-                      onPressed: () => _selectDate(context),
-                      child: Icon(
-                        Icons.calendar_today,
-                        color: Theme.of(context).focusColor,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.only(top: 50),
+              height: 700,
+              child: ShadowContainer(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomFormField(
+                          textEditingController: _bookTitleInput,
+                          iconData: Icons.book,
+                          hintText: "Titre du livre",
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Merci d'indiquer le titre du livre";
+                            } else {
+                              return null;
+                            }
+                          }),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _editBook(
-                              widget.currentGroup.id!,
-                              widget.currentBook.id!,
-                              _bookTitleInput.text,
-                              _bookAuthorInput.text,
-                              _bookCoverInput.text,
-                              int.parse(_bookLengthInput.text),
-                              Timestamp.fromDate(_selectedDate!));
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: Text(
-                          "Modifier".toUpperCase(),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                      CustomFormField(
+                          textEditingController: _bookAuthorInput,
+                          iconData: Icons.face,
+                          hintText: "Auteur.e du livre",
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Merci d'indiquer l'auteur.e du livre";
+                            } else {
+                              return null;
+                            }
+                          }),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomFormField(
+                        keyboardType: TextInputType.number,
+                        textEditingController: _bookLengthInput,
+                        iconData: Icons.format_list_numbered,
+                        hintText: "Nombre de pages",
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomFormField(
+                        textEditingController: _bookCoverInput,
+                        iconData: Icons.auto_stories,
+                        hintText: "Url de la couverture du livre",
+                        validator: (val) {
+                          if (val!.isValidImageUrl || val == "") {
+                            return null;
+                          } else {
+                            return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                          }
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Rdv pour échanger sur ce livre le",
+                        style: TextStyle(
+                            color: Theme.of(context).focusColor, fontSize: 20),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(DateFormat("dd/MM à HH:mm").format(_selectedDate!),
+                          style: Theme.of(context).textTheme.headline6),
+                      TextButton(
+                        onPressed: () => _selectDate(context),
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: Theme.of(context).focusColor,
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Annuler".toUpperCase(),
-                          style:
-                              TextStyle(color: Theme.of(context).focusColor)),
-                    )
-                  ],
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _editBook(
+                                widget.currentGroup.id!,
+                                widget.currentBook.id!,
+                                _bookTitleInput.text,
+                                _bookAuthorInput.text,
+                                _bookCoverInput.text,
+                                int.parse(_bookLengthInput.text),
+                                Timestamp.fromDate(_selectedDate!));
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Text(
+                            "Modifier".toUpperCase(),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Annuler".toUpperCase(),
+                            style:
+                                TextStyle(color: Theme.of(context).focusColor)),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

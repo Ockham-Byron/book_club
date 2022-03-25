@@ -2,18 +2,12 @@ import 'dart:math';
 
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
-import 'package:book_club/root.dart';
-import 'package:book_club/screens/admin/change_leader.dart';
-import 'package:book_club/services/auth.dart';
+
 import 'package:book_club/shared/display_services.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../models/book_model.dart';
 import '../../services/db_future.dart';
-import '../../services/db_stream.dart';
 
 class MemberChange extends StatelessWidget {
   final UserModel user;
@@ -44,60 +38,6 @@ class MemberChange extends StatelessWidget {
       readBooks = 0;
     }
     return readBooks;
-  }
-
-  void _deleteUser(String userId, String groupId, BuildContext context) async {
-    try {
-      String _returnString = await AuthService().deleteUser();
-
-      if (_returnString == "success") {
-        DBFuture().deleteUserFromDb(
-          user.uid!,
-        );
-
-        DBFuture().deleteUserFromGroup(
-          user.uid!,
-          currentGroup.id!,
-        );
-
-        Fluttertoast.showToast(
-            msg: "Compte supprimé, bonjour tristesse...",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        if (currentUser.uid == user.uid) {
-          _signOut(context);
-        }
-      } else if (_returnString == "error" || _returnString == null) {
-        Fluttertoast.showToast(
-            msg:
-                "Opération sensible ! Vous devez vous connecter de nouveau pour la mener en toute sécurité.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Theme.of(context).primaryColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } catch (e) {
-      //print(e);
-    }
-  }
-
-  void _signOut(BuildContext context) async {
-    String _returnedString = await AuthService().signOut();
-    if (_returnedString == "success") {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AppRoot(),
-        ),
-        (route) => false,
-      );
-    }
   }
 
   @override

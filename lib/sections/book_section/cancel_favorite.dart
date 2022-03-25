@@ -4,6 +4,8 @@ import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/admin_profile.dart';
 
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/shared/buttons/cancel_button.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
@@ -37,42 +39,50 @@ class CancelFavorite extends StatelessWidget {
       return currentBookCoverUrl;
     }
 
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return ComputerLayout(globalWidget(_currentBookCoverUrl, context));
+        } else {
+          return globalWidget(_currentBookCoverUrl, context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(
+      String Function() _currentBookCoverUrl, BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 200, horizontal: 20),
-          child: ShadowContainer(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                    height: 150, child: Image.network(_currentBookCoverUrl())),
-                ElevatedButton(
-                  onPressed: () {
-                    DBFuture().cancelFavoriteBook(
-                        currentGroup.id!, favoriteBook.id!, currentUser.uid!);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfileAdmin(
-                          currentUser: currentUser,
-                          currentGroup: currentGroup,
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Text("Supprimer de vos favoris ?"),
-                ),
-                TextButton(
+        child: Center(
+          child: SizedBox(
+            height: 300,
+            child: ShadowContainer(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                      height: 150,
+                      child: Image.network(_currentBookCoverUrl())),
+                  ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      DBFuture().cancelFavoriteBook(
+                          currentGroup.id!, favoriteBook.id!, currentUser.uid!);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileAdmin(
+                            currentUser: currentUser,
+                            currentGroup: currentGroup,
+                          ),
+                        ),
+                      );
                     },
-                    child: Text(
-                      "ANNULER",
-                      style: TextStyle(
-                          color: Theme.of(context).focusColor, fontSize: 20),
-                    ))
-              ],
+                    child: const Text("Supprimer de vos favoris ?"),
+                  ),
+                  const CancelButton()
+                ],
+              ),
             ),
           ),
         ),

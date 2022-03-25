@@ -71,7 +71,7 @@ class MemberCard extends StatelessWidget {
         if (currentUser.uid == user.uid) {
           _signOut(context);
         }
-      } else if (_returnString == "error" || _returnString == null) {
+      } else if (_returnString == "error") {
         Fluttertoast.showToast(
             msg:
                 "Opération sensible ! Vous devez vous connecter de nouveau pour la mener en toute sécurité.",

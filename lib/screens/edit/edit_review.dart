@@ -4,10 +4,12 @@ import 'package:book_club/models/review_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
+import '../../shared/buttons/cancel_button.dart';
 import '../../shared/containers/background_container.dart';
 
 class EditReview extends StatefulWidget {
@@ -89,9 +91,21 @@ class _EditReviewState extends State<EditReview> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return ComputerLayout(globalWidget(context));
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
-        child: Column(
+        child: ListView(
           children: [
             const SizedBox(
               height: 100,
@@ -204,29 +218,45 @@ class _EditReviewState extends State<EditReview> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 20,
             ),
-            ElevatedButton(
-              onPressed: () {
-                _editReview(
-                    widget.currentUser.uid!,
-                    widget.currentGroup.id!,
-                    widget.book.id!,
-                    _bookReviewInput.text,
-                    _favoriteInput,
-                    _bookRatingInput);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                  "Modifier".toUpperCase(),
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ShadowContainer(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _editReview(
+                              widget.currentUser.uid!,
+                              widget.currentGroup.id!,
+                              widget.book.id!,
+                              _bookReviewInput.text,
+                              _favoriteInput,
+                              _bookRatingInput);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Text(
+                            "Modifier".toUpperCase(),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const CancelButton(),
+                  ],
                 ),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:book_club/screens/history/book_card.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/app_drawer.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/loading.dart';
@@ -72,6 +73,23 @@ class _BookHistoryState extends State<BookHistory> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+              child: SizedBox(
+            height: mobileContainerMaxHeight,
+            width: mobileMaxWidth,
+            child: globalWidget(),
+          ));
+        } else {
+          return globalWidget();
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget() {
     return Scaffold(
       body: BackgroundContainer(
         child: StreamBuilder<List<BookModel>>(

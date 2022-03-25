@@ -221,6 +221,7 @@ class DBStream {
         userId: snapshot.get("userId"),
         suggestion: snapshot.get("suggestion"),
         votes: snapshot.get("votes"),
+        supportedBy: List<String>.from(snapshot.data()!["supportedBy"]),
         isWorkedByDev: snapshot.get("isWorkedByDev"),
         isAnonymous: snapshot.get("isAnonymous"));
   }
@@ -244,6 +245,7 @@ class DBStream {
           userId: doc.data()["userId"],
           suggestion: doc.data()["suggestion"],
           votes: doc.data()["votes"],
+          supportedBy: List<String>.from(doc.data()["supportedBy"]),
           isWorkedByDev: doc.data()["isWorkedByDev"],
           isAnonymous: doc.data()["isAnonymous"]);
     }).toList();

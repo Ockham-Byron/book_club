@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:book_club/models/user_model.dart';
-import 'package:book_club/shared/appBars/custom_app_bar.dart';
-import 'package:book_club/shared/containers/background_container.dart';
+
 import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,10 +77,6 @@ class _DonateState extends State<Donate> {
             ],
           ),
         ),
-      ),
-      drawer: AppDrawer(
-        currentGroup: widget.currentGroup,
-        currentUser: widget.currentUser,
       ),
     );
   }

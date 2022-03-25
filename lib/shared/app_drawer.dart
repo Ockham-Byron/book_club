@@ -107,7 +107,7 @@ class AppDrawer extends StatelessWidget {
     }
 
     return Drawer(
-      child: Column(
+      child: ListView(
         // Important: Remove any padding from the ListView.
 
         children: [
@@ -132,7 +132,8 @@ class AppDrawer extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
+          SizedBox(
+            height: 600,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

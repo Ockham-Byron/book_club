@@ -1,6 +1,5 @@
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
-import 'package:book_club/screens/home/noGroupHome/no_group_home.dart';
 
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';

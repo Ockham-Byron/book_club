@@ -1,6 +1,7 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/screens/admin/member_change.dart';
 import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/display_services.dart';
 import 'package:book_club/shared/loading.dart';
@@ -33,6 +34,18 @@ class _ChangeLeaderState extends State<ChangeLeader> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return ComputerLayout(globalWidget());
+        } else {
+          return globalWidget();
+        }
+      },
+    );
+  }
+
+  StreamBuilder<GroupModel> globalWidget() {
     return StreamBuilder<GroupModel>(
         stream: DBStream().getGroupData(widget.currentGroup.id!),
         builder: (context, snapshot) {
@@ -44,8 +57,7 @@ class _ChangeLeaderState extends State<ChangeLeader> {
               return Scaffold(
                 body: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: ListView(
                     children: [
                       const SizedBox(
                         height: 50,

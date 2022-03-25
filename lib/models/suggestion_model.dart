@@ -5,6 +5,7 @@ class SuggestionModel {
   String? suggestion;
   bool? isWorkedByDev;
   bool? isAnonymous;
+  List? supportedBy;
 
   SuggestionModel(
       {this.id,
@@ -12,5 +13,6 @@ class SuggestionModel {
       this.suggestion,
       this.votes,
       this.isWorkedByDev,
-      this.isAnonymous});
+      this.isAnonymous,
+      this.supportedBy});
 }

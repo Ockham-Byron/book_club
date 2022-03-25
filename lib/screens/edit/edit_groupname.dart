@@ -1,6 +1,7 @@
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/admin_group.dart';
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
@@ -48,6 +49,18 @@ class _EditGroupNameState extends State<EditGroupName> {
   final TextEditingController _groupNameInput = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return ComputerLayout(globalWidget(context));
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
         child: Center(

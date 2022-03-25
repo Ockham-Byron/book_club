@@ -28,19 +28,6 @@ class BookCard extends StatefulWidget {
 }
 
 class _BookCardState extends State<BookCard> {
-  String _currentBookCoverUrl() {
-    String currentBookCoverUrl;
-
-    if (widget.book!.cover == "") {
-      currentBookCoverUrl =
-          "https://www.azendportafolio.com/static/img/not-found.png";
-    } else {
-      currentBookCoverUrl = widget.book!.cover!;
-    }
-
-    return currentBookCoverUrl;
-  }
-
   void _goToBookDetail(BuildContext context) {
     Navigator.push(
       context,

@@ -7,6 +7,7 @@ import 'package:book_club/screens/admin/admin_profile.dart';
 import 'package:book_club/screens/admin/change_leader.dart';
 import 'package:book_club/services/auth.dart';
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
@@ -383,438 +384,951 @@ class _EditUserState extends State<EditUser> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 4,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).canvasColor,
-            flexibleSpace: Column(
-              children: [
-                TabBar(
-                  unselectedLabelColor: Theme.of(context).focusColor,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Theme.of(context).focusColor),
-                  tabs: const [
-                    KTab(
-                      iconData: Icons.person,
-                    ),
-                    KTab(iconData: Icons.camera),
-                    KTab(iconData: Icons.mail_outline),
-                    KTab(iconData: Icons.lock),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              //Modifier pseudo
-              BackgroundContainer(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 280,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ShadowContainer(
-                        child: Form(
-                          key: _pseudoFormKey,
-                          child: Column(
-                            children: [
-                              CustomFormField(
-                                focusNode: fPseudo,
-                                textEditingController: _userPseudoInput,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+              height: mobileContainerMaxHeight,
+              width: mobileMaxWidth,
+              child: MaterialApp(
+                home: DefaultTabController(
+                  length: 4,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Theme.of(context).canvasColor,
+                      flexibleSpace: Column(
+                        children: [
+                          TabBar(
+                            unselectedLabelColor: Theme.of(context).focusColor,
+                            indicatorSize: TabBarIndicatorSize.label,
+                            indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Theme.of(context).focusColor),
+                            tabs: const [
+                              KTab(
                                 iconData: Icons.person,
-                                hintText: "Pseudo",
-                                validator: (val) {
-                                  if (val!.isEmpty) {
-                                    return "Merci d'indiquer un pseudo";
-                                  } else if (val.length < 3) {
-                                    return "Merci de choisir un pseudo de plus de trois caractères";
-                                  } else {
-                                    return null;
-                                  }
-                                },
+                              ),
+                              KTab(iconData: Icons.camera),
+                              KTab(iconData: Icons.mail_outline),
+                              KTab(iconData: Icons.lock),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    body: TabBarView(
+                      children: [
+                        //Modifier pseudo
+                        BackgroundContainer(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 280,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: ShadowContainer(
+                                  child: Form(
+                                    key: _pseudoFormKey,
+                                    child: Column(
+                                      children: [
+                                        CustomFormField(
+                                          focusNode: fPseudo,
+                                          textEditingController:
+                                              _userPseudoInput,
+                                          iconData: Icons.person,
+                                          hintText: "Pseudo",
+                                          validator: (val) {
+                                            if (val!.isEmpty) {
+                                              return "Merci d'indiquer un pseudo";
+                                            } else if (val.length < 3) {
+                                              return "Merci de choisir un pseudo de plus de trois caractères";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0)),
+                                              primary:
+                                                  Theme.of(context).focusColor),
+                                          onPressed: () {
+                                            if (_pseudoFormKey.currentState!
+                                                .validate()) {
+                                              _editUserPseudo(
+                                                  _userPseudoInput.text,
+                                                  widget.currentUser.uid!,
+                                                  context);
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 50),
+                                            child: Text(
+                                              "Modifier".toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .canvasColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "Annuler".toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(
                                 height: 20,
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
-                                    primary: Theme.of(context).focusColor),
-                                onPressed: () {
-                                  if (_pseudoFormKey.currentState!.validate()) {
-                                    _editUserPseudo(_userPseudoInput.text,
-                                        widget.currentUser.uid!, context);
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 50),
-                                  child: Text(
-                                    "Modifier".toUpperCase(),
-                                    style: TextStyle(
-                                        color: Theme.of(context).canvasColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: ShadowContainer(
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      if (widget.currentUser.uid ==
+                                          widget.currentGroup.leader) {
+                                        _showDialogDeleteGroup();
+                                      } else {
+                                        String _message =
+                                            await AuthService().deleteUser();
+                                        if (_message == "success") {
+                                          DBFuture().deleteUserFromDb(
+                                              widget.currentUser.uid!);
+                                          DBFuture().deleteUserFromGroup(
+                                              widget.currentUser.uid!,
+                                              widget.currentGroup.id!);
+
+                                          if (widget.currentGroup.leader ==
+                                              widget.currentUser.uid) {
+                                            DBFuture().deleteGroupFromDb(
+                                                widget.currentGroup.id!);
+                                          }
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Votre compte est supprimé, bonjour tristesse...",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.CENTER,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Theme.of(context)
+                                                  .primaryColor,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const AppRoot(),
+                                                  ),
+                                                  (route) => false);
+                                        } else {
+                                          _showDialogSensitiveOperation();
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      "Supprimer mon compte".toUpperCase(),
+                                      style: TextStyle(
+                                          color: Theme.of(context).focusColor),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "Annuler".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Theme.of(context).focusColor),
-                                ),
-                              ),
+                              )
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ShadowContainer(
-                        child: TextButton(
-                          onPressed: () async {
-                            if (widget.currentUser.uid ==
-                                widget.currentGroup.leader) {
-                              _showDialogDeleteGroup();
-                            } else {
-                              String _message =
-                                  await AuthService().deleteUser();
-                              if (_message == "success") {
-                                DBFuture()
-                                    .deleteUserFromDb(widget.currentUser.uid!);
-                                DBFuture().deleteUserFromGroup(
-                                    widget.currentUser.uid!,
-                                    widget.currentGroup.id!);
 
-                                if (widget.currentGroup.leader ==
-                                    widget.currentUser.uid) {
-                                  DBFuture().deleteGroupFromDb(
-                                      widget.currentGroup.id!);
-                                }
-                                Fluttertoast.showToast(
-                                    msg:
-                                        "Votre compte est supprimé, bonjour tristesse...",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => const AppRoot(),
-                                    ),
-                                    (route) => false);
-                              } else {
-                                _showDialogSensitiveOperation();
-                              }
-                            }
-                          },
-                          child: Text(
-                            "Supprimer mon compte".toUpperCase(),
-                            style:
-                                TextStyle(color: Theme.of(context).focusColor),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-              //Modifier Picture
-              BackgroundContainer(
-                child: Center(
-                  child: Container(
-                    height: 285,
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: ShadowContainer(
-                      child: Form(
-                        key: _pictureFormKey,
-                        child: Column(
-                          children: [
-                            CustomFormField(
-                              focusNode: fPicture,
-                              textEditingController: _userProfileInput,
-                              iconData: Icons.camera,
-                              hintText: "Url de votre photo de profil",
-                              validator: (val) {
-                                if (val!.isValidImageUrl || val == "") {
-                                  return null;
-                                } else {
-                                  return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(50.0)),
-                                  primary: Theme.of(context).focusColor),
-                              onPressed: () {
-                                if (_pictureFormKey.currentState!.validate()) {
-                                  _editUserPicture(_userProfileInput.text,
-                                      widget.currentUser.uid!);
-                                  Navigator.of(context).pop();
-                                }
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 50),
-                                child: Text(
-                                  "Modifier".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Theme.of(context).canvasColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                        //Modifier Picture
+                        BackgroundContainer(
+                          child: Center(
+                            child: Container(
+                              height: 285,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: ShadowContainer(
+                                child: Form(
+                                  key: _pictureFormKey,
+                                  child: Column(
+                                    children: [
+                                      CustomFormField(
+                                        focusNode: fPicture,
+                                        textEditingController:
+                                            _userProfileInput,
+                                        iconData: Icons.camera,
+                                        hintText:
+                                            "Url de votre photo de profil",
+                                        validator: (val) {
+                                          if (val!.isValidImageUrl ||
+                                              val == "") {
+                                            return null;
+                                          } else {
+                                            return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                                          }
+                                        },
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        50.0)),
+                                            primary:
+                                                Theme.of(context).focusColor),
+                                        onPressed: () {
+                                          if (_pictureFormKey.currentState!
+                                              .validate()) {
+                                            _editUserPicture(
+                                                _userProfileInput.text,
+                                                widget.currentUser.uid!);
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 50),
+                                          child: Text(
+                                            "Modifier".toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .canvasColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          "Annuler".toUpperCase(),
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).focusColor),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                "Annuler".toUpperCase(),
-                                style: TextStyle(
-                                    color: Theme.of(context).focusColor),
+                          ),
+                        ),
+
+                        //Modifier Mail
+                        Container(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/background.jpg'),
+                                fit: BoxFit.cover),
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            child: Center(
+                              child: Container(
+                                height: 325,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: ShadowContainer(
+                                  child: Form(
+                                    key: _mailFormKey,
+                                    child: Column(
+                                      children: [
+                                        CustomFormField(
+                                          focusNode: fMail,
+                                          textEditingController: _userMailInput,
+                                          iconData: Icons.alternate_email,
+                                          hintText: "Courriel",
+                                          validator: (val) {
+                                            if (!val!.isValidEmail) {
+                                              return 'Entrez un courriel valide';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0)),
+                                              primary:
+                                                  Theme.of(context).focusColor),
+                                          onPressed: () async {
+                                            if (_mailFormKey.currentState!
+                                                .validate()) {
+                                              String message;
+                                              message = await AuthService()
+                                                  .resetEmail(
+                                                      _userMailInput.text);
+                                              if (message == "success") {
+                                                DBFuture().editUserMail(
+                                                    widget.currentUser.uid!,
+                                                    _userMailInput.text);
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "Votre mail est modifié ! Changer d'adresse sans bouger de son canapé, quel confort...",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.CENTER,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .focusColor,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                                Navigator.of(context).pop();
+                                              } else {
+                                                _showDialogSensitiveOperation();
+                                              }
+                                              // Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 50),
+                                            child: Text(
+                                              "Modifier".toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .canvasColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextButton(
+                                          onPressed: () => _signOut(context),
+                                          child: Text(
+                                            "Se déconnecter".toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "Annuler".toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                        //Modifier Mot de passe
+                        Container(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/background.jpg'),
+                                fit: BoxFit.cover),
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            child: Center(
+                              child: Container(
+                                height: 340,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: ShadowContainer(
+                                  child: Form(
+                                    key: _passwordFormKey,
+                                    child: Column(
+                                      children: [
+                                        CustomFormField(
+                                          textEditingController: _userMailInput,
+                                          iconData: Icons.alternate_email,
+                                          hintText: "Votre courriel",
+                                          validator: (val) {
+                                            if (!val!.isValidEmail) {
+                                              return "Entrez un courriel valide";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        const Text(
+                                            "Vous souhaitez changer de mot de passe ? Vérifiez votre courriel ci-dessus, nous allons y envoyer un lien pour modifier votre mot de passe."),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0)),
+                                              primary:
+                                                  Theme.of(context).focusColor),
+                                          onPressed: () async {
+                                            if (_passwordFormKey.currentState!
+                                                .validate()) {
+                                              String message;
+                                              message = await AuthService()
+                                                  .sendPasswordResetEmail(
+                                                      _userMailInput.text);
+                                              if (message == "success") {
+                                                _showDialogEmailSent();
+                                              }
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 50),
+                                            child: Text(
+                                              "Envoyer".toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .canvasColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "Annuler".toUpperCase(),
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .focusColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-
-              //Modifier Mail
-              Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background.jpg'),
-                      fit: BoxFit.cover),
+            ),
+          );
+        } else {
+          return MaterialApp(
+            home: DefaultTabController(
+              length: 4,
+              child: Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Theme.of(context).canvasColor,
+                  flexibleSpace: Column(
+                    children: [
+                      TabBar(
+                        unselectedLabelColor: Theme.of(context).focusColor,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Theme.of(context).focusColor),
+                        tabs: const [
+                          KTab(
+                            iconData: Icons.person,
+                          ),
+                          KTab(iconData: Icons.camera),
+                          KTab(iconData: Icons.mail_outline),
+                          KTab(iconData: Icons.lock),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Center(
-                    child: Container(
-                      height: 325,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ShadowContainer(
-                        child: Form(
-                          key: _mailFormKey,
-                          child: Column(
-                            children: [
-                              CustomFormField(
-                                focusNode: fMail,
-                                textEditingController: _userMailInput,
-                                iconData: Icons.alternate_email,
-                                hintText: "Courriel",
-                                validator: (val) {
-                                  if (!val!.isValidEmail) {
-                                    return 'Entrez un courriel valide';
-                                  } else {
-                                    return null;
-                                  }
-                                },
+                body: TabBarView(
+                  children: [
+                    //Modifier pseudo
+                    BackgroundContainer(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 280,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ShadowContainer(
+                              child: Form(
+                                key: _pseudoFormKey,
+                                child: Column(
+                                  children: [
+                                    CustomFormField(
+                                      focusNode: fPseudo,
+                                      textEditingController: _userPseudoInput,
+                                      iconData: Icons.person,
+                                      hintText: "Pseudo",
+                                      validator: (val) {
+                                        if (val!.isEmpty) {
+                                          return "Merci d'indiquer un pseudo";
+                                        } else if (val.length < 3) {
+                                          return "Merci de choisir un pseudo de plus de trois caractères";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0)),
+                                          primary:
+                                              Theme.of(context).focusColor),
+                                      onPressed: () {
+                                        if (_pseudoFormKey.currentState!
+                                            .validate()) {
+                                          _editUserPseudo(_userPseudoInput.text,
+                                              widget.currentUser.uid!, context);
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 50),
+                                        child: Text(
+                                          "Modifier".toUpperCase(),
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).canvasColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "Annuler".toUpperCase(),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).focusColor),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
-                                    primary: Theme.of(context).focusColor),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ShadowContainer(
+                              child: TextButton(
                                 onPressed: () async {
-                                  if (_mailFormKey.currentState!.validate()) {
-                                    String message;
-                                    message = await AuthService()
-                                        .resetEmail(_userMailInput.text);
-                                    if (message == "success") {
-                                      DBFuture().editUserMail(
+                                  if (widget.currentUser.uid ==
+                                      widget.currentGroup.leader) {
+                                    _showDialogDeleteGroup();
+                                  } else {
+                                    String _message =
+                                        await AuthService().deleteUser();
+                                    if (_message == "success") {
+                                      DBFuture().deleteUserFromDb(
+                                          widget.currentUser.uid!);
+                                      DBFuture().deleteUserFromGroup(
                                           widget.currentUser.uid!,
-                                          _userMailInput.text);
+                                          widget.currentGroup.id!);
+
+                                      if (widget.currentGroup.leader ==
+                                          widget.currentUser.uid) {
+                                        DBFuture().deleteGroupFromDb(
+                                            widget.currentGroup.id!);
+                                      }
                                       Fluttertoast.showToast(
                                           msg:
-                                              "Votre mail est modifié ! Changer d'adresse sans bouger de son canapé, quel confort...",
+                                              "Votre compte est supprimé, bonjour tristesse...",
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.CENTER,
                                           timeInSecForIosWeb: 1,
                                           backgroundColor:
-                                              Theme.of(context).focusColor,
+                                              Theme.of(context).primaryColor,
                                           textColor: Colors.white,
                                           fontSize: 16.0);
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AppRoot(),
+                                          ),
+                                          (route) => false);
                                     } else {
                                       _showDialogSensitiveOperation();
                                     }
-                                    // Navigator.of(context).pop();
                                   }
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 50),
-                                  child: Text(
-                                    "Modifier".toUpperCase(),
-                                    style: TextStyle(
-                                        color: Theme.of(context).canvasColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                child: Text(
+                                  "Supprimer mon compte".toUpperCase(),
+                                  style: TextStyle(
+                                      color: Theme.of(context).focusColor),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    //Modifier Picture
+                    BackgroundContainer(
+                      child: Center(
+                        child: Container(
+                          height: 285,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: ShadowContainer(
+                            child: Form(
+                              key: _pictureFormKey,
+                              child: Column(
+                                children: [
+                                  CustomFormField(
+                                    focusNode: fPicture,
+                                    textEditingController: _userProfileInput,
+                                    iconData: Icons.camera,
+                                    hintText: "Url de votre photo de profil",
+                                    validator: (val) {
+                                      if (val!.isValidImageUrl || val == "") {
+                                        return null;
+                                      } else {
+                                        return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                                      }
+                                    },
                                   ),
-                                ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50.0)),
+                                        primary: Theme.of(context).focusColor),
+                                    onPressed: () {
+                                      if (_pictureFormKey.currentState!
+                                          .validate()) {
+                                        _editUserPicture(_userProfileInput.text,
+                                            widget.currentUser.uid!);
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 50),
+                                      child: Text(
+                                        "Modifier".toUpperCase(),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).canvasColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Annuler".toUpperCase(),
+                                      style: TextStyle(
+                                          color: Theme.of(context).focusColor),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextButton(
-                                onPressed: () => _signOut(context),
-                                child: Text(
-                                  "Se déconnecter".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Theme.of(context).focusColor),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "Annuler".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Theme.of(context).focusColor),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              //Modifier Mot de passe
-              Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background.jpg'),
-                      fit: BoxFit.cover),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Center(
-                    child: Container(
-                      height: 340,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ShadowContainer(
-                        child: Form(
-                          key: _passwordFormKey,
-                          child: Column(
-                            children: [
-                              CustomFormField(
-                                textEditingController: _userMailInput,
-                                iconData: Icons.alternate_email,
-                                hintText: "Votre courriel",
-                                validator: (val) {
-                                  if (!val!.isValidEmail) {
-                                    return "Entrez un courriel valide";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const Text(
-                                  "Vous souhaitez changer de mot de passe ? Vérifiez votre courriel ci-dessus, nous allons y envoyer un lien pour modifier votre mot de passe."),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(50.0)),
-                                    primary: Theme.of(context).focusColor),
-                                onPressed: () async {
-                                  if (_passwordFormKey.currentState!
-                                      .validate()) {
-                                    String message;
-                                    message = await AuthService()
-                                        .sendPasswordResetEmail(
-                                            _userMailInput.text);
-                                    if (message == "success") {
-                                      _showDialogEmailSent();
-                                    }
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 50),
-                                  child: Text(
-                                    "Envoyer".toUpperCase(),
-                                    style: TextStyle(
-                                        color: Theme.of(context).canvasColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
+
+                    //Modifier Mail
+                    Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/background.jpg'),
+                            fit: BoxFit.cover),
+                      ),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Center(
+                          child: Container(
+                            height: 325,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ShadowContainer(
+                              child: Form(
+                                key: _mailFormKey,
+                                child: Column(
+                                  children: [
+                                    CustomFormField(
+                                      focusNode: fMail,
+                                      textEditingController: _userMailInput,
+                                      iconData: Icons.alternate_email,
+                                      hintText: "Courriel",
+                                      validator: (val) {
+                                        if (!val!.isValidEmail) {
+                                          return 'Entrez un courriel valide';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0)),
+                                          primary:
+                                              Theme.of(context).focusColor),
+                                      onPressed: () async {
+                                        if (_mailFormKey.currentState!
+                                            .validate()) {
+                                          String message;
+                                          message = await AuthService()
+                                              .resetEmail(_userMailInput.text);
+                                          if (message == "success") {
+                                            DBFuture().editUserMail(
+                                                widget.currentUser.uid!,
+                                                _userMailInput.text);
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "Votre mail est modifié ! Changer d'adresse sans bouger de son canapé, quel confort...",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .focusColor,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            _showDialogSensitiveOperation();
+                                          }
+                                          // Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 50),
+                                        child: Text(
+                                          "Modifier".toUpperCase(),
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).canvasColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    TextButton(
+                                      onPressed: () => _signOut(context),
+                                      child: Text(
+                                        "Se déconnecter".toUpperCase(),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).focusColor),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "Annuler".toUpperCase(),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).focusColor),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  "Annuler".toUpperCase(),
-                                  style: TextStyle(
-                                      color: Theme.of(context).focusColor),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    //Modifier Mot de passe
+                    Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/background.jpg'),
+                            fit: BoxFit.cover),
+                      ),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Center(
+                          child: Container(
+                            height: 340,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ShadowContainer(
+                              child: Form(
+                                key: _passwordFormKey,
+                                child: Column(
+                                  children: [
+                                    CustomFormField(
+                                      textEditingController: _userMailInput,
+                                      iconData: Icons.alternate_email,
+                                      hintText: "Votre courriel",
+                                      validator: (val) {
+                                        if (!val!.isValidEmail) {
+                                          return "Entrez un courriel valide";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const Text(
+                                        "Vous souhaitez changer de mot de passe ? Vérifiez votre courriel ci-dessus, nous allons y envoyer un lien pour modifier votre mot de passe."),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0)),
+                                          primary:
+                                              Theme.of(context).focusColor),
+                                      onPressed: () async {
+                                        if (_passwordFormKey.currentState!
+                                            .validate()) {
+                                          String message;
+                                          message = await AuthService()
+                                              .sendPasswordResetEmail(
+                                                  _userMailInput.text);
+                                          if (message == "success") {
+                                            _showDialogEmailSent();
+                                          }
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 50),
+                                        child: Text(
+                                          "Envoyer".toUpperCase(),
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).canvasColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "Annuler".toUpperCase(),
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).focusColor),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }

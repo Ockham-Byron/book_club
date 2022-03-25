@@ -168,8 +168,8 @@ class _AdminGroupState extends State<AdminGroup> {
         });
   }
 
-  Scaffold globalWidget(
-      GroupModel _currentGroup, BuildContext context, void _goToBookHistory()) {
+  Scaffold globalWidget(GroupModel _currentGroup, BuildContext context,
+      void Function() _goToBookHistory) {
     return Scaffold(
       body: BackgroundContainer(
         child: ListView(

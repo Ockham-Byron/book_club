@@ -1,5 +1,4 @@
 import 'package:book_club/models/book_model.dart';
-import 'package:book_club/models/suggestion_model.dart';
 
 import 'package:book_club/models/user_model.dart';
 
@@ -506,6 +505,7 @@ class DBFuture {
   Future<String> addSuggestion(String userId, int votes, String suggestion,
       bool isWorkedByDev, bool isAnonymous) async {
     String message = "error";
+    List<String> supportedBy = [];
 
     try {
       await suggestionsCollection.add({
@@ -513,7 +513,8 @@ class DBFuture {
         "votes": votes,
         "suggestion": suggestion,
         "isWorkedByDev": isWorkedByDev,
-        "isAnonymous": isAnonymous
+        "isAnonymous": isAnonymous,
+        "supportedBy": supportedBy
       });
       message = "success";
     } catch (e) {
@@ -523,13 +524,15 @@ class DBFuture {
   }
 
   //Add vote to suggestion
-  Future<String> voteForSuggestion(String suggestionId) async {
+  Future<String> voteForSuggestion(String suggestionId, String userId) async {
     String message = "error";
+    List<String> supportedBy = [];
 
     try {
-      await suggestionsCollection
-          .doc(suggestionId)
-          .update({"votes": FieldValue.increment(1)});
+      await suggestionsCollection.doc(suggestionId).update({
+        "votes": FieldValue.increment(1),
+        "supportedBy": FieldValue.arrayUnion([userId])
+      });
       message = "success";
     } catch (e) {
       message = "error";
@@ -539,13 +542,15 @@ class DBFuture {
   }
 
   //Cancel vote to suggestion
-  Future<String> cancelVoteForSuggestion(String suggestionId) async {
+  Future<String> cancelVoteForSuggestion(
+      String suggestionId, String userId) async {
     String message = "error";
 
     try {
-      await suggestionsCollection
-          .doc(suggestionId)
-          .update({"votes": FieldValue.increment(-1)});
+      await suggestionsCollection.doc(suggestionId).update({
+        "votes": FieldValue.increment(-1),
+        "supportedBy": FieldValue.arrayRemove([userId])
+      });
       message = "success";
     } catch (e) {
       message = "error";

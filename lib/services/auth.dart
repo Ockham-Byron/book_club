@@ -105,7 +105,7 @@ class AuthService {
 
       message = "success";
     } catch (e) {
-      print(e);
+      //print(e);
     }
 
     return message;
@@ -148,7 +148,7 @@ class AuthService {
       _auth.currentUser!.delete();
       message = "success";
     } on PlatformException catch (e) {
-      print(e.message);
+      //print(e.message);
       message = "error";
     }
     return message;

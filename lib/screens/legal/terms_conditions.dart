@@ -6,7 +6,7 @@ class TermsAndConditions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [const Text("TERMS AND CONDITIONS")],
+      children: const [Text("TERMS AND CONDITIONS")],
     );
   }
 }

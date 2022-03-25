@@ -5,11 +5,12 @@ import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/create/add_review.dart';
 import 'package:book_club/screens/edit/edit_book.dart';
 import 'package:book_club/screens/history/review_card.dart';
-import 'package:book_club/services/db_future.dart';
+
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/app_drawer.dart';
 import 'package:book_club/shared/buttons/finish_button.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/loading.dart';
 
@@ -153,6 +154,23 @@ class _BookDetailState extends State<BookDetail> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+                width: mobileMaxWidth,
+                height: mobileContainerMaxHeight,
+                child: globalWidget(context)),
+          );
+        } else {
+          return globalWidget(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
         child: ListView(
