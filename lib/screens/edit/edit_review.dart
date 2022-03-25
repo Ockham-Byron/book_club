@@ -94,7 +94,7 @@ class _EditReviewState extends State<EditReview> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget(context));
+          return computerLayout(globalWidget(context));
         } else {
           return globalWidget(context);
         }

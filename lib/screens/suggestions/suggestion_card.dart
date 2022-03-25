@@ -1,7 +1,6 @@
-import 'package:badges/badges.dart';
 import 'package:book_club/models/suggestion_model.dart';
 import 'package:book_club/models/user_model.dart';
-import 'package:book_club/services/db_future.dart';
+
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +59,7 @@ class _SuggestionCardState extends State<SuggestionCard> {
             return const Loading();
           } else {
             SuggestionModel _suggestion = snapshot.data!;
-            Color iconColor = Colors.black;
+
             // bool hasSupported;
             // if (_suggestion.supportedBy!.contains(widget.currentUser)) {
             //   hasSupported =true ;

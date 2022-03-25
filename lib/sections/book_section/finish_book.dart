@@ -41,7 +41,7 @@ class FinishedBook extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget(_currentBookCoverUrl, context));
+          return computerLayout(globalWidget(_currentBookCoverUrl, context));
         } else {
           return globalWidget(_currentBookCoverUrl, context);
         }
@@ -49,7 +49,8 @@ class FinishedBook extends StatelessWidget {
     );
   }
 
-  Scaffold globalWidget(String _currentBookCoverUrl(), BuildContext context) {
+  Scaffold globalWidget(
+      String Function() _currentBookCoverUrl, BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
         child: Center(
