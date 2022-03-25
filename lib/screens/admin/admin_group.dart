@@ -7,6 +7,7 @@ import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
 import 'package:book_club/shared/app_drawer.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/loading.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -147,181 +148,195 @@ class _AdminGroupState extends State<AdminGroup> {
               );
             }
 
-            return Scaffold(
-              body: BackgroundContainer(
-                child: ListView(
-                  children: [
-                    CustomAppBar(
-                        currentUser: widget.currentUser,
-                        currentGroup: _currentGroup),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).canvasColor,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          displayEditButton(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              GestureDetector(
-                                onTap: (() {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => BookHistory(
-                                          currentGroup: _currentGroup,
-                                          currentUser: widget.currentUser),
-                                    ),
-                                  );
-                                }),
-                                child: const Text(
-                                  "LIVRES",
-                                  style: kTitleStyle,
-                                ),
-                              ),
-                              const Text(
-                                "MEMBRES",
-                                style: kTitleStyle,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              StreamBuilder<List<BookModel>>(
-                                  stream:
-                                      DBStream().getAllBooks(_currentGroup.id!),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Loading();
-                                    } else {
-                                      List<BookModel> books = snapshot.data!;
-                                      return Text(
-                                        books.length.toString(),
-                                        style: kSubtitleStyle,
-                                      );
-                                    }
-                                  }),
-                              Text(
-                                getNbGroupMembers().toString(),
-                                style: kSubtitleStyle,
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: 350,
-                            padding: const EdgeInsets.all(20),
-                            margin: const EdgeInsets.symmetric(vertical: 20),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1,
-                                    color: Theme.of(context).primaryColor)),
-                            child: Column(
-                              children: [
-                                const Text(
-                                  "Id du groupe à partager aux nouveaux membres",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _getGroupId()!,
-                                      style: TextStyle(
-                                          color: Theme.of(context).focusColor),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.copy,
-                                        color: Theme.of(context).focusColor,
-                                      ),
-                                      onTap: _copyToClipboard,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          ElevatedButton(
-                              onPressed: _goToBookHistory,
-                              child:
-                                  const Text("Voir tous les livres du groupe")),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          const Text(
-                            "Membres du groupe",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          StreamBuilder<List<UserModel>>(
-                              stream: DBStream().getAllUsers(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Loading();
-                                } else {
-                                  List<UserModel> allUsers = snapshot.data!;
-                                  List<UserModel> members = [];
-                                  for (var user in allUsers) {
-                                    if (_currentGroup.members!
-                                        .contains(user.uid)) {
-                                      members.add(user);
-                                    }
-                                  }
-                                  return ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: members.length + 1,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        if (index == 0) {
-                                          return Container();
-                                        } else {
-                                          return MemberCard(
-                                              user: members[index - 1],
-                                              currentUser: widget.currentUser,
-                                              currentGroup: _currentGroup);
-                                        }
-                                      });
-                                }
-                              }),
-                        ],
-                      ),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth > mobileMaxWidth) {
+                  return Center(
+                    child: SizedBox(
+                      height: mobileContainerMaxHeight,
+                      width: mobileMaxWidth,
+                      child: globalWidget(
+                          _currentGroup, context, _goToBookHistory),
                     ),
-                  ],
-                ),
-              ),
-              drawer: AppDrawer(
-                currentGroup: _currentGroup,
-                currentUser: widget.currentUser,
-              ),
+                  );
+                } else {
+                  return globalWidget(_currentGroup, context, _goToBookHistory);
+                }
+              },
             );
           }
         });
+  }
+
+  Scaffold globalWidget(
+      GroupModel _currentGroup, BuildContext context, void _goToBookHistory()) {
+    return Scaffold(
+      body: BackgroundContainer(
+        child: ListView(
+          children: [
+            CustomAppBar(
+                currentUser: widget.currentUser, currentGroup: _currentGroup),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(50),
+                ),
+              ),
+              child: Column(
+                children: [
+                  displayEditButton(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: (() {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BookHistory(
+                                  currentGroup: _currentGroup,
+                                  currentUser: widget.currentUser),
+                            ),
+                          );
+                        }),
+                        child: const Text(
+                          "LIVRES",
+                          style: kTitleStyle,
+                        ),
+                      ),
+                      const Text(
+                        "MEMBRES",
+                        style: kTitleStyle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StreamBuilder<List<BookModel>>(
+                          stream: DBStream().getAllBooks(_currentGroup.id!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Loading();
+                            } else {
+                              List<BookModel> books = snapshot.data!;
+                              return Text(
+                                books.length.toString(),
+                                style: kSubtitleStyle,
+                              );
+                            }
+                          }),
+                      Text(
+                        getNbGroupMembers().toString(),
+                        style: kSubtitleStyle,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 350,
+                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 1, color: Theme.of(context).primaryColor)),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Id du groupe à partager aux nouveaux membres",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _getGroupId()!,
+                              style: TextStyle(
+                                  color: Theme.of(context).focusColor),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              child: Icon(
+                                Icons.copy,
+                                color: Theme.of(context).focusColor,
+                              ),
+                              onTap: _copyToClipboard,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: _goToBookHistory,
+                      child: const Text("Voir tous les livres du groupe")),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  const Text(
+                    "Membres du groupe",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  StreamBuilder<List<UserModel>>(
+                      stream: DBStream().getAllUsers(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Loading();
+                        } else {
+                          List<UserModel> allUsers = snapshot.data!;
+                          List<UserModel> members = [];
+                          for (var user in allUsers) {
+                            if (_currentGroup.members!.contains(user.uid)) {
+                              members.add(user);
+                            }
+                          }
+                          return ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: members.length + 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (index == 0) {
+                                  return Container();
+                                } else {
+                                  return MemberCard(
+                                      user: members[index - 1],
+                                      currentUser: widget.currentUser,
+                                      currentGroup: _currentGroup);
+                                }
+                              });
+                        }
+                      }),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      drawer: AppDrawer(
+        currentGroup: _currentGroup,
+        currentUser: widget.currentUser,
+      ),
+    );
   }
 }
 

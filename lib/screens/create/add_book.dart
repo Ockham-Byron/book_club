@@ -3,6 +3,7 @@ import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/root.dart';
 import 'package:book_club/services/db_future.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
@@ -79,10 +80,27 @@ class _AddBookState extends State<AddBook> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+                height: mobileContainerMaxHeight,
+                width: mobileMaxWidth,
+                child: globalLayout(context)),
+          );
+        } else {
+          return globalLayout(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalLayout(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
         child: Center(
-          child: Column(
+          child: ListView(
             children: [
               const SizedBox(
                 height: 50,

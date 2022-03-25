@@ -108,7 +108,7 @@ class _SingleBookHomeState extends State<SingleBookHome> {
   Scaffold globalWidget(BuildContext context) {
     return Scaffold(
       body: BackgroundContainer(
-        child: Column(
+        child: ListView(
           children: [
             SizedBox(
               height: 160,
