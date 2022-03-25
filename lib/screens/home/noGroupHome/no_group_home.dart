@@ -1,5 +1,6 @@
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/home/noGroupHome/create_group.dart';
+import 'package:book_club/shared/constraints.dart';
 
 import 'package:flutter/material.dart';
 
@@ -35,6 +36,23 @@ class NoGroup extends StatelessWidget {
       );
     }
 
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+              child: SizedBox(
+                  height: mobileContainerMaxHeight,
+                  width: mobileMaxWidth,
+                  child: globalLayout(context, _goToJoin, _goToCreate)));
+        } else {
+          return globalLayout(context, _goToJoin, _goToCreate);
+        }
+      },
+    );
+  }
+
+  Scaffold globalLayout(BuildContext context, void Function() _goToJoin,
+      void Function() _goToCreate) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -48,10 +66,6 @@ class NoGroup extends StatelessWidget {
           const Text(
             "Bienvenue au club",
             textAlign: TextAlign.center,
-            // style: GoogleFonts.oswald(
-            //   textStyle: TextStyle(
-            //       fontSize: 40, color: Theme.of(context).primaryColor),
-            // ),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),

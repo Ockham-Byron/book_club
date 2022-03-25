@@ -4,6 +4,7 @@ import 'package:book_club/root.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/appBars/home_app_bar.dart';
+import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/custom_form_field.dart';
@@ -107,6 +108,24 @@ class _JoinGroupState extends State<JoinGroup> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > mobileMaxWidth) {
+          return Center(
+            child: SizedBox(
+              height: mobileContainerMaxHeight,
+              width: mobileMaxWidth,
+              child: globalLayout(context),
+            ),
+          );
+        } else {
+          return globalLayout(context);
+        }
+      },
+    );
+  }
+
+  Scaffold globalLayout(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
       body: BackgroundContainer(
