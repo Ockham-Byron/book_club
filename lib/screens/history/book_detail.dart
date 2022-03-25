@@ -248,6 +248,7 @@ class _BookDetailState extends State<BookDetail> {
                             }
 
                             return ListView.builder(
+                                primary: false,
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 itemCount: _reviews.length + 1,

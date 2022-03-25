@@ -311,6 +311,7 @@ class _AdminGroupState extends State<AdminGroup> {
                             }
                           }
                           return ListView.builder(
+                              primary: false,
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               itemCount: members.length + 1,
