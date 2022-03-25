@@ -199,7 +199,7 @@ class _EditUserState extends State<EditUser> {
                 const Text("Sinon, vous pouvez écrire à "),
                 GestureDetector(
                   onTap: (() => launchMailto()),
-                  child: Text("hola@ikameleon.com"),
+                  child: const Text("hola@ikameleon.com"),
                 )
               ],
             ),

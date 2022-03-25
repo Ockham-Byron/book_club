@@ -42,7 +42,7 @@ class CancelFavorite extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget(_currentBookCoverUrl, context));
+          return computerLayout(globalWidget(_currentBookCoverUrl, context));
         } else {
           return globalWidget(_currentBookCoverUrl, context);
         }

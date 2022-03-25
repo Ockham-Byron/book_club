@@ -4,7 +4,7 @@ double mobileMaxWidth = 420;
 double mobileContainerMaxWidth = 380;
 double mobileContainerMaxHeight = 800;
 
-Widget ComputerLayout(Widget widget) {
+Widget computerLayout(Widget widget) {
   return Center(
       child: SizedBox(
     height: mobileContainerMaxHeight,

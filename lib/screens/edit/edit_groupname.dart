@@ -52,7 +52,7 @@ class _EditGroupNameState extends State<EditGroupName> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget(context));
+          return computerLayout(globalWidget(context));
         } else {
           return globalWidget(context);
         }

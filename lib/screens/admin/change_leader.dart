@@ -37,7 +37,7 @@ class _ChangeLeaderState extends State<ChangeLeader> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget());
+          return computerLayout(globalWidget());
         } else {
           return globalWidget();
         }

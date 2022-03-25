@@ -36,7 +36,7 @@ class _AddReviewState extends State<AddReview> {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > mobileMaxWidth) {
-          return ComputerLayout(globalWidget(context));
+          return computerLayout(globalWidget(context));
         } else {
           return globalWidget(context);
         }

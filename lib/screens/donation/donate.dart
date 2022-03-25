@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/group_model.dart';
 import '../../shared/appBars/home_app_bar.dart';
-import '../../shared/app_drawer.dart';
+
 import '../../shared/helpers.dart';
 
 class Donate extends StatefulWidget {

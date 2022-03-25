@@ -526,7 +526,6 @@ class DBFuture {
   //Add vote to suggestion
   Future<String> voteForSuggestion(String suggestionId, String userId) async {
     String message = "error";
-    List<String> supportedBy = [];
 
     try {
       await suggestionsCollection.doc(suggestionId).update({
