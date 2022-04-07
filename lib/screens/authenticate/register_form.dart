@@ -133,8 +133,8 @@ class _RegisterFormState extends State<RegisterForm> {
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: ListView(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(
                 height: 20,
@@ -175,6 +175,11 @@ class _RegisterFormState extends State<RegisterForm> {
                     return null;
                   }
                 },
+              ),
+              Text(
+                "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
+                textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 15),
               ),
 
               TextFormField(
@@ -234,7 +239,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               //Form Field for the picture
               CustomFormField(
-                hintText: "adresse url de votre photo de profil",
+                hintText: "adresse url de votre photo de profil (facultatif)",
                 focusNode: fpicture,
                 validator: (val) {
                   if (val!.isValidImageUrl || val == "") {

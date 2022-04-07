@@ -248,7 +248,7 @@ class _AdminGroupState extends State<AdminGroup> {
                     child: Column(
                       children: [
                         const Text(
-                          "Id du groupe à partager aux nouveaux membres",
+                          "Code du groupe à partager aux nouveaux membres",
                           style: TextStyle(
                             color: Colors.black,
                           ),

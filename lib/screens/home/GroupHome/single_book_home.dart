@@ -1,5 +1,6 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/admin/admin_group.dart';
 import 'package:book_club/screens/home/GroupHome/next_book_info.dart';
 import 'package:book_club/screens/home/GroupHome/single_book_card.dart';
 
@@ -83,6 +84,29 @@ class _SingleBookHomeState extends State<SingleBookHome> {
               onPressed: () => _goToAddBook(),
               child: const Text("Ajouter le premier livre"),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Pour inviter des membres à vous joindre, envoyez-leur le code du groupe qui se trouve dans l\'onglet "Groupe"',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AdminGroup(
+                        currentGroup: widget.currentGroup,
+                        currentUser: widget.currentUser),
+                  ));
+                },
+                child: Text(
+                  "Aller à l'onglet Groupe",
+                  style: TextStyle(color: Theme.of(context).focusColor),
+                ))
           ],
         ),
       );

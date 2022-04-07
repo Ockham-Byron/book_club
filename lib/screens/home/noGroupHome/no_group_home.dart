@@ -54,8 +54,8 @@ class NoGroup extends StatelessWidget {
   Scaffold globalLayout(BuildContext context, void Function() _goToJoin,
       void Function() _goToCreate) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      body: ListView(
+        //mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
             margin: const EdgeInsets.fromLTRB(40, 10, 40, 100),
