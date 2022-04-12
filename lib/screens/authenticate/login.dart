@@ -1,4 +1,5 @@
 import 'package:book_club/screens/authenticate/login_form.dart';
+import 'package:book_club/screens/authenticate/register.dart';
 import 'package:book_club/screens/authenticate/register_form.dart';
 import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
@@ -63,19 +64,28 @@ class LogIn extends StatelessWidget {
               color: Theme.of(context).canvasColor,
               child: TextButton(
                   onPressed: () {
-                    showModalBottomSheet(
-                        constraints: BoxConstraints(
-                            maxWidth: mobileMaxWidth,
-                            maxHeight: mobileContainerMaxHeight),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30))),
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (BuildContext ctx) {
-                          return const RegisterForm();
-                        });
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Register(),
+                    ));
+                    // showModalBottomSheet(
+                    //     constraints: BoxConstraints(
+                    //         maxWidth: mobileMaxWidth,
+                    //         maxHeight: mobileContainerMaxHeight),
+                    //     shape: const RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.only(
+                    //             topLeft: Radius.circular(30),
+                    //             topRight: Radius.circular(30))),
+                    //     isScrollControlled: true,
+                    //     context: context,
+                    //     builder: (BuildContext ctx) {
+                    //       return DraggableScrollableSheet(
+                    //           initialChildSize: 1,
+                    //           minChildSize: 0.25,
+                    //           maxChildSize: 1,
+                    //           expand: true,
+                    //           builder: (context, scrollController) =>
+                    //               const RegisterForm());
+                    //     });
                   },
                   child: Text(
                     "Pas encore de compte ?".toUpperCase(),

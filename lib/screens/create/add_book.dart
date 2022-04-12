@@ -78,6 +78,59 @@ class _AddBookState extends State<AddBook> {
     }
   }
 
+  //Alert popup show url explanation
+  Future<void> _showUrlExplanation() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: const Text(
+            "Comment récupérer l'url de la couverture du livre ?",
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Trouvez une photo de la couverture sur internet.'),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    "Si vous êtes sur un mobile, appuyez longuement sur l'image. Sur un ordinateur, faites un clic droit."),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    'Dans la liste d\'options, choisissez "copier le lien".'),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    'Collez ce lien dans le champ "url de la couverture du livre".'),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -168,6 +221,14 @@ class _AddBookState extends State<AddBook> {
                             }
                           },
                         ),
+                        TextButton(
+                            onPressed: () => _showUrlExplanation(),
+                            child: Text(
+                              "Comment récupérer l'url de la couverture du livre ?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).shadowColor),
+                            )),
                         const SizedBox(
                           height: 20,
                         ),

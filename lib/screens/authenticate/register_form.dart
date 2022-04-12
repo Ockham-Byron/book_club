@@ -38,6 +38,60 @@ class _RegisterFormState extends State<RegisterForm> {
   //key for the form's validation
   final _formKey = GlobalKey<FormState>();
 
+  //Alert popup show url explanation
+  Future<void> _showUrlExplanation() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: const Text(
+            "Comment récupérer l'url de votre photo de profil ?",
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    'Trouvez une photo de vous (ou qui vous représente) sur internet.'),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    "Si vous êtes sur un mobile, appuyez longuement sur l'image. Sur un ordinateur, faites un clic droit."),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    'Dans la liste d\'options, choisissez "copier le lien".'),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    'Collez ce lien dans le champ "url de votre photo de profil".'),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   //Alert popup existing mail
   Future<void> _showDialogExistingMail() async {
     return showDialog<void>(
@@ -126,14 +180,14 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 0.88,
+    return SizedBox(
+      height: 550,
       //widthFactor: 0.5,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(
@@ -238,18 +292,32 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
               ),
               //Form Field for the picture
-              CustomFormField(
-                hintText: "adresse url de votre photo de profil (facultatif)",
-                focusNode: fpicture,
-                validator: (val) {
-                  if (val!.isValidImageUrl || val == "") {
-                    return null;
-                  } else {
-                    return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
-                  }
-                },
-                textEditingController: _pictureInput,
-                iconData: Icons.camera,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 280,
+                    child: CustomFormField(
+                      hintText: "url de votre photo de profil (facultatif)",
+                      focusNode: fpicture,
+                      validator: (val) {
+                        if (val!.isValidImageUrl || val == "") {
+                          return null;
+                        } else {
+                          return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                        }
+                      },
+                      textEditingController: _pictureInput,
+                      iconData: Icons.camera,
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () => _showUrlExplanation(),
+                      icon: Icon(
+                        Icons.info,
+                        color: Theme.of(context).focusColor,
+                      )),
+                ],
               ),
 
               const SizedBox(
