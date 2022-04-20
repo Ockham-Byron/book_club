@@ -8,6 +8,7 @@ import 'package:book_club/shared/containers/background_container.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/buttons/animated_toggle.dart';
 import '../../../shared/custom_form_field.dart';
 
 class CreateGroup extends StatefulWidget {
@@ -24,10 +25,12 @@ class _CreateGroupState extends State<CreateGroup> {
 
   FocusNode? fgrname;
 
-  void _createGroup(String groupName, UserModel user) async {
+  void _createGroup(
+      String groupName, UserModel user, bool isSingleBookGroup) async {
     String _returnString;
 
-    _returnString = await DBFuture().createGroup(groupName, user);
+    _returnString =
+        await DBFuture().createGroup(groupName, user, isSingleBookGroup);
 
     if (_returnString == "success") {
       Navigator.of(context).pushReplacement(
@@ -36,6 +39,24 @@ class _CreateGroupState extends State<CreateGroup> {
   }
 
   final TextEditingController _groupNameInput = TextEditingController();
+
+  int _toggleValue = 0;
+  bool isSingleBookGroup(toggleValue) {
+    if (toggleValue == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  String explicationText(int toggleValue) {
+    if (toggleValue == 0) {
+      return 'Groupe où tous les membres échangent à propos d\'un même livre';
+    } else {
+      return 'Groupe où les membres se prêtent plusieurs livres entre eux';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -59,7 +80,7 @@ class _CreateGroupState extends State<CreateGroup> {
       body: BackgroundContainer(
         child: Center(
           child: Container(
-            height: 250,
+            height: 450,
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ShadowContainer(
               child: Form(
@@ -82,12 +103,41 @@ class _CreateGroupState extends State<CreateGroup> {
                         }
                       },
                     ),
+                    Text(
+                      "Type de groupe",
+                      style: TextStyle(color: Theme.of(context).shadowColor),
+                    ),
+                    AnimatedToggle(
+                      values: const [
+                        'Un livre par rencontre',
+                        'Plusieurs livres par rencontre'
+                      ],
+                      onToggleCallback: (value) {
+                        setState(() {
+                          _toggleValue = value;
+                        });
+                      },
+                      buttonColor: Theme.of(context).shadowColor,
+                      backgroundColor:
+                          Theme.of(context).shadowColor.withOpacity(0.5),
+                      textColor: const Color(0xFFFFFFFF),
+                    ),
+                    Text(
+                      explicationText(_toggleValue),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).shadowColor, fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           UserModel currentUser = widget.currentUser;
 
-                          _createGroup(_groupNameInput.text, currentUser);
+                          _createGroup(_groupNameInput.text, currentUser,
+                              isSingleBookGroup(_toggleValue));
                         }
                       },
                       child: Padding(

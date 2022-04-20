@@ -129,9 +129,7 @@ class DBFuture {
   /* ---------------------------- */
 
   Future<String> createGroup(
-    String groupName,
-    UserModel user,
-  ) async {
+      String groupName, UserModel user, bool isSingleBookGroup) async {
     String retVal = "error";
     List<String> members = [];
 
@@ -143,6 +141,7 @@ class DBFuture {
         "members": members,
         "currentBookId": null,
         "indexPickingBook": 0,
+        "isSingleBookGroup": isSingleBookGroup
       });
       await usersCollection.doc(user.uid).update({
         "groupId": _docRef.id,

@@ -58,13 +58,13 @@ class DBStream {
   List<GroupModel> _listOfGroups(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) {
       return GroupModel(
-        id: doc.id,
-        name: doc.data()["name"],
-        leader: doc.data()["leader"],
-        currentBookId: doc.data()["currentBookId"],
-        indexPickingBook: doc.data()["indexPickingBook"],
-        members: List<String>.from(doc.data()["members"]),
-      );
+          id: doc.id,
+          name: doc.data()["name"],
+          leader: doc.data()["leader"],
+          currentBookId: doc.data()["currentBookId"],
+          indexPickingBook: doc.data()["indexPickingBook"],
+          members: List<String>.from(doc.data()["members"]),
+          isSingleBookGroup: doc.data()["isSingleBookGroup"]);
     }).toList();
   }
 
@@ -81,6 +81,7 @@ class DBStream {
         leader: snapshot.get("leader"),
         currentBookId: snapshot.get("currentBookId"),
         indexPickingBook: snapshot.get("indexPickingBook"),
+        isSingleBookGroup: snapshot.get("isSingleBookGroup"),
         members: List<String>.from(snapshot.get("members")));
   }
 
