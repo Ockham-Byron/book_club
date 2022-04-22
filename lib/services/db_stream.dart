@@ -109,6 +109,7 @@ class DBStream {
           submittedBy: doc.data()["submittedBy"],
           ownerId: doc.data()["ownerId"],
           lenderId: doc.data()["lenderId"],
+          isLendable: doc.data()["isLendable"],
           cover: doc.data()["cover"]);
     }).toList();
   }
@@ -134,6 +135,7 @@ class DBStream {
         cover: snapshot.get("cover"),
         ownerId: snapshot.get("ownerId"),
         lenderId: snapshot.get("lenderId"),
+        isLendable: snapshot.get("isLendable"),
         submittedBy: snapshot.get("submittedBy"));
   }
 

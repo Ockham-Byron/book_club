@@ -1,6 +1,6 @@
 import 'package:book_club/screens/authenticate/login_form.dart';
 import 'package:book_club/screens/authenticate/register.dart';
-import 'package:book_club/screens/authenticate/register_form.dart';
+
 import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
 

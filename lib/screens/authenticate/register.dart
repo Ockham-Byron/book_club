@@ -1,9 +1,7 @@
 import 'package:book_club/screens/authenticate/login.dart';
-import 'package:book_club/screens/authenticate/login_form.dart';
+
 import 'package:book_club/screens/authenticate/register_form.dart';
 import 'package:book_club/shared/constraints.dart';
-import 'package:book_club/shared/containers/background_container.dart';
-import 'package:book_club/shared/containers/shadow_container.dart';
 
 import 'package:flutter/material.dart';
 

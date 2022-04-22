@@ -359,6 +359,28 @@ class DBFuture {
     return hasReadTheBook;
   }
 
+  //change book lendable status
+  Future<String> changeLendableStatus(
+      {required String groupId,
+      required String bookId,
+      required bool isLendable}) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({
+        "isLendable": isLendable,
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   // add a review to the book
   Future<String> reviewBook(String groupId, String bookId, String userId,
       int rating, String review, bool favorite) async {

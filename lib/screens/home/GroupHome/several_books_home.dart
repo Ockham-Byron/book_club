@@ -213,6 +213,20 @@ class _SeveralBooksHomeState extends State<SeveralBooksHome> {
         currentGroup: widget.currentGroup,
         currentUser: widget.currentUser,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AddBook(
+                currentGroup: widget.currentGroup,
+                currentUser: widget.currentUser),
+          ));
+        },
+        child: Icon(
+          Icons.add,
+        ),
+        backgroundColor: Theme.of(context).focusColor,
+        tooltip: "Ajouter un livre",
+      ),
     );
   }
 }

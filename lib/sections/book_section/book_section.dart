@@ -100,7 +100,7 @@ class _BookSectionState extends State<BookSection> {
               }
               if (widget.sectionCategory == "empruntables") {
                 for (var book in allBooks) {
-                  if (book.lenderId == null) {
+                  if (book.lenderId == null && book.isLendable == true) {
                     selectedBooks.add(book);
                   }
                 }
@@ -151,7 +151,7 @@ class _BookSectionState extends State<BookSection> {
                   height: 320,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: selectedBooks.length + 1,
+                    itemCount: selectedBooks.length.clamp(0, 7),
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return Container();

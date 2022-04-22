@@ -5,6 +5,7 @@ import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/sections/book_section/cancel_favorite.dart';
 import 'package:book_club/sections/book_section/cancel_read.dart';
 import 'package:book_club/sections/book_section/finish_book.dart';
+import 'package:book_club/services/db_future.dart';
 import 'package:book_club/shared/display_services.dart';
 import 'package:flutter/material.dart';
 
@@ -104,10 +105,8 @@ class CancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (widget.sectionCategory == "empruntables" &&
         currentBook.ownerId != widget.currentUser.uid) {
-      print(currentBook.ownerId ?? "personne");
-      print(widget.currentUser.uid);
       return IconButton(
-        onPressed: () {},
+        onPressed: () => _showDialogNoLendable(),
         icon: Icon(
           Icons.add_task,
           color: Theme.of(context).focusColor,
@@ -119,7 +118,7 @@ class CancelButton extends StatelessWidget {
         currentBook.ownerId == widget.currentUser.uid) {
       print("coucou");
       return IconButton(
-        onPressed: () {},
+        onPressed: () => _showDialogNoLendable(),
         icon: Icon(
           Icons.cancel,
           color: Theme.of(context).focusColor,
@@ -192,5 +191,66 @@ class CancelButton extends StatelessWidget {
             color: Theme.of(context).focusColor,
           ));
     }
+  }
+
+  //Alert popup non lendable
+  Future<void> _showDialogNoLendable() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Sortir ce livre de la boucle de prêts ?",
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                    "Il sera toujours possible de consulter les détails du livre, mais plus personne ne pourra l'emprunter."),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Annuler".toUpperCase(),
+                        style: TextStyle(color: Theme.of(context).focusColor),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await DBFuture().changeLendableStatus(
+                            groupId: widget.currentGroup.id!,
+                            bookId: widget.book!.id!,
+                            isLendable: false);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Je confirme".toUpperCase(),
+                          style: TextStyle(color: Colors.white)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
