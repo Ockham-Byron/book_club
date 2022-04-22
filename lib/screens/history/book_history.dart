@@ -19,12 +19,14 @@ import 'package:flutter/material.dart';
 class BookHistory extends StatefulWidget {
   final GroupModel currentGroup;
   final UserModel currentUser;
+  final String? title;
 
-  const BookHistory({
-    Key? key,
-    required this.currentGroup,
-    required this.currentUser,
-  }) : super(key: key);
+  const BookHistory(
+      {Key? key,
+      required this.currentGroup,
+      required this.currentUser,
+      this.title})
+      : super(key: key);
 
   @override
   _BookHistoryState createState() => _BookHistoryState();
@@ -102,6 +104,7 @@ class _BookHistoryState extends State<BookHistory> {
             } else {
               if (snapshot.data!.isNotEmpty) {
                 List<BookModel> _books = snapshot.data!;
+
                 return ListView.builder(
                     itemCount: _books.length + 1,
                     itemBuilder: (BuildContext context, int index) {
@@ -112,11 +115,11 @@ class _BookHistoryState extends State<BookHistory> {
                                 currentUser: widget.currentUser,
                                 currentGroup: widget.currentGroup),
                             Column(
-                              children: const [
+                              children: [
                                 SizedBox(
                                   height: 10,
                                 ),
-                                // Add filter
+                                Text("Livres " + widget.title!),
                               ],
                             ),
                           ],

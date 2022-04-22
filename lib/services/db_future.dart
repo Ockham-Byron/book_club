@@ -292,6 +292,7 @@ class DBFuture {
         "length": book.length,
         "dueDate": book.dueDate,
         "cover": book.cover,
+        "submittedBy": book.submittedBy,
         "ownerId": book.ownerId,
         "lenderId": book.lenderId,
         "isLendable": book.isLendable

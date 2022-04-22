@@ -11,6 +11,8 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/donation/donate.dart';
+import '../screens/home/GroupHome/group_home.dart';
+import '../screens/home/GroupHome/several_books_home.dart';
 
 class AppDrawer extends StatelessWidget {
   final GroupModel currentGroup;
@@ -45,11 +47,19 @@ class AppDrawer extends StatelessWidget {
     }
 
     void _goToHome() {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SingleBookHome(
-                currentGroup: currentGroup,
-                currentUser: currentUser,
-              )));
+      if (currentGroup.isSingleBookGroup == false) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => SeveralBooksHome(
+                  currentGroup: currentGroup,
+                  currentUser: currentUser,
+                )));
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => SingleBookHome(
+                  currentGroup: currentGroup,
+                  currentUser: currentUser,
+                )));
+      }
     }
 
     void _goToGroupManage() {
@@ -73,6 +83,7 @@ class AppDrawer extends StatelessWidget {
           builder: (context) => BookHistory(
                 currentGroup: currentGroup,
                 currentUser: currentUser,
+                title: "du groupe",
               )));
     }
 

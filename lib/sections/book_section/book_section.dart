@@ -151,7 +151,7 @@ class _BookSectionState extends State<BookSection> {
                   height: 320,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: selectedBooks.length.clamp(0, 7),
+                    itemCount: selectedBooks.length + 1.clamp(0, 7),
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return Container();

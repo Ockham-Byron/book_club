@@ -1,6 +1,7 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/admin_group.dart';
+import 'package:book_club/screens/history/book_history.dart';
 
 import 'package:book_club/sections/book_section/book_section.dart';
 
@@ -310,7 +311,15 @@ class HomeBookSection extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)))),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BookHistory(
+                  currentGroup: widget.currentGroup,
+                  currentUser: widget.currentUser,
+                  title: title,
+                ),
+              ));
+            },
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
