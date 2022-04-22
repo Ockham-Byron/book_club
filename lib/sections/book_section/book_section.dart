@@ -98,6 +98,51 @@ class _BookSectionState extends State<BookSection> {
                       (route) => false);
                 };
               }
+              if (widget.sectionCategory == "empruntables") {
+                for (var book in allBooks) {
+                  if (book.lenderId == null) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "Tous les livres du groupe sont prêtés";
+                nothingImage =
+                    "https://upload.wikimedia.org/wikipedia/commons/7/7f/Dicoo_bienvenue.png";
+              }
+
+              if (widget.sectionCategory == "en circulation") {
+                for (var book in allBooks) {
+                  if (book.lenderId != null) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText =
+                    "Aucun livre en circulation. Prêtez-vous les uns les autres !";
+                nothingImage =
+                    "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+              }
+
+              if (widget.sectionCategory == "que vous avez prêtés") {
+                for (var book in allBooks) {
+                  if (book.lenderId != null &&
+                      book.ownerId == widget.currentUser.uid) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "Vous n'avez aucun livre prêté en ce moment.";
+                nothingImage =
+                    "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+              }
+
+              if (widget.sectionCategory == "que vous avez empruntés") {
+                for (var book in allBooks) {
+                  if (book.lenderId == widget.currentUser.uid) {
+                    selectedBooks.add(book);
+                  }
+                }
+                nothingText = "Vous n'avez aucun livre emprunté en ce moment";
+                nothingImage =
+                    "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png";
+              }
 
               if (selectedBooks.isNotEmpty) {
                 return Container(

@@ -71,41 +71,7 @@ class _BookCardState extends State<BookCard> {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15, color: Colors.grey),
             ),
-            IconButton(
-                onPressed: () {
-                  if (widget.sectionCategory == "continuer") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FinishedBook(
-                                  finishedBook: widget.book!,
-                                  currentGroup: widget.currentGroup,
-                                  currentUser: widget.currentUser,
-                                )));
-                  } else if (widget.sectionCategory == "favoris") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CancelFavorite(
-                                  favoriteBook: widget.book!,
-                                  currentGroup: widget.currentGroup,
-                                  currentUser: widget.currentUser,
-                                )));
-                  } else if (widget.sectionCategory == "lus") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CancelRead(
-                                  readBook: widget.book!,
-                                  currentGroup: widget.currentGroup,
-                                  currentUser: widget.currentUser,
-                                )));
-                  }
-                },
-                icon: Icon(
-                  Icons.close,
-                  color: Theme.of(context).focusColor,
-                ))
+            CancelButton(widget: widget, context: context)
           ],
         ),
       ),
@@ -115,5 +81,109 @@ class _BookCardState extends State<BookCard> {
   @override
   Widget build(BuildContext context) {
     return _displayBookCard();
+  }
+}
+
+class CancelButton extends StatelessWidget {
+  const CancelButton({
+    Key? key,
+    required this.widget,
+    required this.context,
+  }) : super(key: key);
+
+  final BookCard widget;
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.sectionCategory == "empruntables" &&
+        widget.book!.ownerId != widget.currentUser.uid) {
+      print("empruntable");
+      return IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.add_task,
+          color: Theme.of(context).focusColor,
+        ),
+        tooltip: "emprunter",
+      );
+    }
+    if (widget.sectionCategory == "empruntables" &&
+        widget.book!.ownerId == widget.currentUser.uid) {
+      print(widget.book!.ownerId);
+      return IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.cancel,
+          color: Theme.of(context).focusColor,
+        ),
+        tooltip: "je ne prête plus ce livre",
+      );
+    } else if (widget.sectionCategory == "en circulation" &&
+        widget.book!.ownerId != widget.currentUser.uid) {
+      return IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.bookmark_add,
+          color: Theme.of(context).focusColor,
+        ),
+        tooltip: "liste d'attente",
+      );
+    } else if (widget.sectionCategory == "en circulation" &&
+        widget.book!.ownerId == widget.currentUser.uid) {
+      return IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.cable,
+          color: Theme.of(context).focusColor,
+        ),
+        tooltip: "modifier l'emprunteur",
+      );
+    } else if (widget.sectionCategory == "que vous avez prêtés") {
+      return IconButton(
+        onPressed: () {},
+        icon: Icon(
+          Icons.bookmark_add,
+          color: Theme.of(context).focusColor,
+        ),
+        tooltip: "il est rendu",
+      );
+    } else {
+      return IconButton(
+          onPressed: () {
+            if (widget.sectionCategory == "continuer") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FinishedBook(
+                            finishedBook: widget.book!,
+                            currentGroup: widget.currentGroup,
+                            currentUser: widget.currentUser,
+                          )));
+            } else if (widget.sectionCategory == "favoris") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CancelFavorite(
+                            favoriteBook: widget.book!,
+                            currentGroup: widget.currentGroup,
+                            currentUser: widget.currentUser,
+                          )));
+            } else if (widget.sectionCategory == "lus") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CancelRead(
+                            readBook: widget.book!,
+                            currentGroup: widget.currentGroup,
+                            currentUser: widget.currentUser,
+                          )));
+            }
+          },
+          icon: Icon(
+            Icons.close,
+            color: Theme.of(context).focusColor,
+          ));
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookModel {
@@ -8,8 +10,10 @@ class BookModel {
   String? cover;
   Timestamp? dueDate;
   String? submittedBy;
-  // String? ownerId;
-  // String? lenderId;
+  String? ownerId;
+  String? lenderId;
+  bool isLendable;
+
   // List<String>? nbOfReaders;
   // List<String>? nbOfFavorites;
 
@@ -20,8 +24,9 @@ class BookModel {
       this.length,
       this.dueDate,
       this.submittedBy,
-      // this.ownerId,
-      // this.lenderId,
+      this.ownerId,
+      this.lenderId,
+      this.isLendable = true,
       // this.nbOfReaders,
       // this.nbOfFavorites,
       this.cover =

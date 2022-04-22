@@ -52,8 +52,9 @@ class _AddBookState extends State<AddBook> {
     });
   }
 
-  //function to add the book
-  void _addBook(BuildContext context, String groupId, BookModel book) async {
+  //function to add the book to a single book group
+  void _addSingleBook(
+      BuildContext context, String groupId, BookModel book) async {
     String _message;
 
     int _nbOfMembers = widget.currentGroup.members!.length;
@@ -75,6 +76,50 @@ class _AddBookState extends State<AddBook> {
             builder: (context) => const AppRoot(),
           ),
           (route) => false);
+    }
+  }
+
+  //function to add the book to a several books group
+  void _addBook(BuildContext context, String groupId, BookModel book) async {
+    String _message;
+
+    _message = await DBFuture().addBook(widget.currentGroup.id!, book);
+
+    if (_message == "success") {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AppRoot(),
+          ),
+          (route) => false);
+    }
+  }
+
+  //display the timepicker
+  Widget _displayTimePicker() {
+    if (widget.currentGroup.isSingleBookGroup == true) {
+      return Column(
+        children: [
+          Text(
+            "Rdv pour échanger sur ce livre",
+            style: TextStyle(color: Theme.of(context).focusColor, fontSize: 20),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(DateFormat("dd/MM à HH:mm").format(_selectedDate),
+              style: Theme.of(context).textTheme.headline6),
+          TextButton(
+            onPressed: () => _selectDate(context),
+            child: Icon(
+              Icons.calendar_today,
+              color: Theme.of(context).focusColor,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
     }
   }
 
@@ -232,24 +277,7 @@ class _AddBookState extends State<AddBook> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          "Rdv pour échanger sur ce livre",
-                          style: TextStyle(
-                              color: Theme.of(context).focusColor,
-                              fontSize: 20),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(DateFormat("dd/MM à HH:mm").format(_selectedDate),
-                            style: Theme.of(context).textTheme.headline6),
-                        TextButton(
-                          onPressed: () => _selectDate(context),
-                          child: Icon(
-                            Icons.calendar_today,
-                            color: Theme.of(context).focusColor,
-                          ),
-                        ),
+                        _displayTimePicker(),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -265,10 +293,19 @@ class _AddBookState extends State<AddBook> {
                                   length: bookLength,
                                   cover: _bookCoverInput.text,
                                   submittedBy: widget.currentUser.uid,
+                                  ownerId: widget.currentUser.uid,
+                                  isLendable: true,
+                                  lenderId: null,
                                   dueDate: Timestamp.fromDate(_selectedDate));
                               if (widget.currentGroup.id != null) {
-                                _addBook(
-                                    context, widget.currentGroup.id!, book);
+                                if (widget.currentGroup.isSingleBookGroup ==
+                                    true) {
+                                  _addSingleBook(
+                                      context, widget.currentGroup.id!, book);
+                                } else {
+                                  _addBook(
+                                      context, widget.currentGroup.id!, book);
+                                }
                               } else {
                                 // print(widget.currentGroup);
                                 // print("pas de groupId");

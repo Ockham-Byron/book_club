@@ -141,7 +141,8 @@ class DBFuture {
         "members": members,
         "currentBookId": null,
         "indexPickingBook": 0,
-        "isSingleBookGroup": isSingleBookGroup
+        "isSingleBookGroup": isSingleBookGroup,
+        "hasBooks": false,
       });
       await usersCollection.doc(user.uid).update({
         "groupId": _docRef.id,
@@ -270,8 +271,33 @@ class DBFuture {
         "currentBookId": _docRef.id,
         "currentBookDue": book.dueDate,
         "indexPickingBook": nextPicker,
+        "hasBooks": true
         //"nbOfBooks": FieldValue.increment(1),
       });
+      message = "success";
+    } catch (e) {
+      //
+    }
+    return message;
+  }
+
+  Future<String> addBook(String groupId, BookModel book) async {
+    String message = "error";
+
+    try {
+      DocumentReference _docRef =
+          await groupsCollection.doc(groupId).collection("books").add({
+        "title": book.title,
+        "author": book.author,
+        "length": book.length,
+        "dueDate": book.dueDate,
+        "cover": book.cover,
+        "ownerId": book.ownerId,
+        "lenderId": book.lenderId,
+        "isLendable": book.isLendable
+      });
+
+      await groupsCollection.doc(groupId).update({"hasBooks": true});
       message = "success";
     } catch (e) {
       //
