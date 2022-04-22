@@ -64,6 +64,7 @@ class DBStream {
           currentBookId: doc.data()["currentBookId"],
           indexPickingBook: doc.data()["indexPickingBook"],
           members: List<String>.from(doc.data()["members"]),
+          hasBooks: doc.data()["hasBooks"],
           isSingleBookGroup: doc.data()["isSingleBookGroup"]);
     }).toList();
   }
@@ -82,6 +83,7 @@ class DBStream {
         currentBookId: snapshot.get("currentBookId"),
         indexPickingBook: snapshot.get("indexPickingBook"),
         isSingleBookGroup: snapshot.get("isSingleBookGroup"),
+        hasBooks: snapshot.get("hasBooks"),
         members: List<String>.from(snapshot.get("members")));
   }
 
@@ -105,6 +107,8 @@ class DBStream {
           length: doc.data()["length"],
           dueDate: doc.data()["dueDate"],
           submittedBy: doc.data()["submittedBy"],
+          ownerId: doc.data()["ownerId"],
+          lenderId: doc.data()["lenderId"],
           cover: doc.data()["cover"]);
     }).toList();
   }
@@ -128,6 +132,8 @@ class DBStream {
         length: snapshot.get("length"),
         dueDate: snapshot.get("dueDate"),
         cover: snapshot.get("cover"),
+        ownerId: snapshot.get("ownerId"),
+        lenderId: snapshot.get("lenderId"),
         submittedBy: snapshot.get("submittedBy"));
   }
 

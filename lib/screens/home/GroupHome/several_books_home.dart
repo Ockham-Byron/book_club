@@ -1,8 +1,7 @@
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
 import 'package:book_club/screens/admin/admin_group.dart';
-import 'package:book_club/screens/home/GroupHome/next_book_info.dart';
-import 'package:book_club/screens/home/GroupHome/single_book_card.dart';
+
 import 'package:book_club/sections/book_section/book_section.dart';
 
 import 'package:book_club/shared/appBars/custom_app_bar.dart';
@@ -40,7 +39,7 @@ class _SeveralBooksHomeState extends State<SeveralBooksHome> {
   }
 
   _displayHomeWidget() {
-    if (widget.currentGroup.hasBooks == false) {
+    if (widget.currentGroup.hasBooks == true) {
       return Container(
         width: MediaQuery.of(context).size.width * 90 / 100,
         child: Column(
@@ -236,9 +235,6 @@ class HomeBookSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 20,
-        ),
         Row(
           children: [
             Text(
@@ -249,26 +245,42 @@ class HomeBookSection extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
-            Text(
-              title!,
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 25),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
+                    child: ColorBar(barWidth: barWidth),
+                  ),
+                  Text(
+                    title!,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ],
+              ),
             ),
+            // Text(
+            //   title!,
+            //   textAlign: TextAlign.start,
+            //   style: TextStyle(fontSize: 25),
+            // ),
           ],
         ),
-        Container(
-          transform: Matrix4.translationValues(0, -27, 0),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 70,
-              ),
-              ColorBar(
-                barWidth: barWidth,
-              )
-            ],
-          ),
-        ),
+        // Container(
+        //   transform: Matrix4.translationValues(0, -27, 0),
+        //   child: Row(
+        //     children: [
+        //       SizedBox(
+        //         width: 70,
+        //       ),
+        //       ColorBar(
+        //         barWidth: barWidth,
+        //       )
+        //     ],
+        //   ),
+        // ),
         Container(
           //color: Colors.blueGrey,
           transform: Matrix4.translationValues(0, -28, 0),
@@ -280,6 +292,10 @@ class HomeBookSection extends StatelessWidget {
         Container(
           transform: Matrix4.translationValues(0, -28, 0),
           child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)))),
             onPressed: () {},
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -71,7 +71,11 @@ class _BookCardState extends State<BookCard> {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15, color: Colors.grey),
             ),
-            CancelButton(widget: widget, context: context)
+            CancelButton(
+              widget: widget,
+              context: context,
+              currentBook: widget.book!,
+            )
           ],
         ),
       ),
@@ -89,16 +93,19 @@ class CancelButton extends StatelessWidget {
     Key? key,
     required this.widget,
     required this.context,
+    required this.currentBook,
   }) : super(key: key);
 
   final BookCard widget;
   final BuildContext context;
+  final BookModel currentBook;
 
   @override
   Widget build(BuildContext context) {
     if (widget.sectionCategory == "empruntables" &&
-        widget.book!.ownerId != widget.currentUser.uid) {
-      print("empruntable");
+        currentBook.ownerId != widget.currentUser.uid) {
+      print(currentBook.ownerId ?? "personne");
+      print(widget.currentUser.uid);
       return IconButton(
         onPressed: () {},
         icon: Icon(
@@ -109,8 +116,8 @@ class CancelButton extends StatelessWidget {
       );
     }
     if (widget.sectionCategory == "empruntables" &&
-        widget.book!.ownerId == widget.currentUser.uid) {
-      print(widget.book!.ownerId);
+        currentBook.ownerId == widget.currentUser.uid) {
+      print("coucou");
       return IconButton(
         onPressed: () {},
         icon: Icon(
