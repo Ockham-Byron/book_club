@@ -129,7 +129,6 @@ class CancelButton extends StatelessWidget {
     }
     if (bookCard.sectionCategory == "empruntables" &&
         currentBook.ownerId == bookCard.currentUser.uid) {
-      print("coucou");
       return IconButton(
         onPressed: () => _showDialogNoLendable(),
         icon: Icon(
@@ -138,8 +137,9 @@ class CancelButton extends StatelessWidget {
         ),
         tooltip: "je ne prête plus ce livre",
       );
-    } else if (bookCard.sectionCategory == "en circulation" &&
-        currentBook.ownerId != bookCard.currentUser.uid) {
+    } else if (currentBook.lenderId != null &&
+        currentBook.ownerId != bookCard.currentUser.uid &&
+        !currentBook.waitingList!.contains(bookCard.currentUser.uid)) {
       return IconButton(
         onPressed: () => _showDialogReservation(),
         icon: Icon(
@@ -150,7 +150,7 @@ class CancelButton extends StatelessWidget {
       );
     } else if (currentBook.waitingList!.contains(bookCard.currentUser.uid)) {
       return IconButton(
-        onPressed: () => _showDialogReservation(),
+        onPressed: () => _showDialogCancelReservation(),
         icon: Icon(
           Icons.bookmark_remove,
           color: Theme.of(context).focusColor,
@@ -176,6 +176,8 @@ class CancelButton extends StatelessWidget {
         ),
         tooltip: "il est rendu",
       );
+    } else if (bookCard.sectionCategory == "que vous avez empruntés") {
+      return Container();
     } else {
       return IconButton(
           onPressed: () {
@@ -426,6 +428,99 @@ class CancelButton extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         await DBFuture().reserveBook(
+                            groupId: bookCard.currentGroup.id!,
+                            bookId: bookCard.book!.id!,
+                            userId: bookCard.currentUser.uid!);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Je confirme".toUpperCase(),
+                          style: TextStyle(color: Colors.white)),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('X',
+                  style: TextStyle(color: Theme.of(context).focusColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //Alert popup cancerl reservation
+  Future<void> _showDialogCancelReservation() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Annuler la réservation de ce livre ?",
+            textAlign: TextAlign.center,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                StreamBuilder<BookModel>(
+                    stream: DBStream().getBookData(
+                        groupId: bookCard.currentGroup.id!,
+                        bookId: bookCard.book!.id!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else {
+                        BookModel _selectedBook = snapshot.data!;
+                        int nbOfWaitingUsers =
+                            _selectedBook.waitingList!.length;
+                        return Column(
+                          children: [
+                            Text(
+                              "Ce livre a",
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              nbOfWaitingUsers.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).focusColor,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            Text("membres en file d'attente",
+                                textAlign: TextAlign.center)
+                          ],
+                        );
+                      }
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Je reste sur la liste d'attente".toUpperCase(),
+                        style: TextStyle(color: Theme.of(context).focusColor),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await DBFuture().cancelReserveBook(
                             groupId: bookCard.currentGroup.id!,
                             bookId: bookCard.book!.id!,
                             userId: bookCard.currentUser.uid!);

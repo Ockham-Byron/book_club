@@ -428,6 +428,28 @@ class DBFuture {
     return message;
   }
 
+  //cancel reserve the book
+  Future<String> cancelReserveBook(
+      {required String groupId,
+      required String bookId,
+      required String userId}) async {
+    String message = "error";
+    List<String> waitingList = [];
+
+    try {
+      waitingList.add(userId);
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({"waitingList": FieldValue.arrayRemove(waitingList)});
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   // add a review to the book
   Future<String> reviewBook(String groupId, String bookId, String userId,
       int rating, String review, bool favorite) async {
