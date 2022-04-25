@@ -1,6 +1,7 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
 import 'package:book_club/models/user_model.dart';
+import 'package:book_club/screens/exchanges/change_borrower.dart';
 import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/sections/book_section/cancel_favorite.dart';
 import 'package:book_club/sections/book_section/cancel_read.dart';
@@ -160,7 +161,15 @@ class CancelButton extends StatelessWidget {
     } else if (bookCard.sectionCategory == "en circulation" &&
         currentBook.ownerId == bookCard.currentUser.uid) {
       return IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ChangeBorrower(
+              currentGroup: bookCard.currentGroup,
+              currentUser: bookCard.currentUser,
+              currentBook: currentBook,
+            ),
+          ));
+        },
         icon: Icon(
           Icons.cable,
           color: Theme.of(context).focusColor,
