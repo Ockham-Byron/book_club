@@ -281,12 +281,13 @@ class DBFuture {
     return message;
   }
 
+  //Add Book in Group with Several Books
   Future<String> addBook(String groupId, BookModel book) async {
     String message = "error";
+    List<String> waitingList = [];
 
     try {
-      DocumentReference _docRef =
-          await groupsCollection.doc(groupId).collection("books").add({
+      await groupsCollection.doc(groupId).collection("books").add({
         "title": book.title,
         "author": book.author,
         "length": book.length,
@@ -295,7 +296,8 @@ class DBFuture {
         "submittedBy": book.submittedBy,
         "ownerId": book.ownerId,
         "lenderId": book.lenderId,
-        "isLendable": book.isLendable
+        "isLendable": book.isLendable,
+        "waitingList": waitingList,
       });
 
       await groupsCollection.doc(groupId).update({"hasBooks": true});
@@ -375,6 +377,50 @@ class DBFuture {
           .update({
         "isLendable": isLendable,
       });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
+  //borrow the book
+  Future<String> borrowBook(
+      {required String groupId,
+      required String bookId,
+      required String userId}) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({
+        "lenderId": userId,
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
+  //reserve the book
+  Future<String> reserveBook(
+      {required String groupId,
+      required String bookId,
+      required String userId}) async {
+    String message = "error";
+    List<String> waitingList = [];
+
+    try {
+      waitingList.add(userId);
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({"waitingList": FieldValue.arrayUnion(waitingList)});
       message = "success";
     } catch (e) {
       //print(e);

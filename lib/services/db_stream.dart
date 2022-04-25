@@ -110,7 +110,8 @@ class DBStream {
           ownerId: doc.data()["ownerId"],
           lenderId: doc.data()["lenderId"],
           isLendable: doc.data()["isLendable"],
-          cover: doc.data()["cover"]);
+          cover: doc.data()["cover"],
+          waitingList: List<String>.from(doc.data()["waitingList"]));
     }).toList();
   }
 
@@ -136,7 +137,8 @@ class DBStream {
         ownerId: snapshot.get("ownerId"),
         lenderId: snapshot.get("lenderId"),
         isLendable: snapshot.get("isLendable"),
-        submittedBy: snapshot.get("submittedBy"));
+        submittedBy: snapshot.get("submittedBy"),
+        waitingList: List<String>.from(snapshot.get("waitingList")));
   }
 
   //get book doc stream

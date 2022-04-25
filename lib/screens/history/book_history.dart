@@ -103,10 +103,38 @@ class _BookHistoryState extends State<BookHistory> {
               return const Loading();
             } else {
               if (snapshot.data!.isNotEmpty) {
-                List<BookModel> _books = snapshot.data!;
-
+                List<BookModel> _allBooks = snapshot.data!;
+                List<BookModel> _filteredBooks = [];
+                if (widget.title == "du groupe") {
+                  _filteredBooks = _allBooks;
+                } else if (widget.title == "empruntables") {
+                  _allBooks.forEach((BookModel book) {
+                    if (book.isLendable == true && book.lenderId == null) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                } else if (widget.title == "en circulation") {
+                  _allBooks.forEach((BookModel book) {
+                    if (book.lenderId != null) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                } else if (widget.title == "que vous avez empruntés") {
+                  _allBooks.forEach((BookModel book) {
+                    if (book.lenderId == widget.currentUser.uid) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                } else if (widget.title == "que vous avez prêtés") {
+                  _allBooks.forEach((BookModel book) {
+                    if (book.ownerId == widget.currentUser.uid &&
+                        book.lenderId != null) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                }
                 return ListView.builder(
-                    itemCount: _books.length + 1,
+                    itemCount: _filteredBooks.length + 1,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return Column(
@@ -130,7 +158,7 @@ class _BookHistoryState extends State<BookHistory> {
                             child: BookCard(
                               currentGroup: widget.currentGroup,
                               currentUser: widget.currentUser,
-                              book: _books[index - 1],
+                              book: _filteredBooks[index - 1],
                             ));
                       }
                     });

@@ -11,6 +11,7 @@ class BookModel {
   String? ownerId;
   String? lenderId;
   bool isLendable;
+  List<String>? waitingList;
 
   // List<String>? nbOfReaders;
   // List<String>? nbOfFavorites;
@@ -25,6 +26,7 @@ class BookModel {
       this.ownerId,
       this.lenderId,
       this.isLendable = true,
+      this.waitingList,
       // this.nbOfReaders,
       // this.nbOfFavorites,
       this.cover =
