@@ -110,15 +110,12 @@ class _ProfileAdminState extends State<ProfileAdmin> {
             builder: (context, snapshot) {
               UserModel _currentUser = UserModel();
               if (snapshot.connectionState == ConnectionState.waiting) {
-                //print("waiting");
                 return const Loading();
               } else {
                 if (snapshot.hasError) {
-                  // print("y a une erreur : " + snapshot.error.toString());
                   return const Loading();
                 } else {
                   if (!snapshot.hasData) {
-                    //print("pas de data");
                     return const Loading();
                   } else {
                     _currentUser = snapshot.data!;
@@ -134,7 +131,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                         children: [
                           Container(
                             margin: const EdgeInsets.only(top: 50),
-                            height: 1350,
+                            height: 1400,
                             decoration: BoxDecoration(
                               color: Colors.amber[50],
                               borderRadius: const BorderRadius.only(
@@ -146,6 +143,9 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                               padding: const EdgeInsets.only(top: 100),
                               child: Column(
                                 children: [
+                                  SizedBox(
+                                    height: 0,
+                                  ),
                                   Text(
                                     getUserPseudo(_currentUser),
                                     style: const TextStyle(
