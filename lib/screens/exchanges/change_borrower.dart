@@ -1,6 +1,6 @@
 import 'package:book_club/models/book_model.dart';
 import 'package:book_club/models/group_model.dart';
-import 'package:book_club/screens/admin/member_change.dart';
+
 import 'package:book_club/services/db_stream.dart';
 import 'package:book_club/shared/constraints.dart';
 import 'package:book_club/shared/containers/background_container.dart';
@@ -40,9 +40,25 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
 
   Widget _displayWaitingList(List<UserModel> members) {
     if (widget.currentBook.waitingList!.isEmpty) {
-      return Text("Personne en liste d'attente");
+      return Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 100,
+            child: Image.network(
+                "https://upload.wikimedia.org/wikipedia/commons/7/7f/Dicoo_bienvenue.png"),
+          ),
+          Text(
+            "Personne en liste d'attente",
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
+        ],
+      );
     } else {
       return ListView.builder(
+          primary: false,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: members.length + 1,
@@ -62,10 +78,88 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
   }
 
   Widget _displayMembersList(List<UserModel> members) {
-    if (widget.currentGroup.members!.length == 1) {
-      return Text("Personne");
+    if (members.isEmpty) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 100,
+            child: Image.network(
+                "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Text(
+              "Il n'y a pas d'autre membre que vous dans ce groupe ;(",
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          const Text(
+            "Invitez des passionnés de lecture à vous rejoindre",
+            textAlign: TextAlign.center,
+          ),
+          Container(
+            width: 350,
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 1, color: Theme.of(context).primaryColor)),
+            child: Column(
+              children: [
+                const Text(
+                  "Id du groupe à partager aux nouveaux membres",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      getGroupId(widget.currentGroup),
+                      style: TextStyle(color: Theme.of(context).focusColor),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.copy,
+                          color: Theme.of(context).focusColor,
+                        ),
+                        onTap: _copyToClipboard,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "Revenir à la page du groupe",
+              style: TextStyle(color: Theme.of(context).focusColor),
+            ),
+          )
+        ],
+      );
     } else {
       return ListView.builder(
+          primary: false,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: members.length + 1,
@@ -106,98 +200,6 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
             return const Loading();
           } else {
             BookModel _currentBook = snapshot.data!;
-            // if (widget.currentGroup.members!.length == 1) {
-            //   return Scaffold(
-            //     body: Padding(
-            //       padding: const EdgeInsets.symmetric(horizontal: 20),
-            //       child: ListView(
-            //         children: [
-            //           const SizedBox(
-            //             height: 50,
-            //           ),
-            //           Container(
-            //             padding: const EdgeInsets.only(
-            //               right: 50,
-            //             ),
-            //             child: Image.network(
-            //                 "https://cdn.pixabay.com/photo/2017/05/27/20/51/book-2349419_1280.png"),
-            //           ),
-            //           Padding(
-            //             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            //             child: Text(
-            //               "Il n'y a pas d'autre membre que vous dans ce groupe ;(",
-            //               style: TextStyle(
-            //                 color: Theme.of(context).primaryColor,
-            //                 fontSize: 20,
-            //               ),
-            //               textAlign: TextAlign.center,
-            //             ),
-            //           ),
-            //           const SizedBox(
-            //             height: 50,
-            //           ),
-            //           const Text(
-            //             "Invitez des passionnés de lecture à vous rejoindre",
-            //             textAlign: TextAlign.center,
-            //           ),
-            //           Container(
-            //             width: 350,
-            //             padding: const EdgeInsets.all(20),
-            //             margin: const EdgeInsets.symmetric(vertical: 20),
-            //             decoration: BoxDecoration(
-            //                 border: Border.all(
-            //                     width: 1,
-            //                     color: Theme.of(context).primaryColor)),
-            //             child: Column(
-            //               children: [
-            //                 const Text(
-            //                   "Id du groupe à partager aux nouveaux membres",
-            //                   style: TextStyle(
-            //                     color: Colors.black,
-            //                   ),
-            //                   textAlign: TextAlign.center,
-            //                 ),
-            //                 const SizedBox(
-            //                   height: 30,
-            //                 ),
-            //                 Row(
-            //                   mainAxisAlignment: MainAxisAlignment.center,
-            //                   children: [
-            //                     Text(
-            //                       getGroupId(_currentGroup),
-            //                       style: TextStyle(
-            //                           color: Theme.of(context).focusColor),
-            //                     ),
-            //                     const SizedBox(
-            //                       width: 20,
-            //                     ),
-            //                     MouseRegion(
-            //                       cursor: SystemMouseCursors.click,
-            //                       child: GestureDetector(
-            //                         child: Icon(
-            //                           Icons.copy,
-            //                           color: Theme.of(context).focusColor,
-            //                         ),
-            //                         onTap: _copyToClipboard,
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //           TextButton(
-            //             onPressed: () => Navigator.of(context).pop(),
-            //             child: Text(
-            //               "Revenir à la page du groupe",
-            //               style: TextStyle(color: Theme.of(context).focusColor),
-            //             ),
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //   );
-            // }
 
             return Scaffold(
               body: BackgroundContainer(
@@ -322,6 +324,15 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                       members.add(user);
                                     }
                                   }
+                                  for (var user in allUsers) {
+                                    if (_currentBook.lenderId == user.uid ||
+                                        _currentBook.ownerId ==
+                                            widget.currentUser.uid) {
+                                      members.remove(user);
+                                    }
+                                  }
+
+                                  print(members);
 
                                   for (var user in allUsers) {
                                     if (_currentBook.waitingList!
@@ -331,9 +342,22 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                   }
                                   return Column(
                                     children: [
-                                      Text("Membres en liste d'attente"),
+                                      Text(
+                                        "Membres en liste d'attente",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor),
+                                      ),
                                       _displayWaitingList(waitingList),
-                                      Text("Autres membres"),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "Autres membres",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor),
+                                      ),
                                       _displayMembersList(members)
                                     ],
                                   );
