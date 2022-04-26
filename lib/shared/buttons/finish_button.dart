@@ -65,18 +65,25 @@ class _FinishButtonState extends State<FinishButton> {
           return const Loading();
         } else {
           if (snapshot.data == true) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.check,
-                  color: Theme.of(context).focusColor,
-                ),
-                Text(
-                  "Livre lu",
-                  style: TextStyle(color: Theme.of(context).focusColor),
-                )
-              ],
+            return Container(
+              padding: EdgeInsets.all(10),
+              width: 120,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).focusColor.withOpacity(0.8)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    "Livre lu",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              ),
             );
           } else {
             if (widget.fromScreen == "singleBookHome") {

@@ -171,7 +171,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                       onPressed: () async {
                         await DBFuture().changeLendableStatus(
                             groupId: bookCard.currentGroup.id!,
-                            bookId: bookCard.book!.id!,
+                            bookId: bookCard.book.id!,
                             isLendable: false);
                         Navigator.of(context).pop();
                       },
@@ -255,7 +255,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                       onPressed: () async {
                         await DBFuture().borrowBook(
                             groupId: bookCard.currentGroup.id!,
-                            bookId: bookCard.book!.id!,
+                            bookId: bookCard.book.id!,
                             userId: bookCard.currentUser.uid!);
                         Navigator.of(context).pop();
                       },
@@ -339,7 +339,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                       onPressed: () async {
                         await DBFuture().giveBackBook(
                           groupId: bookCard.currentGroup.id!,
-                          bookId: bookCard.book!.id!,
+                          bookId: bookCard.book.id!,
                         );
                         Navigator.of(context).pop();
                       },
@@ -382,7 +382,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                 StreamBuilder<BookModel>(
                     stream: DBStream().getBookData(
                         groupId: bookCard.currentGroup.id!,
-                        bookId: bookCard.book!.id!),
+                        bookId: bookCard.book.id!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();
@@ -432,7 +432,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                       onPressed: () async {
                         await DBFuture().reserveBook(
                             groupId: bookCard.currentGroup.id!,
-                            bookId: bookCard.book!.id!,
+                            bookId: bookCard.book.id!,
                             userId: bookCard.currentUser.uid!);
                         Navigator.of(context).pop();
                       },
@@ -475,7 +475,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                 StreamBuilder<BookModel>(
                     stream: DBStream().getBookData(
                         groupId: bookCard.currentGroup.id!,
-                        bookId: bookCard.book!.id!),
+                        bookId: bookCard.book.id!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();
@@ -525,7 +525,7 @@ class ChangeBookStatusButton extends StatelessWidget {
                       onPressed: () async {
                         await DBFuture().cancelReserveBook(
                             groupId: bookCard.currentGroup.id!,
-                            bookId: bookCard.book!.id!,
+                            bookId: bookCard.book.id!,
                             userId: bookCard.currentUser.uid!);
                         Navigator.of(context).pop();
                       },
