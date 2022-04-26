@@ -40,21 +40,31 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
 
   Widget _displayWaitingList(List<UserModel> members) {
     if (widget.currentBook.waitingList!.isEmpty) {
-      return Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            height: 100,
-            child: Image.network(
-                "https://upload.wikimedia.org/wikipedia/commons/7/7f/Dicoo_bienvenue.png"),
-          ),
-          Text(
-            "Personne en liste d'attente",
-            style: TextStyle(color: Theme.of(context).primaryColor),
-          ),
-        ],
+      return SizedBox(
+        width: 320,
+        child: Column(
+          children: [
+            Text(
+              "Membres en liste d'attente",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 100,
+              child: Image.network(
+                  "https://upload.wikimedia.org/wikipedia/commons/7/7f/Dicoo_bienvenue.png"),
+            ),
+            Text(
+              "Personne en liste d'attente",
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
       );
     } else {
       return ListView.builder(
@@ -64,7 +74,13 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
           itemCount: members.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
-              return Container();
+              return Text(
+                "Membres en liste d'attente",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              );
             } else {
               return BorrowerChange(
                 user: members[index - 1],
@@ -89,7 +105,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-              "Il n'y a pas d'autre membre que vous dans ce groupe ;(",
+              "Il n'y a pas d'autre membre à qui prêter ce livre",
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 20,
@@ -98,7 +114,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
             ),
           ),
           const SizedBox(
-            height: 50,
+            height: 10,
           ),
           const Text(
             "Invitez des passionnés de lecture à vous rejoindre",
@@ -109,12 +125,12 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
             padding: const EdgeInsets.all(20),
             margin: const EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
-                border: Border.all(
-                    width: 1, color: Theme.of(context).primaryColor)),
+                color: Theme.of(context).focusColor.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(30)),
             child: Column(
               children: [
                 const Text(
-                  "Id du groupe à partager aux nouveaux membres",
+                  "Code du groupe à partager aux nouveaux membres",
                   style: TextStyle(
                     color: Colors.black,
                   ),
@@ -128,7 +144,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                   children: [
                     Text(
                       getGroupId(widget.currentGroup),
-                      style: TextStyle(color: Theme.of(context).focusColor),
+                      style: TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       width: 20,
@@ -138,7 +154,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                       child: GestureDetector(
                         child: Icon(
                           Icons.copy,
-                          color: Theme.of(context).focusColor,
+                          color: Colors.white,
                         ),
                         onTap: _copyToClipboard,
                       ),
@@ -148,12 +164,8 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
               ],
             ),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              "Revenir à la page du groupe",
-              style: TextStyle(color: Theme.of(context).focusColor),
-            ),
+          SizedBox(
+            height: 200,
           )
         ],
       );
@@ -344,13 +356,30 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                   }
                                   return Column(
                                     children: [
-                                      Text(
-                                        "Membres en liste d'attente",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).shadowColor),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 20),
+                                            decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,
+                                                        3), // changes position of shadow
+                                                  ),
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Theme.of(context)
+                                                    .shadowColor
+                                                    .withOpacity(0.5)),
+                                            child: _displayWaitingList(
+                                                waitingList)),
                                       ),
-                                      _displayWaitingList(waitingList),
                                       SizedBox(
                                         height: 20,
                                       ),
