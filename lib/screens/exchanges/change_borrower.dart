@@ -204,6 +204,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
             return Scaffold(
               body: BackgroundContainer(
                 child: ListView(
+                  primary: true,
                   children: [
                     CustomAppBar(
                         currentUser: widget.currentUser,
@@ -218,7 +219,8 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                           topRight: Radius.circular(50),
                         ),
                       ),
-                      child: Column(
+                      child: ListView(
+                        primary: false,
                         children: [
                           const SizedBox(
                             height: 30,

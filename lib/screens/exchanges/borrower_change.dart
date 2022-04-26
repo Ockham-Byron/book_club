@@ -78,6 +78,12 @@ class BorrowerChange extends StatelessWidget {
                       groupId: currentGroup.id!,
                       userId: user.uid!,
                       bookId: currentBook.id!);
+                  if (currentBook.waitingList!.contains(user.uid!)) {
+                    DBFuture().cancelReserveBook(
+                        groupId: currentGroup.id!,
+                        bookId: currentBook.id!,
+                        userId: user.uid!);
+                  }
                 }),
                 icon: Icon(
                   Icons.add_task,
