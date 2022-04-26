@@ -8,6 +8,7 @@ import 'package:book_club/screens/history/book_detail.dart';
 import 'package:book_club/screens/history/book_history.dart';
 import 'package:book_club/services/db_future.dart';
 import 'package:book_club/services/db_stream.dart';
+import 'package:book_club/shared/buttons/change_book_status_button.dart';
 import 'package:book_club/shared/containers/shadow_container.dart';
 import 'package:book_club/shared/display_services.dart';
 import 'package:book_club/shared/loading.dart';
@@ -18,11 +19,13 @@ class BookCard extends StatefulWidget {
   final GroupModel currentGroup;
   final UserModel currentUser;
   final BookModel book;
+  final String? sectionCategory;
   const BookCard(
       {Key? key,
       required this.currentGroup,
       required this.currentUser,
-      required this.book})
+      required this.book,
+      this.sectionCategory})
       : super(key: key);
 
   @override
@@ -200,7 +203,7 @@ class _BookCardState extends State<BookCard> {
     }
 
     return SizedBox(
-      height: 240,
+      height: 300,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
@@ -253,6 +256,10 @@ class _BookCardState extends State<BookCard> {
                   ),
                 ),
                 _displayFavorite(),
+                ChangeBookStatusButton(
+                    bookCard: widget,
+                    context: context,
+                    currentBook: widget.book)
               ],
             ),
           ),

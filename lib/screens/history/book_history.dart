@@ -21,12 +21,12 @@ class BookHistory extends StatefulWidget {
   final UserModel currentUser;
   final String? title;
 
-  const BookHistory(
-      {Key? key,
-      required this.currentGroup,
-      required this.currentUser,
-      this.title})
-      : super(key: key);
+  const BookHistory({
+    Key? key,
+    required this.currentGroup,
+    required this.currentUser,
+    this.title,
+  }) : super(key: key);
 
   @override
   _BookHistoryState createState() => _BookHistoryState();
@@ -159,6 +159,7 @@ class _BookHistoryState extends State<BookHistory> {
                               currentGroup: widget.currentGroup,
                               currentUser: widget.currentUser,
                               book: _filteredBooks[index - 1],
+                              sectionCategory: widget.title,
                             ));
                       }
                     });

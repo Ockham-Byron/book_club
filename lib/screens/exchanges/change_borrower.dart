@@ -299,6 +299,8 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return const Loading();
+                                    } else if (!snapshot.hasData) {
+                                      return Text("personne");
                                     } else {
                                       UserModel _user = snapshot.data!;
                                       return Text(

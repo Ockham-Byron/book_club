@@ -406,6 +406,28 @@ class DBFuture {
     return message;
   }
 
+  //give back the book
+  Future<String> giveBackBook({
+    required String groupId,
+    required String bookId,
+  }) async {
+    String message = "error";
+
+    try {
+      await groupsCollection
+          .doc(groupId)
+          .collection("books")
+          .doc(bookId)
+          .update({
+        "lenderId": null,
+      });
+      message = "success";
+    } catch (e) {
+      //print(e);
+    }
+    return message;
+  }
+
   //reserve the book
   Future<String> reserveBook(
       {required String groupId,
