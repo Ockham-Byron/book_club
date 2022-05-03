@@ -51,47 +51,6 @@ class LogIn extends StatelessWidget {
           ],
         ),
       ),
-      //   bottomNavigationBar: Padding(
-      //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      //     child: ClipRRect(
-      //         borderRadius: const BorderRadius.only(
-      //           topLeft: Radius.circular(30.0),
-      //           topRight: Radius.circular(30.0),
-      //         ),
-      //         child: Container(
-      //           height: 50,
-      //           color: Theme.of(context).canvasColor,
-      //           child: TextButton(
-      //               onPressed: () {
-      //                 Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => Register(),
-      //                 ));
-      //                 // showModalBottomSheet(
-      //                 //     constraints: BoxConstraints(
-      //                 //         maxWidth: mobileMaxWidth,
-      //                 //         maxHeight: mobileContainerMaxHeight),
-      //                 //     shape: const RoundedRectangleBorder(
-      //                 //         borderRadius: BorderRadius.only(
-      //                 //             topLeft: Radius.circular(30),
-      //                 //             topRight: Radius.circular(30))),
-      //                 //     isScrollControlled: true,
-      //                 //     context: context,
-      //                 //     builder: (BuildContext ctx) {
-      //                 //       return DraggableScrollableSheet(
-      //                 //           initialChildSize: 1,
-      //                 //           minChildSize: 0.25,
-      //                 //           maxChildSize: 1,
-      //                 //           expand: true,
-      //                 //           builder: (context, scrollController) =>
-      //                 //               const RegisterForm());
-      //                 //     });
-      //               },
-      //               child: Text(
-      //                 "Pas encore de compte ?".toUpperCase(),
-      //                 style: TextStyle(color: Theme.of(context).focusColor),
-      //               )),
-      //         )),
-      //   ),
     );
   }
 }

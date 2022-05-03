@@ -273,10 +273,10 @@ class _LoginFormState extends State<LoginForm> {
                         MaterialPageRoute(builder: ((context) => Register())));
                   },
                   child: Text(
-                    "Pas encore de compte ?",
+                    "Pas encore de compte ?".toUpperCase(),
                     style: TextStyle(
                       color: Theme.of(context).shadowColor,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ))
             ],

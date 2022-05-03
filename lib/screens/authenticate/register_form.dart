@@ -182,200 +182,196 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 550,
-      //widthFactor: 0.5,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Tout commence par un incipit",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              //Form field for the name
-              CustomFormField(
-                hintText: "pseudo",
-                focusNode: fpseudo,
-                textEditingController: _pseudoInput,
-                iconData: Icons.person,
-                validator: (val) {
-                  if (val!.isEmpty) {
-                    return "Merci d'indiquer un pseudo";
-                  } else if (val.length < 3) {
-                    return "Merci de choisir un pseudo de plus de trois caractères";
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              //Form Field for the mail
-              CustomFormField(
-                hintText: "courriel",
-                iconData: Icons.alternate_email,
-                focusNode: fmail,
-                textEditingController: _emailInput,
-                validator: (val) {
-                  if (!val!.isValidEmail) {
-                    return 'Entrez un courriel valide';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              Text(
-                "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
-                textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 15),
-              ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Tout commence par un incipit",
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            //Form field for the name
+            CustomFormField(
+              hintText: "pseudo",
+              focusNode: fpseudo,
+              textEditingController: _pseudoInput,
+              iconData: Icons.person,
+              validator: (val) {
+                if (val!.isEmpty) {
+                  return "Merci d'indiquer un pseudo";
+                } else if (val.length < 3) {
+                  return "Merci de choisir un pseudo de plus de trois caractères";
+                } else {
+                  return null;
+                }
+              },
+            ),
+            //Form Field for the mail
+            CustomFormField(
+              hintText: "courriel",
+              iconData: Icons.alternate_email,
+              focusNode: fmail,
+              textEditingController: _emailInput,
+              validator: (val) {
+                if (!val!.isValidEmail) {
+                  return 'Entrez un courriel valide';
+                } else {
+                  return null;
+                }
+              },
+            ),
+            Text(
+              "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 15),
+            ),
 
-              TextFormField(
-                focusNode: fpassword,
-                controller: _passwordInput,
-                obscureText: _isHidden,
-                validator: (val) {
-                  if (val!.length > 7) {
-                    if (val.isValidPassword) {
-                      return null;
-                    } else {
-                      return "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial";
-                    }
+            TextFormField(
+              focusNode: fpassword,
+              controller: _passwordInput,
+              obscureText: _isHidden,
+              validator: (val) {
+                if (val!.length > 7) {
+                  if (val.isValidPassword) {
+                    return null;
                   } else {
                     return "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial";
                   }
-                },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline,
-                      color: Theme.of(context).focusColor),
-                  labelText: "mot de passe",
-                  labelStyle: TextStyle(color: Theme.of(context).focusColor),
-                  suffixIcon: IconButton(
-                    onPressed: _togglePasswordView,
-                    icon: Icon(
-                      _isHidden ? Icons.visibility : Icons.visibility_off,
-                      color: Theme.of(context).focusColor,
-                    ),
+                } else {
+                  return "Votre mot de passe doit comporter au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial";
+                }
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock_outline,
+                    color: Theme.of(context).focusColor),
+                labelText: "mot de passe",
+                labelStyle: TextStyle(color: Theme.of(context).focusColor),
+                suffixIcon: IconButton(
+                  onPressed: _togglePasswordView,
+                  icon: Icon(
+                    _isHidden ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).focusColor,
                   ),
-                  errorMaxLines: 3,
                 ),
-                // style: Theme.of(context).textTheme.bodyText2,
+                errorMaxLines: 3,
               ),
-              TextFormField(
-                focusNode: fpasswordbis,
-                controller: _passwordBisInput,
-                validator: (val) {
-                  if (_passwordInput.text != val) {
-                    return "Les deux mots de passe sont différents";
+              // style: Theme.of(context).textTheme.bodyText2,
+            ),
+            TextFormField(
+              focusNode: fpasswordbis,
+              controller: _passwordBisInput,
+              validator: (val) {
+                if (_passwordInput.text != val) {
+                  return "Les deux mots de passe sont différents";
+                } else {
+                  return null;
+                }
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock_outline,
+                    color: Theme.of(context).focusColor),
+                labelText: "mot de passe bis repetita",
+                labelStyle: TextStyle(color: Theme.of(context).focusColor),
+                suffixIcon: IconButton(
+                  onPressed: _togglePasswordView,
+                  icon: Icon(
+                    _isHidden ? Icons.visibility : Icons.visibility_off,
+                    color: Theme.of(context).focusColor,
+                  ),
+                ),
+              ),
+            ),
+            //Form Field for the picture
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 280,
+                  child: CustomFormField(
+                    hintText: "url de votre photo de profil (facultatif)",
+                    focusNode: fpicture,
+                    validator: (val) {
+                      if (val!.isValidImageUrl || val == "") {
+                        return null;
+                      } else {
+                        return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
+                      }
+                    },
+                    textEditingController: _pictureInput,
+                    iconData: Icons.camera,
+                  ),
+                ),
+                IconButton(
+                    onPressed: () => _showUrlExplanation(),
+                    icon: Icon(
+                      Icons.info,
+                      color: Theme.of(context).focusColor,
+                    )),
+              ],
+            ),
+
+            const SizedBox(
+              height: 10,
+            ),
+
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).focusColor,
+                minimumSize: const Size(250, 50),
+              ),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  String message;
+                  message = await AuthService().registerUser(
+                      _emailInput.text,
+                      _passwordInput.text,
+                      _pseudoInput.text,
+                      _pictureInput.text);
+
+                  if (message == "Il existe déjà un compte avec ce mail.") {
+                    _showDialogExistingMail();
+                  } else if (message == "success") {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const AppRoot()),
+                        (route) => false);
                   } else {
-                    return null;
+                    _showDialogProblem();
                   }
+                }
+              },
+              child: const Text(
+                "S'INSCRIRE",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => LogIn(),
+                  ));
                 },
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline,
-                      color: Theme.of(context).focusColor),
-                  labelText: "mot de passe bis repetita",
-                  labelStyle: TextStyle(color: Theme.of(context).focusColor),
-                  suffixIcon: IconButton(
-                    onPressed: _togglePasswordView,
-                    icon: Icon(
-                      _isHidden ? Icons.visibility : Icons.visibility_off,
-                      color: Theme.of(context).focusColor,
-                    ),
-                  ),
-                ),
-              ),
-              //Form Field for the picture
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 280,
-                    child: CustomFormField(
-                      hintText: "url de votre photo de profil (facultatif)",
-                      focusNode: fpicture,
-                      validator: (val) {
-                        if (val!.isValidImageUrl || val == "") {
-                          return null;
-                        } else {
-                          return 'Url non valide.Y a-t-il un .png ou .jpg à la fin ? Si vous ne souhaitez pas ajouter de photo de profil, laissez vide';
-                        }
-                      },
-                      textEditingController: _pictureInput,
-                      iconData: Icons.camera,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () => _showUrlExplanation(),
-                      icon: Icon(
-                        Icons.info,
-                        color: Theme.of(context).focusColor,
-                      )),
-                ],
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).focusColor,
-                  minimumSize: const Size(250, 50),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    String message;
-                    message = await AuthService().registerUser(
-                        _emailInput.text,
-                        _passwordInput.text,
-                        _pseudoInput.text,
-                        _pictureInput.text);
-
-                    if (message == "Il existe déjà un compte avec ce mail.") {
-                      _showDialogExistingMail();
-                    } else if (message == "success") {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const AppRoot()),
-                          (route) => false);
-                    } else {
-                      _showDialogProblem();
-                    }
-                  }
-                },
-                child: const Text(
-                  "S'INSCRIRE",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LogIn(),
-                    ));
-                  },
-                  child: Text(
-                    "Déjà inscrit ?".toUpperCase(),
-                    style: TextStyle(color: Theme.of(context).shadowColor),
-                  )),
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          ),
+                child: Text(
+                  "Déjà inscrit ?".toUpperCase(),
+                  style: TextStyle(color: Theme.of(context).shadowColor),
+                )),
+            const SizedBox(
+              height: 20,
+            )
+          ],
         ),
       ),
     );
