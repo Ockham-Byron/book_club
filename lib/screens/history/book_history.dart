@@ -132,7 +132,28 @@ class _BookHistoryState extends State<BookHistory> {
                       _filteredBooks.add(book);
                     }
                   });
+                } else if (widget.title == "à continuer") {
+                  _allBooks.forEach((BookModel book) {
+                    if (widget.currentUser.readBooks!.contains(book.id) ||
+                        widget.currentUser.dontWantToReadBooks!
+                            .contains(book.id)) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                } else if (widget.title == "favoris") {
+                  _allBooks.forEach((BookModel book) {
+                    if (widget.currentUser.favoriteBooks!.contains(book.id)) {
+                      _filteredBooks.add(book);
+                    }
+                  });
+                } else if (widget.title == "lus") {
+                  _allBooks.forEach((BookModel book) {
+                    if (widget.currentUser.readBooks!.contains(book.id)) {
+                      _filteredBooks.add(book);
+                    }
+                  });
                 }
+
                 return ListView.builder(
                     itemCount: _filteredBooks.length + 1,
                     itemBuilder: (BuildContext context, int index) {
@@ -147,7 +168,10 @@ class _BookHistoryState extends State<BookHistory> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text("Livres " + widget.title!),
+                                Text(
+                                  "Livres " + widget.title!,
+                                  style: TextStyle(fontSize: 30),
+                                ),
                               ],
                             ),
                           ],

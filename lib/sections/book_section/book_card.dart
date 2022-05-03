@@ -186,7 +186,8 @@ class CancelButton extends StatelessWidget {
         ),
         tooltip: "il est rendu",
       );
-    } else if (bookCard.sectionCategory == "que vous avez empruntés") {
+    } else if (bookCard.sectionCategory == "que vous avez empruntés" ||
+        bookCard.currentUser.uid == bookCard.book!.lenderId) {
       return Container();
     } else {
       return IconButton(
