@@ -1,4 +1,5 @@
 import 'package:book_club/root.dart';
+import 'package:book_club/screens/authenticate/register.dart';
 import 'package:book_club/screens/authenticate/register_form.dart';
 import 'package:book_club/screens/authenticate/reset_password.dart';
 import 'package:book_club/services/auth.dart';
@@ -160,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
+      height: 430,
       child: ShadowContainer(
         child: Form(
           key: _formKey,
@@ -265,6 +266,18 @@ class _LoginFormState extends State<LoginForm> {
                   child: Text(
                     "Oubli du mot de passe ?",
                     style: TextStyle(color: Theme.of(context).focusColor),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: ((context) => Register())));
+                  },
+                  child: Text(
+                    "Pas encore de compte ?",
+                    style: TextStyle(
+                      color: Theme.of(context).shadowColor,
+                      fontSize: 20,
+                    ),
                   ))
             ],
           ),

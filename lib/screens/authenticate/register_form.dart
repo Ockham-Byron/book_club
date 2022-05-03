@@ -5,6 +5,8 @@ import 'package:book_club/shared/custom_form_field.dart';
 
 import 'package:flutter/material.dart';
 
+import 'login.dart';
+
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
@@ -359,6 +361,16 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                 ),
               ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LogIn(),
+                    ));
+                  },
+                  child: Text(
+                    "Déjà inscrit ?".toUpperCase(),
+                    style: TextStyle(color: Theme.of(context).shadowColor),
+                  )),
               const SizedBox(
                 height: 20,
               )

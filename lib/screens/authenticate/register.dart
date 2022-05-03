@@ -45,28 +45,6 @@ class Register extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(30.0),
-            ),
-            child: Container(
-              height: 50,
-              color: Theme.of(context).focusColor,
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LogIn(),
-                    ));
-                  },
-                  child: Text(
-                    "Déjà inscrit ?".toUpperCase(),
-                    style: TextStyle(color: Theme.of(context).canvasColor),
-                  )),
-            )),
-      ),
     );
   }
 }
