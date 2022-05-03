@@ -243,7 +243,6 @@ class HomeBookSection extends StatelessWidget {
   final SeveralBooksHome widget;
   final String? title;
   final double? barWidth;
-  // final SeveralBooksHome widget;
 
   @override
   Widget build(BuildContext context) {

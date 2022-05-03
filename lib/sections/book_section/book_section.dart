@@ -49,7 +49,7 @@ class _BookSectionState extends State<BookSection> {
               //define the selected lists of books
               List<BookModel> allBooks = snapshot.data!;
               List<BookModel> selectedBooks = [];
-              if (widget.sectionCategory == "continuer") {
+              if (widget.sectionCategory == "à continuer") {
                 for (var book in allBooks) {
                   if (widget.currentUser.readBooks!.contains(book.id) ||
                       widget.currentUser.dontWantToReadBooks!

@@ -111,7 +111,8 @@ class MemberCard extends StatelessWidget {
         ?.withOpacity(0.6);
 
     Widget _displayChangeLeader() {
-      if (currentUser.uid == currentGroup.leader) {
+      if (currentUser.uid == currentGroup.leader &&
+          currentUser.uid == user.uid) {
         return TextButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ChangeLeader(

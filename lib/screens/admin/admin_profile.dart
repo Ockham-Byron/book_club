@@ -14,6 +14,8 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 import 'package:flutter/material.dart';
 
+import '../history/book_history.dart';
+
 class ProfileAdmin extends StatefulWidget {
   final UserModel currentUser;
 
@@ -131,7 +133,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                         children: [
                           Container(
                             margin: const EdgeInsets.only(top: 50),
-                            height: 1400,
+                            height: 1560,
                             decoration: BoxDecoration(
                               color: Colors.amber[50],
                               borderRadius: const BorderRadius.only(
@@ -171,7 +173,21 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                   Container(
                                     width: MediaQuery.of(context).size.width,
                                     alignment: Alignment.center,
-                                    margin: const EdgeInsets.only(top: 10),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 20),
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context).canvasColor,
+                                        borderRadius: BorderRadius.circular(30),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ]),
                                     child: Column(
                                       children: [
                                         Row(
@@ -210,41 +226,20 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 50,
+                                    height: 10,
                                   ),
-                                  const Text(
-                                    "Continuer de lire",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 30),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  BookSection(
-                                    currentGroup: widget.currentGroup,
-                                    currentUser: _currentUser,
-                                    sectionCategory: "continuer",
-                                  ),
-                                  const Text(
-                                    "Favoris",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 30),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  BookSection(
-                                    currentGroup: widget.currentGroup,
-                                    currentUser: _currentUser,
-                                    sectionCategory: "favoris",
-                                  ),
-                                  const Text(
-                                    "Tous les livres lus",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 30),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  BookSection(
-                                    currentGroup: widget.currentGroup,
-                                    currentUser: _currentUser,
-                                    sectionCategory: "lus",
-                                  )
+                                  KBookSection(
+                                      widget: widget,
+                                      title: "à continuer",
+                                      barWidth: 115),
+                                  KBookSection(
+                                      widget: widget,
+                                      title: "favoris",
+                                      barWidth: 65),
+                                  KBookSection(
+                                      widget: widget,
+                                      title: "lus",
+                                      barWidth: 25)
                                 ],
                               ),
                             ),
@@ -302,3 +297,112 @@ final kSubtitleStyle = TextStyle(
   color: Colors.red[300],
   fontWeight: FontWeight.w700,
 );
+
+class KBookSection extends StatelessWidget {
+  const KBookSection(
+      {Key? key,
+      required this.widget,
+      required this.title,
+      required this.barWidth})
+      : super(key: key);
+
+  final ProfileAdmin widget;
+  final String? title;
+  final double? barWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Livres",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: ColorBar(barWidth: barWidth),
+                    ),
+                    Text(
+                      title!,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Container(
+            transform: Matrix4.translationValues(0, -28, 0),
+            child: BookSection(
+                currentGroup: widget.currentGroup,
+                currentUser: widget.currentUser,
+                sectionCategory: title!),
+          ),
+          Container(
+            transform: Matrix4.translationValues(0, -28, 0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey[400]),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)))),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => BookHistory(
+                    currentGroup: widget.currentGroup,
+                    currentUser: widget.currentUser,
+                    title: title,
+                  ),
+                ));
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Voir tous les livres $title'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.read_more,
+                    size: 24.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ColorBar extends StatelessWidget {
+  final double? barWidth;
+  const ColorBar({Key? key, required this.barWidth}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 15,
+        bottom: 30,
+      ),
+      width: barWidth,
+      height: 15,
+      color: Theme.of(context).focusColor.withOpacity(0.7),
+    );
+  }
+}
