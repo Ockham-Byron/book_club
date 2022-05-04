@@ -143,6 +143,7 @@ class _AdminGroupState extends State<AdminGroup> {
                   builder: (context) => BookHistory(
                     currentGroup: _currentGroup,
                     currentUser: widget.currentUser,
+                    title: "du groupe",
                   ),
                 ),
               );
