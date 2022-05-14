@@ -25,7 +25,7 @@ class BookHistory extends StatefulWidget {
     Key? key,
     required this.currentGroup,
     required this.currentUser,
-    this.title,
+    required this.title,
   }) : super(key: key);
 
   @override

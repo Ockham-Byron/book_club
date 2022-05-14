@@ -197,8 +197,10 @@ class _AdminGroupState extends State<AdminGroup> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => BookHistory(
-                                  currentGroup: _currentGroup,
-                                  currentUser: widget.currentUser),
+                                currentGroup: _currentGroup,
+                                currentUser: widget.currentUser,
+                                title: "du groupe",
+                              ),
                             ),
                           );
                         }),

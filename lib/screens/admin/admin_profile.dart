@@ -133,7 +133,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                         children: [
                           Container(
                             margin: const EdgeInsets.only(top: 50),
-                            height: 1560,
+                            height: 1707,
                             decoration: BoxDecoration(
                               color: Colors.amber[50],
                               borderRadius: const BorderRadius.only(

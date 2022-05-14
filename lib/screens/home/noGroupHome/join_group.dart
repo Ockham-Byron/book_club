@@ -94,14 +94,18 @@ class _JoinGroupState extends State<JoinGroup> {
   void _joinGroup(BuildContext context, String groupId) async {
     UserModel _currentUser = widget.userModel;
 
-    await DBFuture().joinGroup(groupId: groupId, userId: _currentUser.uid!);
-
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AppRoot(),
-        ),
-        (route) => false);
+    String message =
+        await DBFuture().joinGroup(groupId: groupId, userId: _currentUser.uid!);
+    if (message == "error") {
+      _showDialogWrongCode();
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AppRoot(),
+          ),
+          (route) => false);
+    }
   }
 
   final TextEditingController _groupIdInput = TextEditingController();
@@ -138,72 +142,59 @@ class _JoinGroupState extends State<JoinGroup> {
               child: ShadowContainer(
                 child: Form(
                   key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CustomFormField(
-                        hintText: "code du groupe",
-                        iconData: Icons.group,
-                        focusNode: fid,
-                        textEditingController: _groupIdInput,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Merci d'indiquer le code du groupe";
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      StreamBuilder<List<GroupModel>>(
-                          stream: DBStream().getAllGroups(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Loading();
+                  child: SizedBox(
+                    height: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        CustomFormField(
+                          hintText: "code du groupe",
+                          iconData: Icons.group,
+                          focusNode: fid,
+                          textEditingController: _groupIdInput,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Merci d'indiquer le code du groupe";
                             } else {
-                              List<GroupModel> groups = snapshot.data!;
-                              List<String> groupsId = [];
-                              for (var group in groups) {
-                                groupsId.add(group.id!);
-                              }
-
-                              return ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (groupsId.contains(_groupIdInput.text)) {
-                                      _joinGroup(context, _groupIdInput.text);
-                                    } else {
-                                      _showDialogWrongCode();
-                                    }
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Text(
-                                    "Joindre le groupe".toUpperCase(),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              );
+                              return null;
                             }
-                          }),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Annuler".toUpperCase(),
-                          style: TextStyle(color: Theme.of(context).focusColor),
+                          },
                         ),
-                      )
-                    ],
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _joinGroup(context, _groupIdInput.text);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              "Joindre le groupe".toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
+
+                        // } else {
+                        //   return Text("coucou");
+                        // }
+
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Annuler".toUpperCase(),
+                            style:
+                                TextStyle(color: Theme.of(context).focusColor),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

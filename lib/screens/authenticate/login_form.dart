@@ -161,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 430,
+      height: 450,
       child: ShadowContainer(
         child: Form(
           key: _formKey,
@@ -267,7 +267,15 @@ class _LoginFormState extends State<LoginForm> {
                     "Oubli du mot de passe ?",
                     style: TextStyle(color: Theme.of(context).focusColor),
                   )),
-              TextButton(
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).canvasColor),
+                      side: MaterialStateProperty.all<BorderSide>(
+                          BorderSide(color: Theme.of(context).shadowColor))),
                   onPressed: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: ((context) => Register())));

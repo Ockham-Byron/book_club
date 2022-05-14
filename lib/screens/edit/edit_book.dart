@@ -109,6 +109,7 @@ class _EditBookState extends State<EditBook> {
           builder: (context) => BookHistory(
                 currentGroup: widget.currentGroup,
                 currentUser: widget.currentUser,
+                title: "du groupe",
               )));
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(

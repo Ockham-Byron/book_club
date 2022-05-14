@@ -112,8 +112,10 @@ class _BookCardState extends State<BookCard> {
                                         currentUser: widget.currentUser,
                                         bookId: widget.book.id!,
                                         fromRoute: BookHistory(
-                                            currentGroup: widget.currentGroup,
-                                            currentUser: widget.currentUser))),
+                                          currentGroup: widget.currentGroup,
+                                          currentUser: widget.currentUser,
+                                          title: "du groupe",
+                                        ))),
                                 (route) => false);
                           }
                         },
@@ -167,8 +169,10 @@ class _BookCardState extends State<BookCard> {
                                     currentUser: widget.currentUser,
                                     bookId: widget.book.id!,
                                     fromRoute: BookHistory(
-                                        currentGroup: widget.currentGroup,
-                                        currentUser: widget.currentUser))),
+                                      currentGroup: widget.currentGroup,
+                                      currentUser: widget.currentUser,
+                                      title: "du groupe",
+                                    ))),
                           );
                         },
                         icon: const Icon(Icons.check, color: Colors.grey),
@@ -185,8 +189,10 @@ class _BookCardState extends State<BookCard> {
                                   currentUser: widget.currentUser,
                                   bookId: widget.book.id!,
                                   fromRoute: BookHistory(
-                                      currentGroup: widget.currentGroup,
-                                      currentUser: widget.currentUser))),
+                                    currentGroup: widget.currentGroup,
+                                    currentUser: widget.currentUser,
+                                    title: "du groupe",
+                                  ))),
                         );
                       },
                       icon: const Icon(Icons.favorite, color: Colors.grey),

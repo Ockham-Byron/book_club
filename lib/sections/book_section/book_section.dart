@@ -75,8 +75,10 @@ class _BookSectionState extends State<BookSection> {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => BookHistory(
-                              currentGroup: widget.currentGroup,
-                              currentUser: widget.currentUser)),
+                                currentGroup: widget.currentGroup,
+                                currentUser: widget.currentUser,
+                                title: widget.sectionCategory,
+                              )),
                       (route) => false);
                 };
               }
@@ -93,8 +95,10 @@ class _BookSectionState extends State<BookSection> {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => BookHistory(
-                              currentGroup: widget.currentGroup,
-                              currentUser: widget.currentUser)),
+                                currentGroup: widget.currentGroup,
+                                currentUser: widget.currentUser,
+                                title: widget.sectionCategory,
+                              )),
                       (route) => false);
                 };
               }
@@ -148,7 +152,7 @@ class _BookSectionState extends State<BookSection> {
                 return Container(
                   padding: const EdgeInsets.only(top: 20),
                   width: 350,
-                  height: 320,
+                  height: 330,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: selectedBooks.length + 1.clamp(0, 7),
