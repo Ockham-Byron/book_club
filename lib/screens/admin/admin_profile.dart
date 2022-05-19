@@ -230,14 +230,17 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                                   ),
                                   KBookSection(
                                       widget: widget,
+                                      currentUser: _currentUser,
                                       title: "à continuer",
                                       barWidth: 115),
                                   KBookSection(
                                       widget: widget,
+                                      currentUser: _currentUser,
                                       title: "favoris",
                                       barWidth: 65),
                                   KBookSection(
                                       widget: widget,
+                                      currentUser: _currentUser,
                                       title: "lus",
                                       barWidth: 25)
                                 ],
@@ -302,11 +305,13 @@ class KBookSection extends StatelessWidget {
   const KBookSection(
       {Key? key,
       required this.widget,
+      required this.currentUser,
       required this.title,
       required this.barWidth})
       : super(key: key);
 
   final ProfileAdmin widget;
+  final UserModel currentUser;
   final String? title;
   final double? barWidth;
 
@@ -349,7 +354,7 @@ class KBookSection extends StatelessWidget {
             transform: Matrix4.translationValues(0, -28, 0),
             child: BookSection(
                 currentGroup: widget.currentGroup,
-                currentUser: widget.currentUser,
+                currentUser: currentUser,
                 sectionCategory: title!),
           ),
           Container(
@@ -363,7 +368,7 @@ class KBookSection extends StatelessWidget {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => BookHistory(
                     currentGroup: widget.currentGroup,
-                    currentUser: widget.currentUser,
+                    currentUser: currentUser,
                     title: title,
                   ),
                 ));

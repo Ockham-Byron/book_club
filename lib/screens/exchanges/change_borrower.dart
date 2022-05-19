@@ -174,18 +174,20 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
           primary: false,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: members.length + 1,
+          itemCount: members.length,
           itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Container();
-            } else {
-              return BorrowerChange(
-                user: members[index - 1],
-                currentUser: widget.currentUser,
-                currentGroup: widget.currentGroup,
-                currentBook: widget.currentBook,
-              );
-            }
+            // if (index == 0) {
+            //   return Text("coucou");
+            // } else {
+            print(members.length);
+            //return Text("bouh");
+            return BorrowerChange(
+              user: members[index],
+              currentUser: widget.currentUser,
+              currentGroup: widget.currentGroup,
+              currentBook: widget.currentBook,
+            );
+            // }
           });
     }
   }
@@ -340,14 +342,19 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                       members.add(user);
                                     }
                                   }
+                                  print("membres tous:");
+                                  print(members);
+
                                   for (var user in allUsers) {
-                                    if (_currentBook.lenderId == user.uid ||
-                                        _currentBook.ownerId ==
-                                            widget.currentUser.uid) {
+                                    if (_currentBook.lenderId == user.uid
+                                        // ||
+                                        //     _currentBook.ownerId ==
+                                        //         widget.currentUser.uid
+                                        ) {
                                       members.remove(user);
                                     }
                                   }
-
+                                  print("membres:");
                                   print(members);
 
                                   for (var user in allUsers) {

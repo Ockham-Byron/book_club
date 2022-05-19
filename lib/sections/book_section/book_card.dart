@@ -186,13 +186,12 @@ class CancelButton extends StatelessWidget {
         ),
         tooltip: "il est rendu",
       );
-    } else if (bookCard.sectionCategory == "que vous avez empruntés" ||
-        bookCard.currentUser.uid == bookCard.book!.lenderId) {
+    } else if (bookCard.sectionCategory == "que vous avez empruntés") {
       return Container();
     } else {
       return IconButton(
           onPressed: () {
-            if (bookCard.sectionCategory == "continuer") {
+            if (bookCard.sectionCategory == "à continuer") {
               Navigator.push(
                   context,
                   MaterialPageRoute(

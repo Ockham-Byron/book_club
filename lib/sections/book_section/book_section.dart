@@ -55,7 +55,13 @@ class _BookSectionState extends State<BookSection> {
                       widget.currentUser.dontWantToReadBooks!
                           .contains(book.id)) {
                   } else {
-                    selectedBooks.add(book);
+                    if (widget.currentGroup.isSingleBookGroup == false) {
+                      if (book.lenderId == widget.currentUser.uid) {
+                        selectedBooks.add(book);
+                      }
+                    } else {
+                      selectedBooks.add(book);
+                    }
                   }
                 }
                 nothingText = "Vous avez tout lu";
