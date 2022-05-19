@@ -137,7 +137,14 @@ class _BookHistoryState extends State<BookHistory> {
                     if (widget.currentUser.readBooks!.contains(book.id) ||
                         widget.currentUser.dontWantToReadBooks!
                             .contains(book.id)) {
-                      _filteredBooks.add(book);
+                    } else {
+                      if (widget.currentGroup.isSingleBookGroup == false) {
+                        if (book.lenderId == widget.currentUser.uid) {
+                          _filteredBooks.add(book);
+                        }
+                      } else {
+                        _filteredBooks.add(book);
+                      }
                     }
                   });
                 } else if (widget.title == "favoris") {

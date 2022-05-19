@@ -57,9 +57,23 @@ class BorrowerChange extends StatelessWidget {
       if (currentUser.uid == user.uid) {
         return Container();
       } else {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Row(
+        return Container(
+          height: 200,
+          width: 150,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).canvasColor),
+          //padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(

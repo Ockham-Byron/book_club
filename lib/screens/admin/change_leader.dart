@@ -204,6 +204,7 @@ class _ChangeLeaderState extends State<ChangeLeader> {
                                             (BuildContext context, int index) {
                                           if (index == 0) {
                                             return Container();
+                                            //
                                           } else {
                                             return MemberChange(
                                                 user: members[index - 1],

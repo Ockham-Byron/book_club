@@ -170,25 +170,28 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
         ],
       );
     } else {
-      return ListView.builder(
-          primary: false,
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: members.length,
-          itemBuilder: (BuildContext context, int index) {
-            // if (index == 0) {
-            //   return Text("coucou");
-            // } else {
-            print(members.length);
-            //return Text("bouh");
-            return BorrowerChange(
-              user: members[index],
-              currentUser: widget.currentUser,
-              currentGroup: widget.currentGroup,
-              currentBook: widget.currentBook,
-            );
-            // }
-          });
+      return SizedBox(
+        height: 200,
+        child: ListView.builder(
+            primary: false,
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: members.length + 1,
+            itemBuilder: (BuildContext context, int index) {
+              print("taille de la liste");
+              print(members.length);
+              if (index == 0) {
+                return Container();
+              } else {
+                return BorrowerChange(
+                  user: members[index - 1],
+                  currentUser: widget.currentUser,
+                  currentGroup: widget.currentGroup,
+                  currentBook: widget.currentBook,
+                );
+              }
+            }),
+      );
     }
   }
 
@@ -224,7 +227,7 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                         currentUser: widget.currentUser,
                         currentGroup: widget.currentGroup),
                     Container(
-                      height: MediaQuery.of(context).size.height,
+                      height: 900,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         color: Theme.of(context).canvasColor,
@@ -342,20 +345,17 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                       members.add(user);
                                     }
                                   }
-                                  print("membres tous:");
-                                  print(members);
 
                                   for (var user in allUsers) {
-                                    if (_currentBook.lenderId == user.uid
-                                        // ||
-                                        //     _currentBook.ownerId ==
-                                        //         widget.currentUser.uid
-                                        ) {
+                                    if (_currentBook.lenderId == user.uid ||
+                                        _currentBook.ownerId == user.uid ||
+                                        _currentBook.waitingList!
+                                            .contains(user.uid) ||
+                                        user.readBooks!
+                                            .contains(_currentBook.id)) {
                                       members.remove(user);
                                     }
                                   }
-                                  print("membres:");
-                                  print(members);
 
                                   for (var user in allUsers) {
                                     if (_currentBook.waitingList!
@@ -397,6 +397,9 @@ class _ChangeBorrowerState extends State<ChangeBorrower> {
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).shadowColor),
+                                      ),
+                                      SizedBox(
+                                        height: 40,
                                       ),
                                       _displayMembersList(members)
                                     ],
